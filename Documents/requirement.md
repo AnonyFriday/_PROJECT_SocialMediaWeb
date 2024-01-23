@@ -1,11 +1,8 @@
-
 # Requirement
-
-  
 
 ## Overview
 **LoveIt**
-Mạng xã hội giúp tìm người yêu và bạn bè.  Chỉ dành cho những người trưởng thành từ 18 tuổi trở lên.
+Social media platform to find lovers or friends. Only for 18 and up users.
 
 ## Features
 ### Account setup
@@ -16,6 +13,7 @@ Mạng xã hội giúp tìm người yêu và bạn bè.  Chỉ dành cho nhữn
 
 ### Welcome page
 If user is already login, go to homepage.
+
 First time users will setup personal relationship preference, then homepage will show users/posts with selected preference (unregistered user will not be able to love posts or comments).
 
 ### Homepage/Find Lover
