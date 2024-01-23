@@ -1,1 +1,3 @@
-# prj301-se1860-03
+# LoveIt
+
+This is an open source social media platform based on Java Servlet.
