@@ -41,11 +41,9 @@ TODO: Clearly define what a feed is? How to determine what post will the users s
 
 TODO: How many layers can a comment have?
 
-### Chat
+### Chat (Optional)
 - Each user is able to direct message others.
 - Message is updated in real time.
-
-TODO: Consider if chat is necessary
 
 ### Profile
 - Show personal info (Name, age, gender, preference, avatar)
