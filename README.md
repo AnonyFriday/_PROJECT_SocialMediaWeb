@@ -35,11 +35,9 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Users can make posts. Original posters can delete and modify their posts.
 - Ability to filter posts/users by gender, location.
 - "Love" button to save post for later
-- Comments
+- Comments (1 layer nested comment, each new comment can reply to one parent)
 
 TODO: Clearly define what a feed is? How to determine what post will the users see?
-
-TODO: How many layers can a comment have?
 
 ### Chat (Optional)
 - Each user is able to direct message others.
