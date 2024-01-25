@@ -38,6 +38,7 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Comments
 
 TODO: Clearly define what a feed is? How to determine what post will the users see?
+
 TODO: How many layers can a comment have?
 
 ### Chat
