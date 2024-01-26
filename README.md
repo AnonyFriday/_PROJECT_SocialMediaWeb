@@ -7,8 +7,11 @@ LIT
 
 ## Team members
 Vũ Kim Duy - SE182407
+
 Lê Quang Khánh - SE182420
+
 Võ Nguyên Minh Nhật - SE182355
+
 Nguyễn Trung Hưng - SE182394
 
 # Requirements
@@ -36,8 +39,7 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Ability to filter posts/users by gender, location.
 - "Love" button to save post for later
 - Comments (1 layer nested comment, each new comment can reply to one parent)
-
-TODO: Clearly define what a feed is? How to determine what post will the users see?
+- Posts in feed are shown based on personal preference (the more similar a poster is to the user, the more likely the user will see that person's post)
 
 ### Chat (Optional)
 - Each user is able to direct message others.
