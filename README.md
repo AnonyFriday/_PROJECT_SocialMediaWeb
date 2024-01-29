@@ -54,6 +54,6 @@ then homepage will show users/posts with selected preference (unregistered user 
 - List of favourite post.
 
 ### Admin page
-- See reported posts/users.
-- Ability to delete, modify posts, delete users.
-- Dashboard to see analytics of website content.
+- Post manager: see user-reported posts, search content, hide posts, delete posts.
+- User manager: see all user, search users, delete account, block users from logging in.
+- Dashboard: see analytics charts of data, such as number of posts, accounts, messages, genders...
