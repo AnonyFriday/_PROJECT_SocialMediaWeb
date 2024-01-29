@@ -3,16 +3,13 @@
 This is an open source social media platform based on Java Servlet.
 
 ## Team name
-LIT
+**LIT**
 
 ## Team members
-Vũ Kim Duy - SE182407
-
-Lê Quang Khánh - SE182420
-
-Võ Nguyên Minh Nhật - SE182355
-
-Nguyễn Trung Hưng - SE182394
+- Vũ Kim Duy - SE182407
+- Lê Quang Khánh - SE182420
+- Võ Nguyên Minh Nhật - SE182355
+- Nguyễn Trung Hưng - SE182394
 
 # Requirements
 
@@ -34,8 +31,8 @@ First time users will setup personal relationship preference,
 then homepage will show users/posts with selected preference (unregistered user will not be able to love posts or comments).
 
 ### Homepage/Find Lover/Feed
-- Scroll through posts of people looking for relationship.
-- Users can make posts. Original posters can delete and modify their posts.
+- Users can scroll through posts of people looking for relationship.
+- **Users** can make posts. **Original posters** can delete and modify their posts.
 - Ability to filter posts/users by gender, location.
 - "Love" button to save post for later
 - Comments (1 layer nested comment, each new comment can reply to one parent)
@@ -46,7 +43,7 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Message is updated in real time.
 
 ### Profile
-- Show personal info (Name, age, gender, preference, avatar)
+- Show personal info (Name, age, gender, preference, avatar) of users
 - If the user is owner of profile, they will have ability to change gender or love preference (not email or name due to impersonations).
 
 ### Favorites (Loved posts)
