@@ -35,7 +35,9 @@ then homepage will show users/posts with selected preference (unregistered user 
 - **Users** can make posts. **Original posters** can delete and modify their posts.
 - Ability to filter posts/users by gender, location.
 - "Love" button to save post for later.
-- Comments (1 layer nested comment, each new comment can reply to one parent).
+- Comments 
+    - 1 layer nested comment, each comment will have one or more reply.
+    - Each reply specify their message they want to respond to by quoting the original poster.
 - Posts in feed are shown based on personal preference (the more similar a poster is to the user, the more likely the user will see that person's post).
 
 ### Chat (Optional)
