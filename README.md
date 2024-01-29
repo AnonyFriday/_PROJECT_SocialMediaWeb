@@ -18,11 +18,11 @@ This is an open source social media platform based on Java Servlet.
 Social media platform to find lovers or friends. Only for 18 and up users.
 
 ## Features
-### Account setup
+### Account setup (For unregistered users)
  - Login
  - Register
  - Oauth Login (Using Google)
- - Setup personal info such as name, age, email, location, gender, preferred gender.
+ - New users, setup personal info such as name, age, email, location, gender, preferred gender.
 
 ### Welcome page (for new users)
 If user is already login, go to homepage.
@@ -34,20 +34,20 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Users can scroll through posts of people looking for relationship.
 - **Users** can make posts. **Original posters** can delete and modify their posts.
 - Ability to filter posts/users by gender, location.
-- "Love" button to save post for later
-- Comments (1 layer nested comment, each new comment can reply to one parent)
-- Posts in feed are shown based on personal preference (the more similar a poster is to the user, the more likely the user will see that person's post)
+- "Love" button to save post for later.
+- Comments (1 layer nested comment, each new comment can reply to one parent).
+- Posts in feed are shown based on personal preference (the more similar a poster is to the user, the more likely the user will see that person's post).
 
 ### Chat (Optional)
 - Each user is able to direct message others.
 - Message is updated in real time.
 
 ### Profile
-- Show personal info (Name, age, gender, preference, avatar) of users
+- Show personal info (Name, age, gender, preference, avatar) of users.
 - If the user is owner of profile, they will have ability to change gender or love preference (not email or name due to impersonations).
 
 ### Favorites (Loved posts)
-- List of favourite post
+- List of favourite post.
 
 ### Admin page
 - See reported posts/users.
