@@ -57,3 +57,18 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Post manager: see user-reported posts, search content, hide posts, delete posts.
 - User manager: see all user, search users, delete account, block users from logging in.
 - Dashboard: see analytics charts of data, such as number of posts, accounts, messages, genders...
+
+# Wireframe
+![Alt text](GUI/Wireframe_LoveIT-1.png)
+![Alt text](GUI/Wireframe_LoveIT-2.png)
+![Alt text](GUI/Wireframe_LoveIT-3.png)
+![Alt text](GUI/Wireframe_LoveIT-4.png)
+![Alt text](GUI/Wireframe_LoveIT-5.png)
+![Alt text](GUI/Wireframe_LoveIT-6.png)
+![Alt text](GUI/Wireframe_LoveIT-7.png)
+![Alt text](GUI/Wireframe_LoveIT-8.png)
+![Alt text](GUI/Wireframe_LoveIT-9.png)
+![Alt text](GUI/Wireframe_LoveIT-10.png)
+![Alt text](GUI/Wireframe_LoveIT-11.png)
+![Alt text](GUI/Wireframe_LoveIT-12.png)
+![Alt text](GUI/Wireframe_LoveIT-13.png)
