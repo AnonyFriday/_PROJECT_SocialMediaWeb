@@ -75,3 +75,6 @@ then homepage will show users/posts with selected preference (unregistered user 
 
 # Database
 https://lucid.app/lucidchart/344aa0da-d180-4587-92dd-d4e279696b2e/edit?invitationId=inv_734072b5-348e-4cb1-bc4e-86edd0d151d4
+
+# System Design
+Class diagram: https://drive.google.com/file/d/1iKp6VHsZJ6P5FCMZUTvB610y7a24B-YV/view?usp=sharing 
