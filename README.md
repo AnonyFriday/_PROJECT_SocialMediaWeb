@@ -78,3 +78,4 @@ https://lucid.app/lucidchart/344aa0da-d180-4587-92dd-d4e279696b2e/edit?invitatio
 
 # System Design
 Class diagram: https://drive.google.com/file/d/1iKp6VHsZJ6P5FCMZUTvB610y7a24B-YV/view?usp=sharing 
+![Alt text](SystemDesign/ClassDiagram.png)
