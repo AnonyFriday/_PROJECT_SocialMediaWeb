@@ -26,6 +26,39 @@ public abstract class AccountDTO implements Serializable {
     private EAccountRole role;
 
     // ===========================
+    // == Constructor
+    // ===========================
+    /**
+     * Constructor for comparing AccountDTO
+     *
+     * @param id
+     */
+    public AccountDTO(long id) {
+        this.id = id;
+    }
+
+    /**
+     * General Constructor
+     *
+     * @param id
+     * @param email
+     * @param password
+     * @param fullName
+     * @param imageUrl
+     * @param status
+     * @param role
+     */
+    public AccountDTO(long id, String email, String password, String fullName, String imageUrl, EAccountStatus status, EAccountRole role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.imageUrl = imageUrl;
+        this.status = status;
+        this.role = role;
+    }
+
+    // ===========================
     // == Methods
     // ===========================
     @Override

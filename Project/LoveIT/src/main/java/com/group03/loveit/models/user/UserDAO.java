@@ -4,10 +4,34 @@
  */
 package com.group03.loveit.models.user;
 
+import com.group03.loveit.models.IDAO;
+
 /**
  *
  * @author duyvu
  */
-public class UserDAO {
-    
+public class UserDAO implements IDAO<UserDTO> {
+
+    // ===========================
+    // == Standard CRUD
+    // ===========================
+    @Override
+    public boolean insert(UserDTO instance) {
+        return false;
+    }
+
+    @Override
+    public UserDTO get() {
+        return null;
+    }
+
+    @Override
+    public boolean update(UserDTO t) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(UserDTO t) {
+        return false;
+    }
 }

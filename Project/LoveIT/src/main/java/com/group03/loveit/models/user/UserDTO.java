@@ -27,7 +27,37 @@ public class UserDTO extends AccountDTO implements Serializable {
     // ===========================
     // == Constructors
     // ===========================
+    public UserDTO(long id, String email, String password, String fullName, String imageUrl, EAccountStatus status, EAccountRole role, byte age, GenderDTO gender, GenderDTO preference_gender) {
+        super(id, email, password, fullName, imageUrl, status, role);
+        this.age = age;
+        this.gender = gender;
+        this.preference_gender = preference_gender;
+    }
+
     // ===========================
     // == Methods
     // ===========================
+    public byte getAge() {
+        return age;
+    }
+
+    public void setAge(byte age) {
+        this.age = age;
+    }
+
+    public GenderDTO getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderDTO gender) {
+        this.gender = gender;
+    }
+
+    public GenderDTO getPreference_gender() {
+        return preference_gender;
+    }
+
+    public void setPreference_gender(GenderDTO preference_gender) {
+        this.preference_gender = preference_gender;
+    }
 }
