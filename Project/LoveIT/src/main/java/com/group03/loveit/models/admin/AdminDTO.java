@@ -14,11 +14,12 @@ import java.io.Serializable;
  * @author duyvu
  */
 public class AdminDTO extends AccountDTO implements Serializable {
-    
+
     // ===========================
     // == Constructors
     // ===========================
-    public AdminDTO(long id, String email, String password, String fullName, String imageUrl, EAccountStatus status, EAccountRole role) {
-        super(id, email, password, fullName, imageUrl, status, role);
+    public AdminDTO(long id, String email, String password, String fullName, String imageUrl, EAccountRole role) {
+        super(id, email, password, fullName, imageUrl, role);
     }
+
 }

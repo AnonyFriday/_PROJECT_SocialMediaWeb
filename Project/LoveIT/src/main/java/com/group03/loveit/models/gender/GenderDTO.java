@@ -21,6 +21,19 @@ public class GenderDTO implements Serializable {
     // ===========================
     // == Constructor
     // ===========================
+    public GenderDTO(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    
+    /**
+     * For comparing based on id
+     * @param id 
+     */
+    public GenderDTO(long id) {
+        this.id = id;
+    }
+
     // ===========================
     // == Methods
     // ===========================

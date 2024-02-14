@@ -29,7 +29,7 @@ public abstract class AccountDTO implements Serializable {
     // == Constructor
     // ===========================
     /**
-     * Constructor for comparing AccountDTO
+     * Constructor for comparing Account
      *
      * @param id
      */
@@ -38,7 +38,7 @@ public abstract class AccountDTO implements Serializable {
     }
 
     /**
-     * General Constructor
+     * Constructor for retrieving User without password
      *
      * @param id
      * @param email
@@ -48,13 +48,32 @@ public abstract class AccountDTO implements Serializable {
      * @param status
      * @param role
      */
-    public AccountDTO(long id, String email, String password, String fullName, String imageUrl, EAccountStatus status, EAccountRole role) {
+    public AccountDTO(long id, String email, String fullName, String imageUrl, EAccountStatus status, EAccountRole role) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.imageUrl = imageUrl;
         this.status = status;
+        this.role = role;
+    }
+
+    /**
+     * Constructor for login
+     *
+     * @param id
+     * @param email
+     * @param password
+     * @param fullName
+     * @param imageUrl
+     * @param role
+     */
+    public AccountDTO(long id, String email, String password, String fullName, String imageUrl, EAccountRole role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.imageUrl = imageUrl;
         this.role = role;
     }
 

@@ -20,18 +20,22 @@ public class UserDTO extends AccountDTO implements Serializable {
     // == Fields
     // ===========================
     private byte age;
-    private GenderDTO gender;
-    private GenderDTO preference_gender;
+    private long genderId;
+    private long preferenceGenderId;
+    private String nickName;
 //    private Feed feed;
 
     // ===========================
     // == Constructors
     // ===========================
-    public UserDTO(long id, String email, String password, String fullName, String imageUrl, EAccountStatus status, EAccountRole role, byte age, GenderDTO gender, GenderDTO preference_gender) {
-        super(id, email, password, fullName, imageUrl, status, role);
+    public UserDTO(long id, String email, String fullName,
+            String imageUrl, EAccountStatus status, EAccountRole role,
+            byte age, long genderId, long preferenceGenderId, String nickName) {
+        super(id, email, fullName, imageUrl, status, role);
         this.age = age;
-        this.gender = gender;
-        this.preference_gender = preference_gender;
+        this.genderId = genderId;
+        this.preferenceGenderId = preferenceGenderId;
+        this.nickName = nickName;
     }
 
     // ===========================
@@ -45,19 +49,11 @@ public class UserDTO extends AccountDTO implements Serializable {
         this.age = age;
     }
 
-    public GenderDTO getGender() {
-        return gender;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setGender(GenderDTO gender) {
-        this.gender = gender;
-    }
-
-    public GenderDTO getPreference_gender() {
-        return preference_gender;
-    }
-
-    public void setPreference_gender(GenderDTO preference_gender) {
-        this.preference_gender = preference_gender;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }

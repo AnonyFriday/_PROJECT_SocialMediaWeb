@@ -5,17 +5,18 @@
 package com.group03.loveit.models;
 
 /**
- * A general interface for CRUD
+ * INACTIVE for testing due to mutual conflict
+ * A general interface for CRUD 
  *
  * @author duyvu
  */
-public interface IDAO<T> {
-
-    public abstract boolean insert(T instance);
-
-    public abstract T get();
-
-    public abstract boolean update(T t);
-
-    public abstract boolean delete(T t);
-}
+//public interface IDAO<T> {
+//
+//    public abstract boolean insert(T instance);
+//
+//    public abstract T get();
+//
+//    public abstract boolean update(T t);
+//
+//    public abstract boolean delete(T t);
+//}

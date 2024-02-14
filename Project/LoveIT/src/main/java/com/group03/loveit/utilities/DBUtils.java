@@ -10,10 +10,34 @@ import java.util.logging.Logger;
  *
  * @author DUNGHUYNH
  */
-public class DBUtils {
+public abstract class DBUtils {
 
-    public static Connection getConnection() {
+    private final static String serverName = "localhost";
+    private final static String dbName = "prj301";
+    private final static String portNumber = "1433";
+    private final static String instance = "";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
+    private final static String userID = "duyvukim";
+    private final static String password = "334/26/30a";
 
+    /**
+     * Close the connection
+     *
+     * @param conn connection need closing
+     */
+    public final static void closeConnection(Connection conn) {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Get the connection on connection string
+     *
+     * @return a connection instance
+     */
+    public final static Connection getConnection() {
         String url;
         if (instance == null || instance.trim().isEmpty()) {
             url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
@@ -35,12 +59,4 @@ public class DBUtils {
         }
         return null;
     }
-
-    //TODO: Currently waiting for script
-    private final static String serverName = "localhost";
-    private final static String dbName = "prj301";
-    private final static String portNumber = "1433";
-    private final static String instance = "";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
-    private final static String userID = "duyvukim";
-    private final static String password = "334/26/30a";
 }
