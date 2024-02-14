@@ -9,5 +9,5 @@ package com.group03.loveit.models.gender;
  * @author duyvu
  */
 public class GenderDAO {
-    
+     
 }

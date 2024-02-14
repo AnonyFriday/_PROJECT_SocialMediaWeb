@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author duyvu
  */
 public class UserDTO extends AccountDTO implements Serializable {
-    
+
     // ===========================
     // == Fields
     // ===========================
@@ -23,15 +23,11 @@ public class UserDTO extends AccountDTO implements Serializable {
     private GenderDTO gender;
     private GenderDTO preference_gender;
 //    private Feed feed;
-    
-    
+
     // ===========================
     // == Constructors
     // ===========================
-    
     // ===========================
     // == Methods
     // ===========================
-    
-    
 }
