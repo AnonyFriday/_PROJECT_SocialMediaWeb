@@ -65,6 +65,32 @@ public class PostDAO implements IPostDAO {
     }
 
     /**
+     * Inserts a new post into the database.
+     *
+     * @param post The PostDTO object containing the post data to be inserted.
+     */
+    @Override
+    public void insertPost(PostDTO post) {
+        try (Connection conn = DBUtils.getConnection()) {
+            if (conn == null) {
+                throw new SQLException();
+            }
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Post (" + COL_USER_ID + ", " + COL_CONTENT + ", " + COL_CREATED_AT + ", " + COL_HEARTS_TOTAL + ", " + COL_COMMENT_TOTAL + ", " + COL_STATUS + ", " + COL_IMAGE_URL + ") VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                ps.setLong(1, post.getUserId());
+                ps.setString(2, post.getContent());
+                ps.setString(3, post.getCreatedAt());
+                ps.setInt(4, post.getHeartTotal());
+                ps.setInt(5, post.getCommentTotal());
+                ps.setString(6, post.getStatus());
+                ps.setString(7, post.getImageUrl());
+                ps.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Cannot insert post: " + ex.getMessage());
+        }
+    }
+
+    /**
      * Updates a post in the database.
      *
      * @param post The PostDTO object containing the updated post data.
