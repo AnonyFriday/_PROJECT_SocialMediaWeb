@@ -74,7 +74,9 @@ then homepage will show users/posts with selected preference (unregistered user 
 ![Alt text](GUI/Wireframe_LoveIT-13.png)
 
 # Database
-https://lucid.app/lucidchart/344aa0da-d180-4587-92dd-d4e279696b2e/edit?invitationId=inv_734072b5-348e-4cb1-bc4e-86edd0d151d4
+Entity Relationship Diagram: https://lucid.app/lucidchart/344aa0da-d180-4587-92dd-d4e279696b2e/edit?viewport_loc=-2184%2C-1050%2C2920%2C1509%2C0_0&invitationId=inv_734072b5-348e-4cb1-bc4e-86edd0d151d4
+
+![Alt text](Database/ERD.png)
 
 # System Design
 Class diagram: https://drive.google.com/file/d/1iKp6VHsZJ6P5FCMZUTvB610y7a24B-YV/view?usp=sharing 
