@@ -10,12 +10,12 @@ public class CommentDTO {
     // == Fields
     // ===========================
     private long id;
+    private long postId;
     private long userId;
     private String content;
     private LocalDateTime createdAt;
-    private int heartTotal;
     private String status;
-    private String imageUrl;
+    private long replyId;
 
     // ===========================
     // == Getters and Setters
@@ -26,6 +26,14 @@ public class CommentDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(long postId) {
+        this.postId = postId;
     }
 
     public long getUserId() {
@@ -52,14 +60,6 @@ public class CommentDTO {
         this.createdAt = createdAt;
     }
 
-    public int getHeartTotal() {
-        return heartTotal;
-    }
-
-    public void setHeartTotal(int heartTotal) {
-        this.heartTotal = heartTotal;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -68,12 +68,12 @@ public class CommentDTO {
         this.status = status;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public long getReplyId() {
+        return replyId;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setReplyId(long replyId) {
+        this.replyId = replyId;
     }
 
     // ===========================
@@ -83,14 +83,14 @@ public class CommentDTO {
         this.id = id;
     }
 
-    public CommentDTO(long id, long userId, String content, LocalDateTime createdAt, int heartTotal, String status, String imageUrl) {
+    public CommentDTO(long id, long postId, long userId, String content, LocalDateTime createdAt, String status, long replyId) {
         this.id = id;
+        this.postId = postId;
         this.userId = userId;
         this.content = content;
         this.createdAt = createdAt;
-        this.heartTotal = heartTotal;
         this.status = status;
-        this.imageUrl = imageUrl;
+        this.replyId = replyId;
     }
 
     // ===========================
@@ -124,6 +124,6 @@ public class CommentDTO {
 
     @Override
     public String toString() {
-        return "CommentDTO{" + "id=" + id + ", userId=" + userId + ", content=" + content + ", createdAt=" + createdAt + ", heartTotal=" + heartTotal + ", status=" + status + ", imageUrl=" + imageUrl + '}';
+        return "CommentDTO{" + "id=" + id + ", postId=" + postId + ", userId=" + userId + ", content=" + content + ", createdAt=" + createdAt + ", status=" + status + ", replyId=" + replyId + '}';
     }
 }

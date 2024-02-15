@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 /**
  * This class provides the Data Access Object (DAO) for the Post entity.
- * It provides methods to interact with the database such as retrieving, updating, and deleting posts.
+ * It provides methods to interact with the database such as retrieving, inserting, updating, and deleting posts.
  *
  * @author Nhat
  */
