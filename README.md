@@ -59,19 +59,19 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Dashboard: see analytics charts of data, such as number of posts, accounts, messages, genders...
 
 # Wireframe
-![Alt text](GUI/Wireframe_LoveIT-1.png)
-![Alt text](GUI/Wireframe_LoveIT-2.png)
-![Alt text](GUI/Wireframe_LoveIT-3.png)
-![Alt text](GUI/Wireframe_LoveIT-4.png)
-![Alt text](GUI/Wireframe_LoveIT-5.png)
-![Alt text](GUI/Wireframe_LoveIT-6.png)
-![Alt text](GUI/Wireframe_LoveIT-7.png)
-![Alt text](GUI/Wireframe_LoveIT-8.png)
-![Alt text](GUI/Wireframe_LoveIT-9.png)
-![Alt text](GUI/Wireframe_LoveIT-10.png)
-![Alt text](GUI/Wireframe_LoveIT-11.png)
-![Alt text](GUI/Wireframe_LoveIT-12.png)
-![Alt text](GUI/Wireframe_LoveIT-13.png)
+![Alt text](Wireframe/Wireframe_LoveIT-1.png)
+![Alt text](Wireframe/Wireframe_LoveIT-2.png)
+![Alt text](Wireframe/Wireframe_LoveIT-3.png)
+![Alt text](Wireframe/Wireframe_LoveIT-4.png)
+![Alt text](Wireframe/Wireframe_LoveIT-5.png)
+![Alt text](Wireframe/Wireframe_LoveIT-6.png)
+![Alt text](Wireframe/Wireframe_LoveIT-7.png)
+![Alt text](Wireframe/Wireframe_LoveIT-8.png)
+![Alt text](Wireframe/Wireframe_LoveIT-9.png)
+![Alt text](Wireframe/Wireframe_LoveIT-10.png)
+![Alt text](Wireframe/Wireframe_LoveIT-11.png)
+![Alt text](Wireframe/Wireframe_LoveIT-12.png)
+![Alt text](Wireframe/Wireframe_LoveIT-13.png)
 
 # Database
 https://lucid.app/lucidchart/344aa0da-d180-4587-92dd-d4e279696b2e/edit?invitationId=inv_734072b5-348e-4cb1-bc4e-86edd0d151d4
