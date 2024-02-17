@@ -17,6 +17,9 @@ import java.util.concurrent.CompletableFuture;
  * @author Nhat
  */
 public class CommentDAO implements ICommentDAO {
+    // ===========================
+    // == Fields
+    // ===========================
     private static final String COL_ID = "Id";
     private static final String COL_POST_ID = "Post_Id";
     private static final String COL_USER_ID = "User_Id";
@@ -25,6 +28,10 @@ public class CommentDAO implements ICommentDAO {
     private static final String COL_STATUS = "Status";
     private static final String COL_REPLY_ID = "Reply_Id";
 
+    // ===========================
+    // == Override Methods
+    // ===========================
+    
     /**
      * Retrieves a comment by its ID.
      *

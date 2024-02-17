@@ -16,8 +16,15 @@ import java.util.concurrent.CompletableFuture;
  * @author Nhat
  */
 public class FavouriteDAO implements IFavouriteDAO {
+    // ===========================
+    // == Fields
+    // ===========================
     private static final String COL_POST_ID = "Post_Id";
     private static final String COL_USER_ID = "User_Id";
+
+    // ===========================
+    // == Override Methods
+    // ===========================
 
     /**
      * Retrieves a favourite by its post ID and user ID.
@@ -58,8 +65,29 @@ public class FavouriteDAO implements IFavouriteDAO {
      */
     @Override
     public CompletableFuture<List<FavouriteDTO>> getFavouritesByUser(long userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFavouritesByUser'");
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM Favorite WHERE " + COL_USER_ID + " = ?")) {
+                    ps.setLong(1, userId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        List<FavouriteDTO> favourites = new java.util.ArrayList<>();
+                        while (rs.next()) {
+                            favourites.add(new FavouriteDTO(
+                                    rs.getLong(COL_POST_ID),
+                                    rs.getLong(COL_USER_ID)
+                            ));
+                        }
+                        return favourites;
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot get favourites by user: " + ex.getMessage());
+            }
+            return null;
+        });
     }
 
     /**
