@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class provides the Data Access Object (DAO) for the Comment entity.
@@ -54,6 +57,80 @@ public class CommentDAO implements ICommentDAO {
             System.out.println("Cannot get comment by id: " + ex.getMessage());
         }
         return null;
+    }
+
+    /**
+     * Retrieves all comments associated with a post.
+     * 
+     * @param postId The ID of the post to retrieve comments for.
+     * @return A list of CommentDTO objects representing the comments.
+     */
+    @Override
+    public CompletableFuture<List<CommentDTO>> getCommentsByPost(long postId) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<CommentDTO> comments = new ArrayList<>();
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM Comment WHERE " + COL_POST_ID + " = ?")) {
+                    ps.setLong(1, postId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            comments.add(new CommentDTO(
+                                    rs.getLong(COL_ID),
+                                    rs.getLong(COL_POST_ID),
+                                    rs.getLong(COL_USER_ID),
+                                    rs.getString(COL_CONTENT),
+                                    rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
+                                    rs.getString(COL_STATUS),
+                                    rs.getLong(COL_REPLY_ID)
+                            ));
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot get comments by post id: " + ex.getMessage());
+            }
+            return comments;
+        });
+    }
+
+    /**
+     * Retrieves all child comments of a comment.
+     *
+     * @param id The ID of the comment to retrieve child comments for.
+     * @return A list of CommentDTO objects representing the child comments.
+     */
+    @Override
+    public CompletableFuture<List<CommentDTO>> getChildComments(long id) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<CommentDTO> childComments = new ArrayList<>();
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM Comment WHERE " + COL_REPLY_ID + " = ?")) {
+                    ps.setLong(1, id);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            childComments.add(new CommentDTO(
+                                    rs.getLong(COL_ID),
+                                    rs.getLong(COL_POST_ID),
+                                    rs.getLong(COL_USER_ID),
+                                    rs.getString(COL_CONTENT),
+                                    rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
+                                    rs.getString(COL_STATUS),
+                                    rs.getLong(COL_REPLY_ID)
+                            ));
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot get child comments: " + ex.getMessage());
+            }
+            return childComments;
+        });
     }
 
     /**
