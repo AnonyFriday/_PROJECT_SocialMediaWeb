@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class provides the Data Access Object (DAO) for the Favourite entity.
@@ -46,6 +48,18 @@ public class FavouriteDAO implements IFavouriteDAO {
             System.out.println("Cannot get favourite by id: " + ex.getMessage());
         }
         return null;
+    }
+
+    /**
+     * Retrieves all favourites by a user.
+     *
+     * @param userId The ID of the user to retrieve.
+     * @return A list of FavouriteDTO objects representing the favourites, or an empty list if no favourites were found.
+     */
+    @Override
+    public CompletableFuture<List<FavouriteDTO>> getFavouritesByUser(long userId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getFavouritesByUser'");
     }
 
     /**
