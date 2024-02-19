@@ -38,7 +38,7 @@ public class PostDAO implements IPostDAO {
      * Retrieves a post by its ID.
      *
      * @param id The ID of the post to retrieve.
-     * @return The PostDTO object representing the post, or null if no post with the given ID was found.
+     * @return The CompletableFuture that returns the PostDTO object, or null if the post is not found.
      */
     @Override
     public CompletableFuture<PostDTO> getPostById(long id) {
@@ -87,6 +87,7 @@ public class PostDAO implements IPostDAO {
      * Inserts a new post into the database.
      *
      * @param post The PostDTO object containing the post data to be inserted.
+     * @return The CompletableFuture that represents the completion of the insertion.
      */
     @Override
     public CompletableFuture<Void> insertPost(PostDTO post) {
@@ -116,6 +117,7 @@ public class PostDAO implements IPostDAO {
      * Updates a post in the database.
      *
      * @param post The PostDTO object containing the updated post data.
+     * @return The CompletableFuture that represents the completion of the update.
      */
     @Override
     public CompletableFuture<Void> updatePost(PostDTO post) {
@@ -146,6 +148,7 @@ public class PostDAO implements IPostDAO {
      * Deletes a post from the database.
      *
      * @param id The ID of the post to delete.
+     * @return The CompletableFuture that represents the completion of the deletion.
      */
     @Override
     public CompletableFuture<Void> deletePost(long id) {

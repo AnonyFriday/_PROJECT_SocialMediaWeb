@@ -40,7 +40,7 @@ public class CommentDAO implements ICommentDAO {
      * Retrieves a comment by its ID from the database.
      *
      * @param id The ID of the comment to retrieve.
-     * @return The CommentDTO object representing the comment, or null if no comment with the given ID was found.
+     * @return The CompletableFuture that returns the CommentDTO object, or null if the comment is not found.
      */
     @Override
     public CompletableFuture<CommentDTO> getCommentById(long id) {
@@ -103,7 +103,7 @@ public class CommentDAO implements ICommentDAO {
      * Retrieves all comments associated with a post.
      * 
      * @param postId The ID of the post to retrieve comments for.
-     * @return A list of CommentDTO objects representing the comments.
+     * @return The CompletableFuture that returns a list of CommentDTO objects representing the comments, or an empty list if no comments are found.
      */
     @Override
     public CompletableFuture<List<CommentDTO>> getCommentsByPost(long postId) {
@@ -167,7 +167,7 @@ public class CommentDAO implements ICommentDAO {
      * Retrieves all child comments of a comment.
      *
      * @param id The ID of the comment to retrieve child comments for.
-     * @return A list of CommentDTO objects representing the child comments.
+     * @return The CompletableFuture that returns a list of CommentDTO objects representing the child comments, or an empty list if no child comments are found.
      */
     @Override
     public CompletableFuture<List<CommentDTO>> getChildComments(long id) {
@@ -231,6 +231,7 @@ public class CommentDAO implements ICommentDAO {
      * Inserts a new comment into the database.
      *
      * @param comment The CommentDTO object containing the comment data to be inserted.
+     * @return The CompletableFuture that represents the completion of the insertion.
      */
     @Override
     public CompletableFuture<Void> insertComment(CommentDTO comment) {
@@ -258,6 +259,7 @@ public class CommentDAO implements ICommentDAO {
      * Updates a comment in the database.
      *
      * @param comment The CommentDTO object containing the updated comment data.
+     * @return The CompletableFuture that represents the completion of the update.
      */
     @Override
     public CompletableFuture<Void> updateComment(CommentDTO comment) {
@@ -286,6 +288,7 @@ public class CommentDAO implements ICommentDAO {
      * Deletes a comment from the database.
      *
      * @param id The ID of the comment to delete.
+     * @return The CompletableFuture that represents the completion of the deletion.
      */
     @Override
     public CompletableFuture<Void> deleteComment(long id) {

@@ -7,8 +7,9 @@ import java.util.concurrent.CompletableFuture;
  * @author Nhat
  */
 public interface IFavouriteDAO {
-    public FavouriteDTO getFavouriteById(long id, long userId);
-    public CompletableFuture<List<FavouriteDTO>> getFavouritesByUser(long userId);
-    public void insertFavourite(FavouriteDTO favourite);
-    public void deleteFavourite(long postId, long userId);
+    CompletableFuture<FavouriteDTO> getFavouriteById(long postId, long userId);
+    CompletableFuture<List<FavouriteDTO>> getFavouritesByUser(long userId);
+    CompletableFuture<List<FavouriteDTO>> getFavouritesByPost(long postId);
+    CompletableFuture<Void> insertFavourite(FavouriteDTO favourite);
+    CompletableFuture<Void> deleteFavourite(long postId, long userId);
 }
