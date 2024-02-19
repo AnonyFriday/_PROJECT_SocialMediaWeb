@@ -1,5 +1,9 @@
 package com.group03.loveit.models.comment;
 
+import com.group03.loveit.models.account.EAccountRole;
+import com.group03.loveit.models.account.EAccountStatus;
+import com.group03.loveit.models.post.PostDTO;
+import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
 
 import java.sql.Connection;
@@ -31,39 +35,68 @@ public class CommentDAO implements ICommentDAO {
     // ===========================
     // == Override Methods
     // ===========================
-    
+
     /**
-     * Retrieves a comment by its ID.
+     * Retrieves a comment by its ID from the database.
      *
      * @param id The ID of the comment to retrieve.
      * @return The CommentDTO object representing the comment, or null if no comment with the given ID was found.
      */
     @Override
-    public CommentDTO getCommentById(long id) {
-        try (Connection conn = DBUtils.getConnection()) {
-            if (conn == null) {
-                throw new SQLException();
-            }
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM Comment WHERE " + COL_ID + " = ?")) {
-                ps.setLong(1, id);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return new CommentDTO(
-                                rs.getLong(COL_ID),
-                                rs.getLong(COL_POST_ID),
-                                rs.getLong(COL_USER_ID),
-                                rs.getString(COL_CONTENT),
-                                rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
-                                rs.getString(COL_STATUS),
-                                rs.getLong(COL_REPLY_ID)
-                        );
+    public CompletableFuture<CommentDTO> getCommentById(long id) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                String query = "SELECT c.*, p.*, u.* FROM Comment c " +
+                               "JOIN Post p ON c.Post_Id = p.Id " +
+                               "JOIN User u ON c.User_Id = u.Id " +
+                               "WHERE c." + COL_ID + " = ?";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    ps.setLong(1, id);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            PostDTO post = new PostDTO(
+                                rs.getLong("p.Id"),
+                                rs.getLong("p.User_Id"),
+                                rs.getString("p.Content"),
+                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                rs.getInt("p.Hearts_Total"),
+                                rs.getInt("p.Comment_Total"),
+                                rs.getString("p.Status"),
+                                rs.getString("p.Image_Url")
+                            );
+                            UserDTO user = new UserDTO(
+                                rs.getLong("u.Id"),
+                                rs.getString("u.Email"),
+                                rs.getString("u.Fullname"),
+                                rs.getString("u.Image_Url"),
+                                EAccountStatus.valueOf(rs.getString("u.Status")),
+                                EAccountRole.valueOf(rs.getString("u.Role")),
+                                rs.getByte("u.Age"),
+                                rs.getLong("u.Gender_Id"),
+                                rs.getLong("u.Preference_Id"),
+                                rs.getString("u.Nickname")
+                            );
+                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
+                            return new CommentDTO(
+                                rs.getLong("c." + COL_ID),
+                                post,
+                                user,
+                                rs.getString("c." + COL_CONTENT),
+                                rs.getTimestamp("c." + COL_CREATED_AT).toLocalDateTime(),
+                                rs.getString("c." + COL_STATUS),
+                                reply
+                            );
+                        }
                     }
                 }
+            } catch (SQLException ex) {
+                System.out.println("Cannot get comment by id: " + ex.getMessage());
             }
-        } catch (SQLException ex) {
-            System.out.println("Cannot get comment by id: " + ex.getMessage());
-        }
-        return null;
+            return null;
+        });
     }
 
     /**
@@ -80,18 +113,45 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM Comment WHERE " + COL_POST_ID + " = ?")) {
+                String query = "SELECT c.*, p.*, u.* FROM Comment c " +
+                               "JOIN Post p ON c.Post_Id = p.Id " +
+                               "JOIN User u ON c.User_Id = u.Id " +
+                               "WHERE c." + COL_POST_ID + " = ?";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
+                            PostDTO post = new PostDTO(
+                                rs.getLong("p.Id"),
+                                rs.getLong("p.User_Id"),
+                                rs.getString("p.Content"),
+                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                rs.getInt("p.Hearts_Total"),
+                                rs.getInt("p.Comment_Total"),
+                                rs.getString("p.Status"),
+                                rs.getString("p.Image_Url")
+                            );
+                            UserDTO user = new UserDTO(
+                                rs.getLong("u.Id"),
+                                rs.getString("u.Email"),
+                                rs.getString("u.Fullname"),
+                                rs.getString("u.Image_Url"),
+                                EAccountStatus.valueOf(rs.getString("u.Status")),
+                                EAccountRole.valueOf(rs.getString("u.Role")),
+                                rs.getByte("u.Age"),
+                                rs.getLong("u.Gender_Id"),
+                                rs.getLong("u.Preference_Id"),
+                                rs.getString("u.Nickname")
+                            );
+                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
                             comments.add(new CommentDTO(
-                                    rs.getLong(COL_ID),
-                                    rs.getLong(COL_POST_ID),
-                                    rs.getLong(COL_USER_ID),
-                                    rs.getString(COL_CONTENT),
-                                    rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
-                                    rs.getString(COL_STATUS),
-                                    rs.getLong(COL_REPLY_ID)
+                                rs.getLong("c." + COL_ID),
+                                post,
+                                user,
+                                rs.getString("c." + COL_CONTENT),
+                                rs.getTimestamp("c." + COL_CREATED_AT).toLocalDateTime(),
+                                rs.getString("c." + COL_STATUS),
+                                reply
                             ));
                         }
                     }
@@ -117,18 +177,45 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM Comment WHERE " + COL_REPLY_ID + " = ?")) {
+                String query = "SELECT c.*, p.*, u.* FROM Comment c " +
+                               "JOIN Post p ON c.Post_Id = p.Id " +
+                               "JOIN User u ON c.User_Id = u.Id " +
+                               "WHERE c." + COL_REPLY_ID + " = ?";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, id);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
+                            PostDTO post = new PostDTO(
+                                rs.getLong("p.Id"),
+                                rs.getLong("p.User_Id"),
+                                rs.getString("p.Content"),
+                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                rs.getInt("p.Hearts_Total"),
+                                rs.getInt("p.Comment_Total"),
+                                rs.getString("p.Status"),
+                                rs.getString("p.Image_Url")
+                            );
+                            UserDTO user = new UserDTO(
+                                rs.getLong("u.Id"),
+                                rs.getString("u.Email"),
+                                rs.getString("u.Fullname"),
+                                rs.getString("u.Image_Url"),
+                                EAccountStatus.valueOf(rs.getString("u.Status")),
+                                EAccountRole.valueOf(rs.getString("u.Role")),
+                                rs.getByte("u.Age"),
+                                rs.getLong("u.Gender_Id"),
+                                rs.getLong("u.Preference_Id"),
+                                rs.getString("u.Nickname")
+                            );
+                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
                             childComments.add(new CommentDTO(
-                                    rs.getLong(COL_ID),
-                                    rs.getLong(COL_POST_ID),
-                                    rs.getLong(COL_USER_ID),
-                                    rs.getString(COL_CONTENT),
-                                    rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
-                                    rs.getString(COL_STATUS),
-                                    rs.getLong(COL_REPLY_ID)
+                                rs.getLong("c." + COL_ID),
+                                post,
+                                user,
+                                rs.getString("c." + COL_CONTENT),
+                                rs.getTimestamp("c." + COL_CREATED_AT).toLocalDateTime(),
+                                rs.getString("c." + COL_STATUS),
+                                reply
                             ));
                         }
                     }
@@ -146,23 +233,25 @@ public class CommentDAO implements ICommentDAO {
      * @param comment The CommentDTO object containing the comment data to be inserted.
      */
     @Override
-    public void insertComment(CommentDTO comment) {
-        try (Connection conn = DBUtils.getConnection()) {
-            if (conn == null) {
-                throw new SQLException();
+    public CompletableFuture<Void> insertComment(CommentDTO comment) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Comment (" + COL_POST_ID + ", " + COL_USER_ID + ", " + COL_CONTENT + ", " + COL_CREATED_AT + ", " + COL_STATUS + ", " + COL_REPLY_ID + ") VALUES (?, ?, ?, ?, ?, ?)")) {
+                    ps.setLong(1, comment.getPost().getId());
+                    ps.setLong(2, comment.getUser().getId());
+                    ps.setString(3, comment.getContent());
+                    ps.setTimestamp(4, java.sql.Timestamp.valueOf(comment.getCreatedAt()));
+                    ps.setString(5, comment.getStatus());
+                    ps.setLong(6, comment.getReply().getId());
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot insert comment: " + ex.getMessage());
             }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Comment (" + COL_POST_ID + ", " + COL_USER_ID + ", " + COL_CONTENT + ", " + COL_CREATED_AT + ", " + COL_STATUS + ", " + COL_REPLY_ID + ") VALUES (?, ?, ?, ?, ?, ?)")) {
-                ps.setLong(1, comment.getPostId());
-                ps.setLong(2, comment.getUserId());
-                ps.setString(3, comment.getContent());
-                ps.setTimestamp(4, java.sql.Timestamp.valueOf(comment.getCreatedAt()));
-                ps.setString(5, comment.getStatus());
-                ps.setLong(6, comment.getReplyId());
-                ps.executeUpdate();
-            }
-        } catch (SQLException ex) {
-            System.out.println("Cannot insert comment: " + ex.getMessage());
-        }
+        });
     }
 
     /**
@@ -171,24 +260,26 @@ public class CommentDAO implements ICommentDAO {
      * @param comment The CommentDTO object containing the updated comment data.
      */
     @Override
-    public void updateComment(CommentDTO comment) {
-        try (Connection conn = DBUtils.getConnection()) {
-            if (conn == null) {
-                throw new SQLException();
+    public CompletableFuture<Void> updateComment(CommentDTO comment) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("UPDATE Comment SET " + COL_POST_ID + " = ?, " + COL_USER_ID + " = ?, " + COL_CONTENT + " = ?, " + COL_CREATED_AT + " = ?, " + COL_STATUS + " = ?, " + COL_REPLY_ID + " = ? WHERE " + COL_ID + " = ?")) {
+                    ps.setLong(1, comment.getPost().getId());
+                    ps.setLong(2, comment.getUser().getId());
+                    ps.setString(3, comment.getContent());
+                    ps.setTimestamp(4, java.sql.Timestamp.valueOf(comment.getCreatedAt()));
+                    ps.setString(5, comment.getStatus());
+                    ps.setLong(6, comment.getReply().getId());
+                    ps.setLong(7, comment.getId());
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot update comment: " + ex.getMessage());
             }
-            try (PreparedStatement ps = conn.prepareStatement("UPDATE Comment SET " + COL_POST_ID + " = ?, " + COL_USER_ID + " = ?, " + COL_CONTENT + " = ?, " + COL_CREATED_AT + " = ?, " + COL_STATUS + " = ?, " + COL_REPLY_ID + " = ? WHERE " + COL_ID + " = ?")) {
-                ps.setLong(1, comment.getPostId());
-                ps.setLong(2, comment.getUserId());
-                ps.setString(3, comment.getContent());
-                ps.setTimestamp(4, java.sql.Timestamp.valueOf(comment.getCreatedAt()));
-                ps.setString(5, comment.getStatus());
-                ps.setLong(6, comment.getReplyId());
-                ps.setLong(7, comment.getId());
-                ps.executeUpdate();
-            }
-        } catch (SQLException ex) {
-            System.out.println("Cannot update comment: " + ex.getMessage());
-        }
+        });
     }
 
     /**
@@ -197,17 +288,19 @@ public class CommentDAO implements ICommentDAO {
      * @param id The ID of the comment to delete.
      */
     @Override
-    public void deleteComment(long id) {
-        try (Connection conn = DBUtils.getConnection()) {
-            if (conn == null) {
-                throw new SQLException();
+    public CompletableFuture<Void> deleteComment(long id) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Comment WHERE " + COL_ID + " = ?")) {
+                    ps.setLong(1, id);
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete comment: " + ex.getMessage());
             }
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Comment WHERE " + COL_ID + " = ?")) {
-                ps.setLong(1, id);
-                ps.executeUpdate();
-            }
-        } catch (SQLException ex) {
-            System.out.println("Cannot delete comment: " + ex.getMessage());
-        }
+        });
     }
 }

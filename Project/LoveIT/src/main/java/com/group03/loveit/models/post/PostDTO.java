@@ -1,24 +1,21 @@
 package com.group03.loveit.models.post;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Nhat
  */
 public class PostDTO {
-    // ===========================
-    // == Fields
-    // ===========================
     private long id;
     private long userId;
     private String content;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private int heartTotal;
     private int commentTotal;
     private String status;
     private String imageUrl;
 
-    // ===========================
-    // == Getters and Setters
-    // ===========================
+    // Getters and Setters
     public long getId() {
         return id;
     }
@@ -43,11 +40,11 @@ public class PostDTO {
         this.content = content;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -83,14 +80,12 @@ public class PostDTO {
         this.imageUrl = imageUrl;
     }
 
-    // ===========================
-    // == Constructors
-    // ===========================
+    // Constructors
     public PostDTO(long id) {
         this.id = id;
     }
 
-    public PostDTO(long id, long userId, String content, String createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
+    public PostDTO(long id, long userId, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
         this.id = id;
         this.userId = userId;
         this.content = content;
@@ -101,9 +96,7 @@ public class PostDTO {
         this.imageUrl = imageUrl;
     }
 
-    // ===========================
-    // == Override Methods
-    // ===========================
+    // Override Methods
     @Override
     public int hashCode() {
         final int prime = 31;

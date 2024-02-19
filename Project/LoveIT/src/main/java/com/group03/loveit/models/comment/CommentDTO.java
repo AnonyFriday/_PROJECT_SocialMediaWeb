@@ -1,25 +1,22 @@
 package com.group03.loveit.models.comment;
 
 import java.time.LocalDateTime;
+import com.group03.loveit.models.post.PostDTO;
+import com.group03.loveit.models.user.UserDTO;
 
 /**
  * @author Nhat
  */
 public class CommentDTO {
-    // ===========================
-    // == Fields
-    // ===========================
     private long id;
-    private long postId;
-    private long userId;
+    private PostDTO post;
+    private UserDTO user;
     private String content;
     private LocalDateTime createdAt;
     private String status;
-    private long replyId;
+    private CommentDTO reply;
 
-    // ===========================
-    // == Getters and Setters
-    // ===========================
+    // Getters and Setters
     public long getId() {
         return id;
     }
@@ -28,20 +25,20 @@ public class CommentDTO {
         this.id = id;
     }
 
-    public long getPostId() {
-        return postId;
+    public PostDTO getPost() {
+        return post;
     }
 
-    public void setPostId(long postId) {
-        this.postId = postId;
+    public void setPost(PostDTO post) {
+        this.post = post;
     }
 
-    public long getUserId() {
-        return userId;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 
     public String getContent() {
@@ -68,34 +65,30 @@ public class CommentDTO {
         this.status = status;
     }
 
-    public long getReplyId() {
-        return replyId;
+    public CommentDTO getReply() {
+        return reply;
     }
 
-    public void setReplyId(long replyId) {
-        this.replyId = replyId;
+    public void setReply(CommentDTO reply) {
+        this.reply = reply;
     }
 
-    // ===========================
-    // == Constructors
-    // ===========================
+    // Constructors
     public CommentDTO(long id) {
         this.id = id;
     }
 
-    public CommentDTO(long id, long postId, long userId, String content, LocalDateTime createdAt, String status, long replyId) {
+    public CommentDTO(long id, PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO reply) {
         this.id = id;
-        this.postId = postId;
-        this.userId = userId;
+        this.post = post;
+        this.user = user;
         this.content = content;
         this.createdAt = createdAt;
         this.status = status;
-        this.replyId = replyId;
+        this.reply = reply;
     }
 
-    // ===========================
-    // == Override Methods
-    // ===========================
+    // Override Methods
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -124,6 +117,6 @@ public class CommentDTO {
 
     @Override
     public String toString() {
-        return "CommentDTO{" + "id=" + id + ", postId=" + postId + ", userId=" + userId + ", content=" + content + ", createdAt=" + createdAt + ", status=" + status + ", replyId=" + replyId + '}';
+        return "CommentDTO{" + "id=" + id + ", post=" + post + ", user=" + user + ", content=" + content + ", createdAt=" + createdAt + ", status=" + status + ", reply=" + reply + '}';
     }
 }
