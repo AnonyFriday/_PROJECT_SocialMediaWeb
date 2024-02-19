@@ -1,11 +1,13 @@
 package com.group03.loveit.models.post;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author Nhat
  */
 public interface IPostDAO {
-    public PostDTO getPostById(long id);
-    public void insertPost(PostDTO post);
-    public void updatePost(PostDTO post);
-    public void deletePost(long id);
+    CompletableFuture<PostDTO> getPostById(long id);
+    CompletableFuture<Void> insertPost(PostDTO post);
+    CompletableFuture<Void> updatePost(PostDTO post);
+    CompletableFuture<Void> deletePost(long id);
 }

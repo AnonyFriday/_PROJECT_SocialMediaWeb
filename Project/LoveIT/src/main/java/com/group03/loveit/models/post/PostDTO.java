@@ -1,13 +1,16 @@
 package com.group03.loveit.models.post;
 
+import com.group03.loveit.models.account.AccountDTO;
+
 import java.time.LocalDateTime;
 
 /**
  * @author Nhat
  */
 public class PostDTO {
+    // Fields
     private long id;
-    private long userId;
+    private AccountDTO user;
     private String content;
     private LocalDateTime createdAt;
     private int heartTotal;
@@ -24,12 +27,12 @@ public class PostDTO {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
+    public AccountDTO getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(AccountDTO user) {
+        this.user = user;
     }
 
     public String getContent() {
@@ -85,9 +88,9 @@ public class PostDTO {
         this.id = id;
     }
 
-    public PostDTO(long id, long userId, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
+    public PostDTO(long id, AccountDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.content = content;
         this.createdAt = createdAt;
         this.heartTotal = heartTotal;
@@ -125,6 +128,6 @@ public class PostDTO {
 
     @Override
     public String toString() {
-        return "PostDTO{" + "id=" + id + ", userId=" + userId + ", content=" + content + ", createdAt=" + createdAt + ", heartTotal=" + heartTotal + ", commentTotal=" + commentTotal + ", status=" + status + ", imageUrl=" + imageUrl + '}';
+        return "PostDTO{" + "id=" + id + ", user=" + user + ", content=" + content + ", createdAt=" + createdAt + ", heartTotal=" + heartTotal + ", commentTotal=" + commentTotal + ", status=" + status + ", imageUrl=" + imageUrl + '}';
     }
 }

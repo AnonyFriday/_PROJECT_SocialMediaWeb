@@ -8,6 +8,7 @@ import com.group03.loveit.models.user.UserDTO;
  * @author Nhat
  */
 public class CommentDTO {
+    // Fields
     private long id;
     private PostDTO post;
     private UserDTO user;

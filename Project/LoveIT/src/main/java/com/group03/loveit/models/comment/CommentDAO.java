@@ -57,16 +57,6 @@ public class CommentDAO implements ICommentDAO {
                     ps.setLong(1, id);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            PostDTO post = new PostDTO(
-                                rs.getLong("p.Id"),
-                                rs.getLong("p.User_Id"),
-                                rs.getString("p.Content"),
-                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
-                                rs.getInt("p.Hearts_Total"),
-                                rs.getInt("p.Comment_Total"),
-                                rs.getString("p.Status"),
-                                rs.getString("p.Image_Url")
-                            );
                             UserDTO user = new UserDTO(
                                 rs.getLong("u.Id"),
                                 rs.getString("u.Email"),
@@ -78,6 +68,16 @@ public class CommentDAO implements ICommentDAO {
                                 rs.getLong("u.Gender_Id"),
                                 rs.getLong("u.Preference_Id"),
                                 rs.getString("u.Nickname")
+                            );
+                            PostDTO post = new PostDTO(
+                                    rs.getLong("p.Id"),
+                                    user,
+                                    rs.getString("p.Content"),
+                                    rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                    rs.getInt("p.Hearts_Total"),
+                                    rs.getInt("p.Comment_Total"),
+                                    rs.getString("p.Status"),
+                                    rs.getString("p.Image_Url")
                             );
                             CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
                             return new CommentDTO(
@@ -121,16 +121,6 @@ public class CommentDAO implements ICommentDAO {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            PostDTO post = new PostDTO(
-                                rs.getLong("p.Id"),
-                                rs.getLong("p.User_Id"),
-                                rs.getString("p.Content"),
-                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
-                                rs.getInt("p.Hearts_Total"),
-                                rs.getInt("p.Comment_Total"),
-                                rs.getString("p.Status"),
-                                rs.getString("p.Image_Url")
-                            );
                             UserDTO user = new UserDTO(
                                 rs.getLong("u.Id"),
                                 rs.getString("u.Email"),
@@ -142,6 +132,16 @@ public class CommentDAO implements ICommentDAO {
                                 rs.getLong("u.Gender_Id"),
                                 rs.getLong("u.Preference_Id"),
                                 rs.getString("u.Nickname")
+                            );
+                            PostDTO post = new PostDTO(
+                                    rs.getLong("p.Id"),
+                                    user,
+                                    rs.getString("p.Content"),
+                                    rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                    rs.getInt("p.Hearts_Total"),
+                                    rs.getInt("p.Comment_Total"),
+                                    rs.getString("p.Status"),
+                                    rs.getString("p.Image_Url")
                             );
                             CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
                             comments.add(new CommentDTO(
@@ -185,16 +185,6 @@ public class CommentDAO implements ICommentDAO {
                     ps.setLong(1, id);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            PostDTO post = new PostDTO(
-                                rs.getLong("p.Id"),
-                                rs.getLong("p.User_Id"),
-                                rs.getString("p.Content"),
-                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
-                                rs.getInt("p.Hearts_Total"),
-                                rs.getInt("p.Comment_Total"),
-                                rs.getString("p.Status"),
-                                rs.getString("p.Image_Url")
-                            );
                             UserDTO user = new UserDTO(
                                 rs.getLong("u.Id"),
                                 rs.getString("u.Email"),
@@ -206,6 +196,16 @@ public class CommentDAO implements ICommentDAO {
                                 rs.getLong("u.Gender_Id"),
                                 rs.getLong("u.Preference_Id"),
                                 rs.getString("u.Nickname")
+                            );
+                            PostDTO post = new PostDTO(
+                                rs.getLong("p.Id"),
+                                user,
+                                rs.getString("p.Content"),
+                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                rs.getInt("p.Hearts_Total"),
+                                rs.getInt("p.Comment_Total"),
+                                rs.getString("p.Status"),
+                                rs.getString("p.Image_Url")
                             );
                             CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
                             childComments.add(new CommentDTO(
