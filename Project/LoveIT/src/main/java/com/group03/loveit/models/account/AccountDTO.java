@@ -7,6 +7,7 @@ package com.group03.loveit.models.account;
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  *
@@ -24,6 +25,7 @@ public abstract class AccountDTO implements Serializable {
     private String imageUrl;
     private EAccountStatus status;
     private EAccountRole role;
+    private Date createdAt;
 
     // ===========================
     // == Constructor
@@ -51,7 +53,6 @@ public abstract class AccountDTO implements Serializable {
     public AccountDTO(long id, String email, String fullName, String imageUrl, EAccountStatus status, EAccountRole role) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.fullName = fullName;
         this.imageUrl = imageUrl;
         this.status = status;
@@ -61,20 +62,12 @@ public abstract class AccountDTO implements Serializable {
     /**
      * Constructor for login
      *
-     * @param id
      * @param email
      * @param password
-     * @param fullName
-     * @param imageUrl
-     * @param role
      */
-    public AccountDTO(long id, String email, String password, String fullName, String imageUrl, EAccountRole role) {
-        this.id = id;
+    public AccountDTO(String email, String password) {
         this.email = email;
         this.password = password;
-        this.fullName = fullName;
-        this.imageUrl = imageUrl;
-        this.role = role;
     }
 
     // ===========================
@@ -161,5 +154,9 @@ public abstract class AccountDTO implements Serializable {
 
     public void setRole(EAccountRole role) {
         this.role = role;
+    }
+
+    public AccountDTO(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

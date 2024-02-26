@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 public abstract class DBUtils {
 
     private final static String serverName = "localhost";
-    private final static String dbName = "prj301";
+    private final static String dbName = "LoveIt";
     private final static String portNumber = "1433";
-    private final static String instance = "";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
+    private final static String instance = "MSSQLSERVER_2019";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
     private final static String userID = "duyvukim";
     private final static String password = "334/26/30a";
 
@@ -34,10 +34,10 @@ public abstract class DBUtils {
 
     /**
      * Get the connection on connection string
-     *
+     * Multiple will access to the 
      * @return a connection instance
      */
-    public final static Connection getConnection() {
+    public synchronized final static Connection getConnection() {
         String url;
         if (instance == null || instance.trim().isEmpty()) {
             url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
@@ -58,5 +58,10 @@ public abstract class DBUtils {
             System.out.println("PRJ301DEMO: Can not connect SQL Server. Reason: " + ex.getMessage());
         }
         return null;
+    }
+
+    // Testing Connection
+    public static void main(String[] args) {
+        Connection conn = getConnection();
     }
 }

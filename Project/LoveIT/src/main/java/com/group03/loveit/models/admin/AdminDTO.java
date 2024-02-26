@@ -19,7 +19,6 @@ public class AdminDTO extends AccountDTO implements Serializable {
     // == Constructors
     // ===========================
     public AdminDTO(long id, String email, String password, String fullName, String imageUrl, EAccountRole role) {
-        super(id, email, password, fullName, imageUrl, role);
-    }
-
+        super(id, email, fullName, imageUrl, EAccountStatus.ACTIVE, role);
+    }   
 }

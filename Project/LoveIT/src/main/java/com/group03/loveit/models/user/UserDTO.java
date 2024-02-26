@@ -23,7 +23,6 @@ public class UserDTO extends AccountDTO implements Serializable {
     private long genderId;
     private long preferenceGenderId;
     private String nickName;
-//    private Feed feed;
 
     // ===========================
     // == Constructors
