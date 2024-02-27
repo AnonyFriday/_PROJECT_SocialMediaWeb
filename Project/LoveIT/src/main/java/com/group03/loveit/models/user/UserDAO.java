@@ -57,50 +57,40 @@ public final class UserDAO implements IUserDAO {
      */
     @Override
     public CompletableFuture<List<UserDTO>> getUsers() {
-        CompletableFuture<List<UserDTO>> future = CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
 
-            Connection connection = null;
-            PreparedStatement stmt = null;
-            ResultSet resultSet = null;
+                // SQL query
+                String sql = "SELECT * FROM " + TABLE_NAME;
+                List<UserDTO> list = new ArrayList<>();
 
-            String sql = "SELECT * FROM " + TABLE_NAME;
-            List<UserDTO> users = new ArrayList<>();
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            UserDTO user = new UserDTO(
+                                    rs.getLong(COL_ID),
+                                    rs.getByte(COL_AGE),
+                                    rs.getLong(COL_GENDER),
+                                    rs.getLong(COL_GENDER_PREFERENCE),
+                                    rs.getNString(COL_NICKNAME),
+                                    rs.getNString(COL_FULLNAME),
+                                    rs.getString(COL_EMAIL),
+                                    rs.getString(COL_IMAGEURL),
+                                    EAccountStatus.valueOf(rs.getString(COL_STATUS)),
+                                    EAccountRole.valueOf(rs.getString(COL_ROLE)));
+                            list.add(user);
+                        }
 
-            try {
-                connection = DBUtils.getConnection();
-                stmt = connection.prepareStatement(sql);
-                resultSet = stmt.executeQuery();
-
-                if (resultSet != null && !resultSet.isClosed()) {
-                    while (resultSet.next()) {
-                        long id = resultSet.getLong(COL_ID);
-                        String email = resultSet.getNString(COL_EMAIL);
-                        String fullName = resultSet.getNString(COL_FULLNAME);
-                        String nickName = resultSet.getNString(COL_NICKNAME);
-                        String imageUrl = resultSet.getNString(COL_IMAGEURL);
-                        EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
-                        EAccountRole role = EAccountRole.valueOf(resultSet.getNString(COL_ROLE));
-                        byte age = resultSet.getByte(COL_AGE);
-                        long gender = resultSet.getLong(COL_GENDER);
-                        long preferenceGender = resultSet.getInt(COL_GENDER_PREFERENCE);
-
-                        // Add user to the array
-                        UserDTO user = new UserDTO(id, email, fullName, imageUrl, status, role, age, gender, preferenceGender, nickName);
-                        users.add(user);
+                        return list;
                     }
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                // Close resourse
-                AsyncUtils.closeQuitely(stmt);
-                AsyncUtils.closeQuitely(resultSet);
-                AsyncUtils.closeQuitely(connection);
+                System.out.println("Cannot get list of users");
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
             }
-
-            return users;
+            return null;
         });
-        return future;
     }
 
     /**
@@ -110,7 +100,8 @@ public final class UserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public CompletableFuture<List<UserDTO>> getUsersByConditions(UserSearchCriteria usc) {
+
+    public CompletableFuture<List<UserDTO>> getUsersByConditions(UserSearchCriteria conditions) {
 
         // Using Future for async data retrieve
         CompletableFuture<List<UserDTO>> future = CompletableFuture.supplyAsync(() -> {
@@ -119,82 +110,113 @@ public final class UserDAO implements IUserDAO {
             String sql = "SELECT * FROM " + TABLE_NAME;
             sql += " WHERE 1=1 ";
 
-            if (usc.getFullname() != null) {
+            if (conditions.getFullname() != null) {
                 sql += " AND " + COL_FULLNAME + " LIKE ? ";
             }
 
-            if (usc.getNickName() != null) {
+            if (conditions.getNickName() != null) {
                 sql += " OR " + COL_NICKNAME + " LIKE ? ";
             }
 
             List<UserDTO> users = new ArrayList<>();
-            Connection connection = null;
-            PreparedStatement stmt = null;
-            ResultSet resultSet = null;
 
-            // Conducting the comments
-            try {
-                connection = DBUtils.getConnection();
-                stmt = connection.prepareStatement(sql);
+            // 1. Connection
+            try (Connection conn = DBUtils.getConnection()) {
 
-                stmt.setString(1, sql);
+                List<UserDTO> list = new ArrayList<>();
 
-                if (usc.getFullname() != null) {
-                    stmt.setString(1, usc.getFullname());
-                }
+                // 2. Prepare Statement
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    if (conditions.getFullname() != null) {
+                        ps.setNString(1, conditions.getFullname());
+                    }
 
-                if (usc.getNickName() != null) {
-                    stmt.setString(2, usc.getNickName());
-                }
+                    if (conditions.getNickName() != null) {
+                        ps.setNString(2, conditions.getNickName());
+                    }
 
-                ResultSet rs = stmt.executeQuery();
+                    // 3. Execute Query
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            UserDTO user = new UserDTO(
+                                    rs.getLong(COL_ID),
+                                    rs.getByte(COL_AGE),
+                                    rs.getLong(COL_GENDER),
+                                    rs.getLong(COL_GENDER_PREFERENCE),
+                                    rs.getNString(COL_NICKNAME),
+                                    rs.getNString(COL_FULLNAME),
+                                    rs.getString(COL_EMAIL),
+                                    rs.getString(COL_IMAGEURL),
+                                    EAccountStatus.valueOf(rs.getString(COL_STATUS)),
+                                    EAccountRole.valueOf(rs.getString(COL_ROLE)));
+                            list.add(user);
+                        }
 
-                if (resultSet != null && !resultSet.isClosed()) {
-                    while (resultSet.next()) {
-                        long id = resultSet.getLong(COL_ID);
-                        String email = resultSet.getNString(COL_EMAIL);
-                        String fullName = resultSet.getNString(COL_FULLNAME);
-                        String nickName = resultSet.getNString(COL_NICKNAME);
-                        String imageUrl = resultSet.getNString(COL_IMAGEURL);
-                        EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
-                        EAccountRole role = EAccountRole.valueOf(resultSet.getNString(COL_ROLE));
-                        byte age = resultSet.getByte(COL_AGE);
-                        long gender = resultSet.getLong(COL_GENDER);
-                        long preferenceGender = resultSet.getInt(COL_GENDER_PREFERENCE);
-
-                        // Add user to the array
-                        UserDTO user = new UserDTO(id, email, fullName, imageUrl, status, role, age, gender, preferenceGender, nickName);
-                        users.add(user);
+                        return list;
                     }
                 }
-
             } catch (SQLException ex) {
-                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Cannot get list of users");
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
             }
-
-            return users;
+            return null;
         });
 
         return future;
     }
 
     @Override
-    public UserDTO getUserById(long l) {
+    public UserDTO getUserById(long userId
+    ) {
+
+        try {
+            String sql = "SELECT * FROM " + TABLE_NAME;
+            sql += " WHERE " + COL_ID + " = ? ";
+
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet resultSet = null;
+            ps.setLong(1, userId);
+
+            if (resultSet != null && !resultSet.isClosed()) {
+                while (resultSet.next()) {
+                    long id = resultSet.getLong(COL_ID);
+                    String email = resultSet.getNString(COL_EMAIL);
+                    String fullName = resultSet.getNString(COL_FULLNAME);
+                    String nickName = resultSet.getNString(COL_NICKNAME);
+                    String imageUrl = resultSet.getNString(COL_IMAGEURL);
+                    EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
+                    EAccountRole role = EAccountRole.valueOf(resultSet.getNString(COL_ROLE));
+                    byte age = resultSet.getByte(COL_AGE);
+                    long gender = resultSet.getLong(COL_GENDER);
+                    long preferenceGender = resultSet.getInt(COL_GENDER_PREFERENCE);
+
+                }
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Cannot get list of users. Pleaes try again.");
+        }
+
+        return null;
+    }
+
+    @Override
+    public void create(UserDTO udto
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void save(UserDTO udto) {
+    public void update(UserDTO udto
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void update(UserDTO udto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void delete(long l) {
+    public void delete(long l
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

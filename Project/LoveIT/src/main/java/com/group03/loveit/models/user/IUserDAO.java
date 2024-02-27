@@ -12,13 +12,14 @@ import java.util.concurrent.CompletableFuture;
  * @author duyvu
  */
 public interface IUserDAO {
+
     public CompletableFuture<List<UserDTO>> getUsers();
 
     public CompletableFuture<List<UserDTO>> getUsersByConditions(UserSearchCriteria criteria);
 
     public UserDTO getUserById(long id);
 
-    public void save(UserDTO user);
+    public void create(UserDTO user);
 
     public void update(UserDTO user);
 

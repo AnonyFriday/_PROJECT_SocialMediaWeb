@@ -27,9 +27,38 @@ public class UserDTO extends AccountDTO implements Serializable {
     // ===========================
     // == Constructors
     // ===========================
-    public UserDTO(long id, String email, String fullName,
-            String imageUrl, EAccountStatus status, EAccountRole role,
-            byte age, long genderId, long preferenceGenderId, String nickName) {
+    /**
+     * Constructor for JavaBean
+     */
+    public UserDTO() {
+
+    }
+
+    /**
+     * Constructor for fetching data
+     *
+     * @param id
+     * @param age
+     * @param gender
+     * @param preferenceGender
+     * @param nickName
+     * @param fullName
+     * @param email
+     * @param imageUrl
+     * @param status
+     * @param role
+     */
+    public UserDTO(
+            long id,
+            byte age,
+            long genderId,
+            long preferenceGenderId,
+            String nickName,
+            String fullName,
+            String email,
+            String imageUrl,
+            EAccountStatus status,
+            EAccountRole role) {
         super(id, email, fullName, imageUrl, status, role);
         this.age = age;
         this.genderId = genderId;
