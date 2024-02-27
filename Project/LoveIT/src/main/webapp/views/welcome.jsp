@@ -17,7 +17,7 @@
                 <a href="/login">Already a member?</a>
             </div>
             <div>
-                <img src="../images/profile.jpg" alt="profile-picture" width="200" height="300"/>
+                <img src="/assets/KhanhLeTutTut.png" alt="profile-picture" width="200" height="300"/>
 
                 <form method="GET" action="WelcomeController">
                     <div>
@@ -31,7 +31,6 @@
                     </div>
                 </form>
 
-                <!-- Will fix later-->
                 <a href="">Others</a>
             </div>
         </main>
