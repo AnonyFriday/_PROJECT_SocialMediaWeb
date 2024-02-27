@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -45,44 +47,120 @@ public class PostDAO implements IPostDAO {
     @Override
     public CompletableFuture<PostDTO> getPostById(long id) {
         return CompletableFuture.supplyAsync(() -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            try {
+                conn = DBUtils.getConnection();
+                if (conn == null) {
+                    throw new RuntimeException("Connection is null");
+                }
+                String query = "SELECT p.Id as p_Id, p.Content as p_Content, p.Created_At as p_Created_At, p.Hearts_Total as p_Hearts_Total, p.Comment_Total as p_Comment_Total, p.Status as p_Status, p.Image_Url as p_Image_Url, "
+                        + "u.Id as u_Id, u.Age as u_Age, u.Gender_Id as u_Gender_Id, u.Preference_Id as u_Preference_Id, u.Nickname as u_Nickname, u.Fullname as u_Fullname, u.Email as u_Email, u.Image_Url as u_Image_Url, u.Status as u_Status, u.Role as u_Role "
+                        + "FROM Post p JOIN [User] u ON p.User_Id = u.Id WHERE p." + COL_ID + " = ?";
+
+                ps = conn.prepareStatement(query);
+                ps.setLong(1, id);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    UserDTO user = new UserDTO(
+                            rs.getLong("u_Id"),
+                            rs.getByte("u_Age"),
+                            rs.getLong("u_Gender_Id"),
+                            rs.getLong("u_Preference_Id"),
+                            rs.getString("u_Nickname"),
+                            rs.getString("u_Fullname"),
+                            rs.getString("u_Email"),
+                            rs.getString("u_Image_Url"),
+                            EAccountStatus.valueOf(rs.getString("u_Status")),
+                            EAccountRole.valueOf(rs.getString("u_Role"))
+                    );
+
+                    return new PostDTO(
+                            rs.getLong("p_Id"),
+                            user,
+                            rs.getString("p_Content"),
+                            rs.getTimestamp("p_Created_At").toLocalDateTime(),
+                            rs.getInt("p_Hearts_Total"),
+                            rs.getInt("p_Comment_Total"),
+                            rs.getString("p_Status"),
+                            rs.getString("p_Image_Url")
+                    );
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot get post by ID: " + ex.getMessage());
+            } finally {
+                try {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("Error closing resources: " + ex.getMessage());
+                }
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Retrieves all posts from the database.
+     *
+     * @return A CompletableFuture that completes with a List of PostDTO objects representing all posts in the database.
+     * Each PostDTO object contains the post details and the associated user details.
+     * If there are no posts in the database, the CompletableFuture completes with an empty list.
+     * If an error occurs while retrieving the posts, the CompletableFuture completes exceptionally with the SQLException.
+     */
+    @Override
+    public CompletableFuture<List<PostDTO>> getAllPosts() {
+        return CompletableFuture.supplyAsync(() -> {
+            List<PostDTO> posts = new ArrayList<>();
             try (Connection conn = DBUtils.getConnection()) {
                 if (conn == null) {
-                    throw new SQLException();
+                    throw new RuntimeException("Connection is null");
                 }
-                try (PreparedStatement ps = conn.prepareStatement("SELECT p.*, u.* FROM Post p JOIN User u ON p.User_Id = u.Id WHERE p." + COL_ID + " = ?")) {
-                    ps.setLong(1, id);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
+                String query = "SELECT p.Id as p_Id, p.Content as p_Content, p.Created_At as p_Created_At, p.Hearts_Total as p_Hearts_Total, p.Comment_Total as p_Comment_Total, p.Status as p_Status, p.Image_Url as p_Image_Url, "
+                        + "u.Id as u_Id, u.Age as u_Age, u.Gender_Id as u_Gender_Id, u.Preference_Id as u_Preference_Id, u.Nickname as u_Nickname, u.Fullname as u_Fullname, u.Email as u_Email, u.Image_Url as u_Image_Url, u.Status as u_Status, u.Role as u_Role "
+                        + "FROM Post p JOIN [User] u ON p.User_Id = u.Id";
 
-                            UserDTO user = new UserDTO(
-                                    rs.getLong("u.Id"),
-                                    rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
-                                    rs.getString("u.Nickname"),
-                                    rs.getString("u.Fullname"),
-                                    rs.getString("u.Email"),
-                                    rs.getString("u.Image_Url"),
-                                    EAccountStatus.valueOf(rs.getString("u.Status")),
-                                    EAccountRole.valueOf(rs.getString("u.Role")));
+                try (PreparedStatement ps = conn.prepareStatement(query);
+                     ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        UserDTO user = new UserDTO(
+                                rs.getLong("u_Id"),
+                                rs.getByte("u_Age"),
+                                rs.getLong("u_Gender_Id"),
+                                rs.getLong("u_Preference_Id"),
+                                rs.getString("u_Nickname"),
+                                rs.getString("u_Fullname"),
+                                rs.getString("u_Email"),
+                                rs.getString("u_Image_Url"),
+                                EAccountStatus.valueOf(rs.getString("u_Status")),
+                                EAccountRole.valueOf(rs.getString("u_Role"))
+                        );
 
-                            return new PostDTO(
-                                    rs.getLong("p." + COL_ID),
-                                    user,
-                                    rs.getString("p." + COL_CONTENT),
-                                    rs.getTimestamp("p." + COL_CREATED_AT).toLocalDateTime(),
-                                    rs.getInt("p." + COL_HEARTS_TOTAL),
-                                    rs.getInt("p." + COL_COMMENT_TOTAL),
-                                    rs.getString("p." + COL_STATUS),
-                                    rs.getString("p." + COL_IMAGE_URL)
-                            );
-                        }
+                        PostDTO post = new PostDTO(
+                                rs.getLong("p_Id"),
+                                user,
+                                rs.getString("p_Content"),
+                                rs.getTimestamp("p_Created_At").toLocalDateTime(),
+                                rs.getInt("p_Hearts_Total"),
+                                rs.getInt("p_Comment_Total"),
+                                rs.getString("p_Status"),
+                                rs.getString("p_Image_Url")
+                        );
+                        posts.add(post);
                     }
                 }
             } catch (SQLException ex) {
-                System.out.println("Cannot get post by id: " + ex.getMessage());
+                System.out.println("Cannot get posts: " + ex.getMessage());
             }
-            return null;
+            return posts;
         });
     }
 
