@@ -6,6 +6,7 @@ package com.group03.loveit.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +19,11 @@ public class DispatcherServlet extends HttpServlet {
     // Authentications
     // ..... adding more pages when developing further
     private final String PAGE_INDEX = "index.jsp";
-    private final String PAGE_WELCOME = "welcome.jsp";
-    private final String PAGE_HOME = "home.jsp";
-    private final String PAGE_LOGIN = "login.jsp";
-    private final String PAGE_REGISTER = "register.jsp";
-    private final String PAGE_FORGOT_PASSSWORD = "forgot_password.jsp";
+    private final String PAGE_WELCOME = "views/welcome.jsp";
+    private final String PAGE_HOME = "views/home.jsp";
+    private final String PAGE_LOGIN = "views/login.jsp";
+    private final String PAGE_REGISTER = "views/register.jsp";
+    private final String PAGE_FORGOT_PASSSWORD = "views/forgot_password.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,16 +49,19 @@ public class DispatcherServlet extends HttpServlet {
         try {
             if ("/".equals(path) || "/index.jsp".equals(path) || "/index".equals(path)) {
                 view += PAGE_INDEX;
-            } else if ("/login".equals(path) || action.equals("login")) {
+            } else if ("login".equals(path) || action.equals("login")) {
                 view += PAGE_LOGIN;
-            } else if ("/register".equals(path) || action.equals("register")) {
+            } else if ("register".equals(path) || action.equals("register")) {
                 view += PAGE_REGISTER;
-            } else if ("/home".equals(path) || action.equals("home")) {
+            } else if ("home".equals(path) || action.equals("home")) {
                 view += PAGE_HOME;
-            } else if ("/welcome".equals(path) || action.equals("welcome")) {
+            } else if ("welcome".equals(path) || action.equals("welcome")) {
                 view += PAGE_WELCOME;
             }
         } finally {
+
+            Logger.getLogger(this.getClass().getName()).info("Give me message");
+
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(view);
             requestDispatcher.forward(request, response);
         }
