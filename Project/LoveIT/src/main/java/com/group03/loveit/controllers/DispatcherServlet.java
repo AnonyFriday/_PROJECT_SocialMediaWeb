@@ -6,7 +6,6 @@ package com.group03.loveit.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.jws.WebService;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "DispatchServlet", urlPatterns = "/DispatchServlet")
 public class DispatcherServlet extends HttpServlet {
 
     // Authentications
@@ -47,16 +45,16 @@ public class DispatcherServlet extends HttpServlet {
         // User type the path on the url
         String path = request.getServletPath();
 
-        try (PrintWriter out = response.getWriter()) {
-            if ("/".equals(path)) {
+        try {
+            if ("/".equals(path) || "/index.jsp".equals(path) || "/index".equals(path)) {
                 view += PAGE_INDEX;
-            } else if ("/login".equals(path) || action.equals(PAGE_LOGIN)) {
+            } else if ("/login".equals(path) || action.equals("login")) {
                 view += PAGE_LOGIN;
-            } else if ("/register".equals(path) || action.equals(PAGE_REGISTER)) {
+            } else if ("/register".equals(path) || action.equals("register")) {
                 view += PAGE_REGISTER;
-            } else if ("/home".equals(path) || action.equals(PAGE_HOME)) {
+            } else if ("/home".equals(path) || action.equals("home")) {
                 view += PAGE_HOME;
-            } else if ("/welcome".equals(path) || action.equals(PAGE_WELCOME)) {
+            } else if ("/welcome".equals(path) || action.equals("welcome")) {
                 view += PAGE_WELCOME;
             }
         } finally {
