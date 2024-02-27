@@ -8,6 +8,7 @@ import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -25,11 +26,17 @@ public abstract class AccountDTO implements Serializable {
     private String imageUrl;
     private EAccountStatus status;
     private EAccountRole role;
-    private Date createdAt;
+    private Timestamp createdAt;
 
     // ===========================
     // == Constructor
     // ===========================
+    /**
+     * Default Constructor For JavaBean
+     */
+    public AccountDTO() {
+    }
+
     /**
      * Constructor for comparing Account
      *
@@ -154,9 +161,5 @@ public abstract class AccountDTO implements Serializable {
 
     public void setRole(EAccountRole role) {
         this.role = role;
-    }
-
-    public AccountDTO(Date createdAt) {
-        this.createdAt = createdAt;
     }
 }

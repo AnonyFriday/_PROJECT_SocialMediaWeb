@@ -43,4 +43,8 @@ public enum EAccountStatus {
     public String getStatus() {
         return status;
     }
+
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }   
 }

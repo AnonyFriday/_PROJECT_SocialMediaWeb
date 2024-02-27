@@ -12,12 +12,14 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * This class provides the Data Access Object (DAO) for the Post entity.
- * It provides methods to interact with the database such as retrieving, inserting, updating, and deleting posts.
+ * This class provides the Data Access Object (DAO) for the Post entity. It
+ * provides methods to interact with the database such as retrieving, inserting,
+ * updating, and deleting posts.
  *
  * @author Nhat
  */
 public class PostDAO implements IPostDAO {
+
     // ===========================
     // == Fields
     // ===========================
@@ -33,12 +35,12 @@ public class PostDAO implements IPostDAO {
     // ===========================
     // == Override Methods
     // ===========================
-    
     /**
      * Retrieves a post by its ID.
      *
      * @param id The ID of the post to retrieve.
-     * @return The CompletableFuture that returns the PostDTO object, or null if the post is not found.
+     * @return The CompletableFuture that returns the PostDTO object, or null if
+     * the post is not found.
      */
     @Override
     public CompletableFuture<PostDTO> getPostById(long id) {
@@ -51,18 +53,19 @@ public class PostDAO implements IPostDAO {
                     ps.setLong(1, id);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
+
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
-                                    rs.getString("u.Email"),
-                                    rs.getString("u.Fullname"),
-                                    rs.getString("u.Image_Url"),
-                                    EAccountStatus.valueOf(rs.getString("u.Status")),
-                                    EAccountRole.valueOf(rs.getString("u.Role")),
                                     rs.getByte("u.Age"),
                                     rs.getLong("u.Gender_Id"),
                                     rs.getLong("u.Preference_Id"),
-                                    rs.getString("u.Nickname")
-                            );
+                                    rs.getString("u.Nickname"),
+                                    rs.getString("u.Fullname"),
+                                    rs.getString("u.Email"),
+                                    rs.getString("u.Image_Url"),
+                                    EAccountStatus.valueOf(rs.getString("u.Status")),
+                                    EAccountRole.valueOf(rs.getString("u.Role")));
+
                             return new PostDTO(
                                     rs.getLong("p." + COL_ID),
                                     user,
@@ -87,7 +90,8 @@ public class PostDAO implements IPostDAO {
      * Inserts a new post into the database.
      *
      * @param post The PostDTO object containing the post data to be inserted.
-     * @return The CompletableFuture that represents the completion of the insertion.
+     * @return The CompletableFuture that represents the completion of the
+     * insertion.
      */
     @Override
     public CompletableFuture<Void> insertPost(PostDTO post) {
@@ -117,7 +121,8 @@ public class PostDAO implements IPostDAO {
      * Updates a post in the database.
      *
      * @param post The PostDTO object containing the updated post data.
-     * @return The CompletableFuture that represents the completion of the update.
+     * @return The CompletableFuture that represents the completion of the
+     * update.
      */
     @Override
     public CompletableFuture<Void> updatePost(PostDTO post) {
@@ -148,7 +153,8 @@ public class PostDAO implements IPostDAO {
      * Deletes a post from the database.
      *
      * @param id The ID of the post to delete.
-     * @return The CompletableFuture that represents the completion of the deletion.
+     * @return The CompletableFuture that represents the completion of the
+     * deletion.
      */
     @Override
     public CompletableFuture<Void> deletePost(long id) {

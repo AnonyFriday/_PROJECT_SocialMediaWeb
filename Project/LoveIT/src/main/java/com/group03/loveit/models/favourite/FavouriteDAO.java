@@ -15,12 +15,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * This class provides the Data Access Object (DAO) for the Favourite entity.
- * It provides methods to interact with the database such as retrieving, inserting, and deleting favourites.
+ * This class provides the Data Access Object (DAO) for the Favourite entity. It
+ * provides methods to interact with the database such as retrieving, inserting,
+ * and deleting favourites.
  *
  * @author Nhat
  */
 public class FavouriteDAO implements IFavouriteDAO {
+
     // ===========================
     // == Fields
     // ===========================
@@ -30,13 +32,13 @@ public class FavouriteDAO implements IFavouriteDAO {
     // ===========================
     // == Override Methods
     // ===========================
-
     /**
      * Retrieves a favourite by its post ID and user ID.
      *
      * @param postId The ID of the post to retrieve.
      * @param userId The ID of the user to retrieve.
-     * @return The CompletableFuture that returns the FavouriteDTO object, or null if the favourite is not found.
+     * @return The CompletableFuture that returns the FavouriteDTO object, or
+     * null if the favourite is not found.
      */
     @Override
     public CompletableFuture<FavouriteDTO> getFavouriteById(long postId, long userId) {
@@ -45,27 +47,28 @@ public class FavouriteDAO implements IFavouriteDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT f.*, p.*, u.* FROM Favorite f " +
-                        "JOIN Post p ON f." + COL_POST_ID + " = p.Id " +
-                        "JOIN User u ON f." + COL_USER_ID + " = u.Id " +
-                        "WHERE f." + COL_POST_ID + " = ? AND f." + COL_USER_ID + " = ?";
+                String query = "SELECT f.*, p.*, u.* FROM Favorite f "
+                        + "JOIN Post p ON f." + COL_POST_ID + " = p.Id "
+                        + "JOIN User u ON f." + COL_USER_ID + " = u.Id "
+                        + "WHERE f." + COL_POST_ID + " = ? AND f." + COL_USER_ID + " = ?";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     ps.setLong(2, userId);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
+
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
-                                    rs.getString("u.Email"),
-                                    rs.getString("u.Fullname"),
-                                    rs.getString("u.Image_Url"),
-                                    EAccountStatus.valueOf(rs.getString("u.Status")),
-                                    EAccountRole.valueOf(rs.getString("u.Role")),
                                     rs.getByte("u.Age"),
                                     rs.getLong("u.Gender_Id"),
                                     rs.getLong("u.Preference_Id"),
-                                    rs.getString("u.Nickname")
-                            );
+                                    rs.getString("u.Nickname"),
+                                    rs.getString("u.Fullname"),
+                                    rs.getString("u.Email"),
+                                    rs.getString("u.Image_Url"),
+                                    EAccountStatus.valueOf(rs.getString("u.Status")),
+                                    EAccountRole.valueOf(rs.getString("u.Role")));
+
                             PostDTO post = new PostDTO(
                                     rs.getLong("p.Id"),
                                     user,
@@ -91,7 +94,8 @@ public class FavouriteDAO implements IFavouriteDAO {
      * Retrieves all favourites by a user.
      *
      * @param userId The ID of the user to retrieve.
-     * @return The CompletableFuture that returns a list of FavouriteDTO objects, or empty list if the user has no favourites.
+     * @return The CompletableFuture that returns a list of FavouriteDTO
+     * objects, or empty list if the user has no favourites.
      */
     @Override
     public CompletableFuture<List<FavouriteDTO>> getFavouritesByUser(long userId) {
@@ -100,36 +104,35 @@ public class FavouriteDAO implements IFavouriteDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT f.*, p.*, u.* FROM Favorite f " +
-                               "JOIN Post p ON f." + COL_POST_ID + " = p.Id " +
-                               "JOIN User u ON f." + COL_USER_ID + " = u.Id " +
-                               "WHERE f." + COL_USER_ID + " = ?";
+                String query = "SELECT f.*, p.*, u.* FROM Favorite f "
+                        + "JOIN Post p ON f." + COL_POST_ID + " = p.Id "
+                        + "JOIN User u ON f." + COL_USER_ID + " = u.Id "
+                        + "WHERE f." + COL_USER_ID + " = ?";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, userId);
                     try (ResultSet rs = ps.executeQuery()) {
                         List<FavouriteDTO> favourites = new ArrayList<>();
                         while (rs.next()) {
                             UserDTO user = new UserDTO(
-                                rs.getLong("u.Id"),
-                                rs.getString("u.Email"),
-                                rs.getString("u.Fullname"),
-                                rs.getString("u.Image_Url"),
-                                EAccountStatus.valueOf(rs.getString("u.Status")),
-                                EAccountRole.valueOf(rs.getString("u.Role")),
-                                rs.getByte("u.Age"),
-                                rs.getLong("u.Gender_Id"),
-                                rs.getLong("u.Preference_Id"),
-                                rs.getString("u.Nickname")
-                            );
+                                    rs.getLong("u.Id"),
+                                    rs.getByte("u.Age"),
+                                    rs.getLong("u.Gender_Id"),
+                                    rs.getLong("u.Preference_Id"),
+                                    rs.getString("u.Nickname"),
+                                    rs.getString("u.Fullname"),
+                                    rs.getString("u.Email"),
+                                    rs.getString("u.Image_Url"),
+                                    EAccountStatus.valueOf(rs.getString("u.Status")),
+                                    EAccountRole.valueOf(rs.getString("u.Role")));
                             PostDTO post = new PostDTO(
-                                rs.getLong("p.Id"),
-                                user,
-                                rs.getString("p.Content"),
-                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
-                                rs.getInt("p.Hearts_Total"),
-                                rs.getInt("p.Comment_Total"),
-                                rs.getString("p.Status"),
-                                rs.getString("p.Image_Url")
+                                    rs.getLong("p.Id"),
+                                    user,
+                                    rs.getString("p.Content"),
+                                    rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                    rs.getInt("p.Hearts_Total"),
+                                    rs.getInt("p.Comment_Total"),
+                                    rs.getString("p.Status"),
+                                    rs.getString("p.Image_Url")
                             );
                             favourites.add(new FavouriteDTO(post, user));
                         }
@@ -147,7 +150,8 @@ public class FavouriteDAO implements IFavouriteDAO {
      * Retrieves all favourites by a post.
      *
      * @param postId The ID of the post to retrieve.
-     * @return The CompletableFuture that returns the list of FavouriteDTO objects, or empty list if no user has favourited the post.
+     * @return The CompletableFuture that returns the list of FavouriteDTO
+     * objects, or empty list if no user has favourited the post.
      */
     @Override
     public CompletableFuture<List<FavouriteDTO>> getFavouritesByPost(long postId) {
@@ -156,36 +160,35 @@ public class FavouriteDAO implements IFavouriteDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT f.*, p.*, u.* FROM Favorite f " +
-                               "JOIN Post p ON f." + COL_POST_ID + " = p.Id " +
-                               "JOIN User u ON f." + COL_USER_ID + " = u.Id " +
-                               "WHERE f." + COL_POST_ID + " = ?";
+                String query = "SELECT f.*, p.*, u.* FROM Favorite f "
+                        + "JOIN Post p ON f." + COL_POST_ID + " = p.Id "
+                        + "JOIN User u ON f." + COL_USER_ID + " = u.Id "
+                        + "WHERE f." + COL_POST_ID + " = ?";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
                         List<FavouriteDTO> favourites = new ArrayList<>();
                         while (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                rs.getLong("u.Id"),
-                                rs.getString("u.Email"),
-                                rs.getString("u.Fullname"),
-                                rs.getString("u.Image_Url"),
-                                EAccountStatus.valueOf(rs.getString("u.Status")),
-                                EAccountRole.valueOf(rs.getString("u.Role")),
-                                rs.getByte("u.Age"),
-                                rs.getLong("u.Gender_Id"),
-                                rs.getLong("u.Preference_Id"),
-                                rs.getString("u.Nickname")
-                            );
+                           UserDTO user = new UserDTO(
+                                    rs.getLong("u.Id"),
+                                    rs.getByte("u.Age"),
+                                    rs.getLong("u.Gender_Id"),
+                                    rs.getLong("u.Preference_Id"),
+                                    rs.getString("u.Nickname"),
+                                    rs.getString("u.Fullname"),
+                                    rs.getString("u.Email"),
+                                    rs.getString("u.Image_Url"),
+                                    EAccountStatus.valueOf(rs.getString("u.Status")),
+                                    EAccountRole.valueOf(rs.getString("u.Role")));
                             PostDTO post = new PostDTO(
-                                rs.getLong("p.Id"),
-                                user,
-                                rs.getString("p.Content"),
-                                rs.getTimestamp("p.Created_At").toLocalDateTime(),
-                                rs.getInt("p.Hearts_Total"),
-                                rs.getInt("p.Comment_Total"),
-                                rs.getString("p.Status"),
-                                rs.getString("p.Image_Url")
+                                    rs.getLong("p.Id"),
+                                    user,
+                                    rs.getString("p.Content"),
+                                    rs.getTimestamp("p.Created_At").toLocalDateTime(),
+                                    rs.getInt("p.Hearts_Total"),
+                                    rs.getInt("p.Comment_Total"),
+                                    rs.getString("p.Status"),
+                                    rs.getString("p.Image_Url")
                             );
                             favourites.add(new FavouriteDTO(post, user));
                         }
@@ -202,8 +205,10 @@ public class FavouriteDAO implements IFavouriteDAO {
     /**
      * Inserts a new favourite into the database.
      *
-     * @param favourite The FavouriteDTO object containing the favourite data to be inserted.
-     * @return The CompletableFuture that represents the completion of the insertion.
+     * @param favourite The FavouriteDTO object containing the favourite data to
+     * be inserted.
+     * @return The CompletableFuture that represents the completion of the
+     * insertion.
      */
     @Override
     public CompletableFuture<Void> insertFavourite(FavouriteDTO favourite) {
@@ -228,7 +233,8 @@ public class FavouriteDAO implements IFavouriteDAO {
      *
      * @param postId The ID of the post to delete.
      * @param userId The ID of the user to delete.
-     * @return The CompletableFuture that represents the completion of the deletion.
+     * @return The CompletableFuture that represents the completion of the
+     * deletion.
      */
     @Override
     public CompletableFuture<Void> deleteFavourite(long postId, long userId) {
