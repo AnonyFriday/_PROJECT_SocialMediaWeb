@@ -4,6 +4,8 @@
  */
 package com.group03.loveit.models.account;
 
+import com.sun.tools.javac.Main;
+
 /**
  * Define 2 objects only of roles
  */
@@ -12,7 +14,7 @@ public enum EAccountRole {
     // ===========================
     // == No. objects
     // ===========================
-    ADMIN("admin"), USER("user");
+    ADMIN("Admin"), USER("User");
 
     // ===========================
     // == Fields

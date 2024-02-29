@@ -84,14 +84,14 @@
 
 <script>
     function toggleImage(img) {
-        img.src = img.src.endsWith("heart_off.png") ? "../assets/heart_on.png" : "../assets/heart_off.png";
+        img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/heart_on.png" : "${pageContext.request.contextPath}/assets/heart_off.png";
     }
 </script>
 
 <div class="component">
     <div class="sub-components-wrapper">
         <div class="left-area">
-            <img src="../assets/KhanhLeTutTut.png" alt="Avatar">
+            <img src="${pageContext.request.contextPath}/assets/KhanhLeTutTut.png" alt="Avatar">
             <div class="info">
                 <div>
                     <p>Khanh Le Tut Tut</p>
@@ -104,7 +104,7 @@
         </div>
         <div class="right-area">
             <button style="align-self: flex-end;" onclick="toggleImage(this.children[0])">
-                <img src="../assets/heart_off.png" alt="Heart">
+                <img src="${pageContext.request.contextPath}/assets/heart_off.png" alt="Heart">
             </button>
             <div>
                 <p>I am</p>
@@ -115,12 +115,12 @@
         </div>
     </div>
     <div class="content_area">
-        <p>Them bun long qua! Bye Bye!</p>
-        <img src="../assets/post_image.png" alt="Post image">
+        <p>${param.content}</p>
+        <img src="${param.image_url}" alt="Post image">
     </div>
     <hr>
     <div class="comment-area">
-        <img src="../assets/miley_cyrus.png" alt="Comment avatar">
+        <img src="${pageContext.request.contextPath}/assets/miley_cyrus.png" alt="Comment avatar">
         <div class="text">
             <p>Miley Cyrus</p>
             <p>Anh dep trai nha o dau vay?</p>

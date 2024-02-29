@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    
     <!-- Packages -->
-    <servlet>
-        <servlet-name>DispatchServlet</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.DispatcherServlet</servlet-class>
-    </servlet>
     <servlet>
         <servlet-name>LoginController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.LoginController</servlet-class>
@@ -18,23 +13,43 @@
         <servlet-name>WelcomeController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.WelcomeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PeopleZoneServlet</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.PeopleZoneServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChatController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.ChatController</servlet-class>
+    </servlet>
     
     <!-- Mappings -->
-    <servlet-mapping>
-        <servlet-name>DispatchServlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>ProfileController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.ProfileController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
-        <url-pattern>/LoginController</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterController</servlet-name>
-        <url-pattern>/RegisterController</url-pattern>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>WelcomeController</servlet-name>
-        <url-pattern>/WelcomeController</url-pattern>
+        <url-pattern>/welcome</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PeopleZoneServlet</servlet-name>
+        <url-pattern>/people-zone</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileController</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatController</servlet-name>
+        <url-pattern>/chat</url-pattern>
     </servlet-mapping>
     
     <!-- Session -->
@@ -46,7 +61,6 @@
     
     <!-- Welcome File -->
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/welcome</welcome-file>
     </welcome-file-list>
-   
 </web-app>

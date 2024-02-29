@@ -15,24 +15,24 @@ public final class UserSearchCriteria {
     // == Fields
     // ===========================
     private String nickName;
-    private String fullname;
+    private String fullName;
 
     // ===========================
     // == Constructors
     // ===========================
-    public UserSearchCriteria(String nickName, String fullname) {
+    public UserSearchCriteria(String nickName, String fullName) {
         this.nickName = nickName;
-        this.fullname = fullname;
+        this.fullName = fullName;
     }
 
     // ===========================
     // == Methods
     // ===========================
     public String getNickName() {
-        return nickName;
+        return (nickName == null || nickName.trim().isEmpty()) ? "" : nickName;
     }
 
     public String getFullname() {
-        return fullname;
+        return (fullName == null || fullName.trim().isEmpty()) ? "" : fullName;
     }
 }

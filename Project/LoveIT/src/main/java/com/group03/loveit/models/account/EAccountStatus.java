@@ -13,7 +13,7 @@ public enum EAccountStatus {
     // ===========================
     // == No. objects
     // ===========================
-    ACTIVE("active"), BLOCKED("deleted"), HIDDEN("blocked");
+    ACTIVE("Active"), BLOCKED("Deleted"), HIDDEN("Blocked");
 
     // ===========================
     // == Fields
@@ -43,8 +43,4 @@ public enum EAccountStatus {
     public String getStatus() {
         return status;
     }
-
-    public static void main(String[] args) {
-        System.out.println("Hello");
-    }   
 }

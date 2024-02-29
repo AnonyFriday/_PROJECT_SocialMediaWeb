@@ -2,6 +2,7 @@ package com.group03.loveit.models.comment;
 
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
+import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.post.PostDTO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
@@ -62,8 +63,8 @@ public class CommentDAO implements ICommentDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
                                     rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Preference_Id")),
                                     rs.getString("u.Nickname"),
                                     rs.getString("u.Fullname"),
                                     rs.getString("u.Email"),
@@ -126,8 +127,8 @@ public class CommentDAO implements ICommentDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
                                     rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Preference_Id")),
                                     rs.getString("u.Nickname"),
                                     rs.getString("u.Fullname"),
                                     rs.getString("u.Email"),
@@ -191,8 +192,8 @@ public class CommentDAO implements ICommentDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
                                     rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Preference_Id")),
                                     rs.getString("u.Nickname"),
                                     rs.getString("u.Fullname"),
                                     rs.getString("u.Email"),

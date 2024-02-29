@@ -6,28 +6,16 @@ package com.group03.loveit.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DispatcherServlet extends HttpServlet {
-
-    // ..... adding more controllers when developing further
-    private final String CONTROLLER_LOGIN = "LoginController";
-    private final String CONTROLLER_REGISTER = "RegisterController";
-    private final String CONTROLLER_WELCOME = "WelcomeController";
-
-    // ..... adding more pages when developing further
-    private final String PAGE_INDEX = "index.jsp";
-    private final String PAGE_WELCOME = "views/welcome.jsp";
-    private final String PAGE_HOME = "views/home.jsp";
-    private final String PAGE_LOGIN = "views/login.jsp";
-    private final String PAGE_REGISTER = "views/register.jsp";
-    private final String PAGE_FORGOT_PASSSWORD = "views/forgot_password.jsp";
+/**
+ *
+ * @author duyvu
+ */
+public class ProfileController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,33 +29,21 @@ public class DispatcherServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        // Default View
-        String view = "/";
-
-        // e.g. http://example.com/contextPath/servletPath/pathInfo
-        // will return /servletPath
-        String path = request.getServletPath();
-
-        try {
-            if ("/".equals(path)) {
-                view += PAGE_INDEX;
-            } else if ("/login".equals(path)) {
-                view += PAGE_LOGIN;
-            } else if ("/register".equals(path)) {
-                view += PAGE_REGISTER;
-            } else if ("/home".equals(path)) {
-                view += PAGE_HOME;
-            } else if ("/welcome".equals(path)) {
-                view += PAGE_WELCOME;
-            }
-        } finally {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(view);
-            requestDispatcher.forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ProfileController</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ProfileController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -105,4 +81,5 @@ public class DispatcherServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

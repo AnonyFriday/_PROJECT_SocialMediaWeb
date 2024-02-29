@@ -9,6 +9,7 @@ import com.group03.loveit.models.account.EAccountStatus;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -26,7 +27,7 @@ public abstract class AccountDTO implements Serializable {
     private String imageUrl;
     private EAccountStatus status;
     private EAccountRole role;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     // ===========================
     // == Constructor
@@ -75,6 +76,21 @@ public abstract class AccountDTO implements Serializable {
     public AccountDTO(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    /**
+     * Constructor for register
+     *
+     * @param email
+     * @param password
+     * @param fullName
+     */
+    public AccountDTO(String email, String password, String fullName) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.createdAt = LocalDateTime.now();
+        this.status = EAccountStatus.ACTIVE;
     }
 
     // ===========================

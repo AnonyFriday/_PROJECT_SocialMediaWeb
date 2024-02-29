@@ -20,8 +20,8 @@ public class UserDTO extends AccountDTO implements Serializable {
     // == Fields
     // ===========================
     private byte age;
-    private long genderId;
-    private long preferenceGenderId;
+    private GenderDTO gender;
+    private GenderDTO preferenceGender;
     private String nickName;
 
     // ===========================
@@ -50,8 +50,8 @@ public class UserDTO extends AccountDTO implements Serializable {
     public UserDTO(
             long id,
             byte age,
-            long genderId,
-            long preferenceGenderId,
+            GenderDTO gender,
+            GenderDTO preferenceGender,
             String nickName,
             String fullName,
             String email,
@@ -60,9 +60,26 @@ public class UserDTO extends AccountDTO implements Serializable {
             EAccountRole role) {
         super(id, email, fullName, imageUrl, status, role);
         this.age = age;
-        this.genderId = genderId;
-        this.preferenceGenderId = preferenceGenderId;
+        this.gender = gender;
+        this.preferenceGender = preferenceGender;
         this.nickName = nickName;
+    }
+
+    /**
+     * Constructor for register
+     *
+     * @param age
+     * @param gender
+     * @param preferenceGender
+     * @param email
+     * @param password
+     * @param fullName
+     */
+    public UserDTO(String email, String password, String fullName, byte age, GenderDTO gender, GenderDTO preferenceGender) {
+        super(email, password, fullName);
+        this.age = age;
+        this.gender = gender;
+        this.preferenceGender = preferenceGender;
     }
 
     // ===========================
@@ -82,5 +99,21 @@ public class UserDTO extends AccountDTO implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public GenderDTO getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderDTO gender) {
+        this.gender = gender;
+    }
+
+    public GenderDTO getPreferenceGender() {
+        return preferenceGender;
+    }
+
+    public void setPreferenceGender(GenderDTO preferenceGender) {
+        this.preferenceGender = preferenceGender;
     }
 }

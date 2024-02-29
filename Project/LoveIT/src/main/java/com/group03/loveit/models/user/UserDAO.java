@@ -6,6 +6,7 @@ package com.group03.loveit.models.user;
 
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
+import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.utilities.AsyncUtils;
 import com.group03.loveit.utilities.DBUtils;
@@ -41,8 +42,8 @@ public final class UserDAO implements IUserDAO {
     private final String COL_STATUS = "Status";
     private final String COL_ROLE = "Role";
     private final String COL_AGE = "Age";
-    private final String COL_GENDER = "Gender_Id";
-    private final String COL_GENDER_PREFERENCE = "Preference_Id";
+    private final String COL_GENDER_ID = "Gender_Id";
+    private final String COL_GENDER_PREFERENCE_ID = "Preference_Id";
 
     // ===========================
     // == Methods
@@ -61,7 +62,9 @@ public final class UserDAO implements IUserDAO {
             try (Connection conn = DBUtils.getConnection()) {
 
                 // SQL query
-                String sql = "SELECT * FROM " + TABLE_NAME;
+                String sql = " SELECT * "
+                        + " FROM [User] ";
+
                 List<UserDTO> list = new ArrayList<>();
 
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -70,8 +73,8 @@ public final class UserDAO implements IUserDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong(COL_ID),
                                     rs.getByte(COL_AGE),
-                                    rs.getLong(COL_GENDER),
-                                    rs.getLong(COL_GENDER_PREFERENCE),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID)),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID)),
                                     rs.getNString(COL_NICKNAME),
                                     rs.getNString(COL_FULLNAME),
                                     rs.getString(COL_EMAIL),
@@ -141,8 +144,8 @@ public final class UserDAO implements IUserDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong(COL_ID),
                                     rs.getByte(COL_AGE),
-                                    rs.getLong(COL_GENDER),
-                                    rs.getLong(COL_GENDER_PREFERENCE),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID)),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID)),
                                     rs.getNString(COL_NICKNAME),
                                     rs.getNString(COL_FULLNAME),
                                     rs.getString(COL_EMAIL),
@@ -189,8 +192,8 @@ public final class UserDAO implements IUserDAO {
                     EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
                     EAccountRole role = EAccountRole.valueOf(resultSet.getNString(COL_ROLE));
                     byte age = resultSet.getByte(COL_AGE);
-                    long gender = resultSet.getLong(COL_GENDER);
-                    long preferenceGender = resultSet.getInt(COL_GENDER_PREFERENCE);
+                    long gender = resultSet.getLong(COL_GENDER_ID);
+                    long preferenceGender = resultSet.getInt(COL_GENDER_PREFERENCE_ID);
 
                 }
             }

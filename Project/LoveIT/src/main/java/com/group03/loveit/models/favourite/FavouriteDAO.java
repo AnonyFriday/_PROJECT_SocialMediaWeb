@@ -2,6 +2,7 @@ package com.group03.loveit.models.favourite;
 
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
+import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.post.PostDTO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
@@ -60,8 +61,8 @@ public class FavouriteDAO implements IFavouriteDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
                                     rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Preference_Id")),
                                     rs.getString("u.Nickname"),
                                     rs.getString("u.Fullname"),
                                     rs.getString("u.Email"),
@@ -116,8 +117,8 @@ public class FavouriteDAO implements IFavouriteDAO {
                             UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
                                     rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Preference_Id")),
                                     rs.getString("u.Nickname"),
                                     rs.getString("u.Fullname"),
                                     rs.getString("u.Email"),
@@ -169,11 +170,11 @@ public class FavouriteDAO implements IFavouriteDAO {
                     try (ResultSet rs = ps.executeQuery()) {
                         List<FavouriteDTO> favourites = new ArrayList<>();
                         while (rs.next()) {
-                           UserDTO user = new UserDTO(
+                            UserDTO user = new UserDTO(
                                     rs.getLong("u.Id"),
                                     rs.getByte("u.Age"),
-                                    rs.getLong("u.Gender_Id"),
-                                    rs.getLong("u.Preference_Id"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("u.Preference_Id")),
                                     rs.getString("u.Nickname"),
                                     rs.getString("u.Fullname"),
                                     rs.getString("u.Email"),
@@ -252,5 +253,11 @@ public class FavouriteDAO implements IFavouriteDAO {
                 System.out.println("Cannot delete favourite: " + ex.getMessage());
             }
         });
+    }
+
+    public static void main(String[] args) {
+        FavouriteDAO dao = new FavouriteDAO();
+        System.out.println(dao.getFavouritesByUser(2).join());
+
     }
 }

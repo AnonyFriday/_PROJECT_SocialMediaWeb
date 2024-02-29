@@ -15,9 +15,14 @@ public abstract class DBUtils {
     private final static String serverName = "localhost";
     private final static String dbName = "LoveIt";
     private final static String portNumber = "1433";
-    private final static String instance = "MSSQLSERVER_2019";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
-    private final static String userID = "duyvukim";
-    private final static String password = "334/26/30a";
+    private final static String instance = "";
+    //private final static String instance = "MSSQLSERVER_2019";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
+
+//    private final static String userID = "sa";
+//    private final static String password = "123456789";
+
+    private final static String userID = "sa";
+    private final static String password = "123456";
 
     /**
      * Close the connection
@@ -33,8 +38,8 @@ public abstract class DBUtils {
     }
 
     /**
-     * Get the connection on connection string
-     * Multiple will access to the 
+     * Get the connection on connection string Multiple will access to the
+     *
      * @return a connection instance
      */
     public synchronized final static Connection getConnection() {

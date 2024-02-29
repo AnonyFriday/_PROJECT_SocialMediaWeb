@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>People Zone</title>
@@ -23,11 +24,13 @@
             <input type="text" name="query" placeholder="e.g. Sarah">
         </form>
     </div>
-    <jsp:include page="create_post.jsp" />
+    <jsp:include page="create-post.jsp" />
     <hr>
-    <jsp:include page="post.jsp" />
-    <jsp:include page="post.jsp" />
-    <jsp:include page="post.jsp" />
-    <jsp:include page="post.jsp" />
+    <c:forEach var="post" items="${posts}">
+        <jsp:include page="post.jsp">
+            <jsp:param name="content" value="${post.content}" />
+            <jsp:param name="image_url" value="${post.imageUrl}" />
+        </jsp:include>
+    </c:forEach>
 </body>
 </html>
