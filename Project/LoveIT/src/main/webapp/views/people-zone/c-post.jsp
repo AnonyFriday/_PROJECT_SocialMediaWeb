@@ -26,7 +26,7 @@
                     <div class="info">
                         <div>
                             <p>${param.user_name}</p>
-                            <p>${param.user_age}</p>
+                            <p>Age: ${param.user_age}</p>
                         </div>
                         <div>
                             <p>${param.user_nickname}</p>
