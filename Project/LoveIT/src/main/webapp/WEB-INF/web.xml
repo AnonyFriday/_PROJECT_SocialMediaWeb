@@ -15,11 +15,19 @@
     </servlet>
     <servlet>
         <servlet-name>PeopleZoneServlet</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.PeopleZoneServlet</servlet-class>
+        <servlet-class>com.group03.loveit.controllers.PeopleZoneController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ChatController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.ChatController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PostDetailsController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.PostDetailsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreatePostController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.CreatePostController</servlet-class>
     </servlet>
     
     <!-- Mappings -->
@@ -50,6 +58,14 @@
     <servlet-mapping>
         <servlet-name>ChatController</servlet-name>
         <url-pattern>/chat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostDetailsController</servlet-name>
+        <url-pattern>/post-details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreatePostController</servlet-name>
+        <url-pattern>/create-post</url-pattern>
     </servlet-mapping>
     
     <!-- Session -->

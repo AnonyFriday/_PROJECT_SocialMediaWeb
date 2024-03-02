@@ -68,7 +68,7 @@ public class PostDAO implements IPostDAO {
                             rs.getLong("u_Id"),
                             rs.getByte("u_Age"),
                             GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Gender_Id")),
-                            GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Preference_Id ")),
+                            GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Preference_Id")),
                             rs.getString("u_Nickname"),
                             rs.getString("u_Fullname"),
                             rs.getString("u_Email"),
@@ -90,6 +90,7 @@ public class PostDAO implements IPostDAO {
                 }
             } catch (SQLException ex) {
                 System.out.println("Cannot get post by ID: " + ex.getMessage());
+                ex.printStackTrace();
             } finally {
                 try {
                     if (rs != null) {
@@ -178,6 +179,7 @@ public class PostDAO implements IPostDAO {
     @Override
     public CompletableFuture<Void> insertPost(PostDTO post) {
         return CompletableFuture.supplyAsync(() -> {
+            System.out.println("Inserting post: " + post.toString());
             try (Connection conn = DBUtils.getConnection()) {
                 if (conn == null) {
                     throw new SQLException();
@@ -190,6 +192,7 @@ public class PostDAO implements IPostDAO {
                     ps.setInt(5, post.getCommentTotal());
                     ps.setString(6, post.getStatus());
                     ps.setString(7, post.getImageUrl());
+                    System.out.println("Inserting post 2");
                     ps.executeUpdate();
                 }
             } catch (SQLException ex) {

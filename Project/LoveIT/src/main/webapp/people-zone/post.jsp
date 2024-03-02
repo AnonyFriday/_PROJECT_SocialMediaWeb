@@ -125,6 +125,10 @@
             <p>Miley Cyrus</p>
             <p>Anh dep trai nha o dau vay?</p>
         </div>
-        <button>Discuss Now ></button>
+
+        <form action="post-details" method="get" style="margin-left: auto;">
+            <input type="hidden" name="post_id" value="${param.post_id}" />
+            <button type="submit">Discuss Now ></button>
+        </form>
     </div>
 </div>

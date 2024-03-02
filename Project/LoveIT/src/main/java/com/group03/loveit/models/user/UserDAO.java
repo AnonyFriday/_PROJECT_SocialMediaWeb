@@ -32,7 +32,7 @@ public final class UserDAO implements IUserDAO {
     // ===========================
     // == Fields
     // ===========================
-    private final String TABLE_NAME = "User";
+    private final String TABLE_NAME = "[User]";
     private final String COL_ID = "Id";
     private final String COL_EMAIL = "Email";
     private final String COL_NICKNAME = "Nickname";
@@ -170,38 +170,34 @@ public final class UserDAO implements IUserDAO {
     }
 
     @Override
-    public UserDTO getUserById(long userId
-    ) {
+    public UserDTO getUserById(long userId) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = ? ";
+        try (Connection conn = DBUtils.getConnection()) {
+            if (conn == null) {
+                throw new SQLException("Cannot get connection");
+            }
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, userId);
+                try (ResultSet resultSet = ps.executeQuery()) {
+                    if (resultSet.next()) {
+                        long id = resultSet.getLong(COL_ID);
+                        String email = resultSet.getNString(COL_EMAIL);
+                        String fullName = resultSet.getNString(COL_FULLNAME);
+                        String nickName = resultSet.getNString(COL_NICKNAME);
+                        String imageUrl = resultSet.getString(COL_IMAGEURL);
+                        EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
+                        EAccountRole role = EAccountRole.valueOf(resultSet.getString(COL_ROLE));
+                        byte age = resultSet.getByte(COL_AGE);
+                        GenderDTO gender = new GenderDTO(resultSet.getLong(COL_GENDER_ID));
+                        GenderDTO preferenceGender = new GenderDTO(resultSet.getInt(COL_GENDER_PREFERENCE_ID));
 
-        try {
-            String sql = "SELECT * FROM " + TABLE_NAME;
-            sql += " WHERE " + COL_ID + " = ? ";
-
-            Connection conn = DBUtils.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet resultSet = null;
-            ps.setLong(1, userId);
-
-            if (resultSet != null && !resultSet.isClosed()) {
-                while (resultSet.next()) {
-                    long id = resultSet.getLong(COL_ID);
-                    String email = resultSet.getNString(COL_EMAIL);
-                    String fullName = resultSet.getNString(COL_FULLNAME);
-                    String nickName = resultSet.getNString(COL_NICKNAME);
-                    String imageUrl = resultSet.getNString(COL_IMAGEURL);
-                    EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
-                    EAccountRole role = EAccountRole.valueOf(resultSet.getNString(COL_ROLE));
-                    byte age = resultSet.getByte(COL_AGE);
-                    long gender = resultSet.getLong(COL_GENDER_ID);
-                    long preferenceGender = resultSet.getInt(COL_GENDER_PREFERENCE_ID);
-
+                        return new UserDTO(id, age, gender, preferenceGender, nickName, fullName, email, imageUrl, status, role);
+                    }
                 }
             }
-
         } catch (SQLException ex) {
-            System.out.println("Cannot get list of users. Pleaes try again.");
+            System.out.println("Cannot get user by id: " + ex.getMessage());
         }
-
         return null;
     }
 

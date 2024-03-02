@@ -84,8 +84,17 @@ public class PostDTO {
     }
 
     // Constructors
-    public PostDTO(long id) {
-        this.id = id;
+    public PostDTO() {
+    }
+
+    public PostDTO(AccountDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
+        this.user = user;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.heartTotal = heartTotal;
+        this.commentTotal = commentTotal;
+        this.status = status;
+        this.imageUrl = imageUrl;
     }
 
     public PostDTO(long id, AccountDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {

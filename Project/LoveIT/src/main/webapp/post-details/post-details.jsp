@@ -94,17 +94,19 @@
         }
     </script>
 
+    <jsp:include page="../header.html" />
+
     <div class="post">
         <div class="top-area">
             <div class="top-left-area">
-                <img src="${pageContext.request.contextPath}/assets/KhanhLeTutTut.png" alt="Avatar">
+                <img src="${post.user.imageUrl}" alt="Avatar">
                 <div class="info">
                     <div>
-                        <p>${param.user_name}</p>
-                        <p>${param.user_age}</p>
+                        <p>${post.user.fullName}</p>
+                        <p>${post.user.age}</p>
                     </div>
                     <div>
-                        <p>The king of fingers</p>
+                        <p>${post.user.nickName}</p>
                     </div>
                 </div>
             </div>
@@ -114,15 +116,15 @@
                 </button>
                 <div>
                     <p>I am</p>
-                    <p>Demi-guy</p>
+                    <p>${post.user.gender.name}</p>
                     <p>Looking for</p>
-                    <p>Bigender</p>
+                    <p>${post.user.preferenceGender.name}</p>
                 </div>
             </div>
         </div>
         <div class="content_area">
-            <p>${param.content}</p>
-            <img src="${param.image_url}" alt="Post image">
+            <p>${post.content}</p>
+            <img src="${post.imageUrl}" alt="Post image">
         </div>
         <hr>
         <div class="comment-area">

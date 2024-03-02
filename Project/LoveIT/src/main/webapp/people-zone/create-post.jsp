@@ -23,12 +23,18 @@
     }
 </style>
 
-<div class="create_post">
-    <input type="text" placeholder="Enter text here...">
-    <div class="sub-component">
-        <label>Upload an image:</label>
-        <input type="text" placeholder="Image URL...">
-        <button>Browse...</button>
-        <button>Post</button>
+<form action="create-post" method="post">
+    <div class="create_post">
+        <label>
+            <input type="text" name="content" placeholder="Enter text here...">
+        </label>
+        <div class="sub-component">
+            <label>Upload an image:</label>
+            <label>
+                <input type="text" name="imageUrl" placeholder="Image URL...">
+            </label>
+            <button type="button">Browse...</button>
+            <input type="submit" value="Post">
+        </div>
     </div>
-</div>
+</form>

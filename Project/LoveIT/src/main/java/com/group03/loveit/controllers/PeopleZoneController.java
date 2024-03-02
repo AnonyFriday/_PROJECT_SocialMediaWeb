@@ -11,15 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class PeopleZoneServlet extends HttpServlet {
+public class PeopleZoneController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processPostList(request, response);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/people-zone/people-zone.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void processPostList(HttpServletRequest request, HttpServletResponse response) {
         PostDAO postDAO = new PostDAO();
         List<PostDTO> posts = postDAO.getAllPosts().join();
         request.setAttribute("posts", posts);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/people-zone/people-zone.jsp");
-        dispatcher.forward(request, response);
     }
 }
