@@ -6,11 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <style>
-    .component, .sub-components-wrapper, .left-area, .right-area, .info > div:first-child, .right-area div, .content_area, .comment-area {
+    .post, .top-area, .top-left-area, .top-right-area, .info > div:first-child, .top-right-area div, .content_area, .comment-area {
         display: flex;
     }
 
-    .component {
+    .post {
         border: 1px solid black;
         padding: 20px;
         width: 50%;
@@ -18,25 +18,25 @@
         flex-direction: column;
     }
 
-    .sub-components-wrapper, .content_area {
+    .top-area, .content_area {
         justify-content: space-between;
     }
 
-    .left-area, .right-area {
+    .top-left-area, .top-right-area {
         justify-content: center;
     }
 
-    .left-area {
+    .top-left-area {
         flex-direction: row;
     }
 
-    .left-area img, .comment-area img {
+    .top-left-area img, .comment-area img {
         width: 100px;
         height: 100px;
         margin-right: 20px;
     }
 
-    .left-area p, .right-area p {
+    .top-left-area p, .top-right-area p {
         margin-right: 10px;
     }
 
@@ -44,12 +44,12 @@
         flex-direction: column;
     }
 
-    .right-area {
+    .top-right-area {
         flex-direction: column;
         align-items: flex-end;
     }
 
-    .right-area button {
+    .top-right-area button {
         border: none;
     }
 
@@ -88,29 +88,29 @@
     }
 </script>
 
-<div class="component">
-    <div class="sub-components-wrapper">
-        <div class="left-area">
-            <img src="${pageContext.request.contextPath}/assets/KhanhLeTutTut.png" alt="Avatar">
+<div class="post">
+    <div class="top-area">
+        <div class="top-left-area">
+            <img src="${param.user_image_url}" alt="Avatar">
             <div class="info">
                 <div>
-                    <p>Khanh Le Tut Tut</p>
-                    <p>Age: 65</p>
+                    <p>${param.user_name}</p>
+                    <p>${param.user_age}</p>
                 </div>
                 <div>
-                    <p>The king of fingers</p>
+                    <p>${param.user_nickname}</p>
                 </div>
             </div>
         </div>
-        <div class="right-area">
+        <div class="top-right-area">
             <button style="align-self: flex-end;" onclick="toggleImage(this.children[0])">
                 <img src="${pageContext.request.contextPath}/assets/heart_off.png" alt="Heart">
             </button>
             <div>
                 <p>I am</p>
-                <p>Demi-guy</p>
+                <p>${param.user_gender}</p>
                 <p>Looking for</p>
-                <p>Bigender</p>
+                <p>${param.user_preference_gender}</p>
             </div>
         </div>
     </div>

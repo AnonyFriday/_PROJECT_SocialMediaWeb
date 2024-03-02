@@ -28,6 +28,12 @@
     <hr>
     <c:forEach var="post" items="${posts}">
         <jsp:include page="post.jsp">
+            <jsp:param name="user_image_url" value="${post.user.imageUrl}" />
+            <jsp:param name="user_name" value="${post.user.fullName}" />
+            <jsp:param name="user_nickname" value="${post.user.nickName}" />
+            <jsp:param name="user_age" value="${post.user.age}" />
+            <jsp:param name="user_gender" value="${post.user.gender.name}" />
+            <jsp:param name="user_preference_gender" value="${post.user.preferenceGender.name}" />
             <jsp:param name="content" value="${post.content}" />
             <jsp:param name="image_url" value="${post.imageUrl}" />
         </jsp:include>

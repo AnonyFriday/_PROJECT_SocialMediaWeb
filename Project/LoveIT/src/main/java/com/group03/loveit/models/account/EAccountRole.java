@@ -4,8 +4,6 @@
  */
 package com.group03.loveit.models.account;
 
-import com.sun.tools.javac.Main;
-
 /**
  * Define 2 objects only of roles
  */
