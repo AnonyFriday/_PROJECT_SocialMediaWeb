@@ -29,6 +29,10 @@
         <servlet-name>CreatePostController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.CreatePostController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateCommentController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.CreateCommentController</servlet-class>
+    </servlet>
     
     <!-- Mappings -->
     <servlet>
@@ -66,6 +70,10 @@
     <servlet-mapping>
         <servlet-name>CreatePostController</servlet-name>
         <url-pattern>/create-post</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateCommentController</servlet-name>
+        <url-pattern>/create-comment</url-pattern>
     </servlet-mapping>
     
     <!-- Session -->

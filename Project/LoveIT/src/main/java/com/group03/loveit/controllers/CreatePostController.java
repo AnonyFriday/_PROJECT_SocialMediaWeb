@@ -22,6 +22,7 @@ public class CreatePostController extends HttpServlet {
 
         UserDAO userDAO = new UserDAO();
         UserDTO user = userDAO.getUserById(2);
+
         PostDTO post = new PostDTO(user, content, LocalDateTime.now(), 0, 0, "Active", imageUrl);
         PostDAO postDAO = new PostDAO();
         postDAO.insertPost(post);

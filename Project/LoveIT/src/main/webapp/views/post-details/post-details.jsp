@@ -1,0 +1,69 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Nhat
+  Date: 3/2/2024
+  Time: 4:11 PM
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+    <head>
+        <title>LoveIt</title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/post-details/post-details.css">
+    </head>
+    <body>
+        <script>
+            function toggleImage(img) {
+                img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/heart_on.png" : "${pageContext.request.contextPath}/assets/heart_off.png";
+            }
+        </script>
+
+        <jsp:include page="../../header.html" />
+
+        <div class="post">
+            <div class="top-area">
+                <div class="top-left-area">
+                    <img src="${post.user.imageUrl}" alt="Avatar">
+                    <div class="info">
+                        <div>
+                            <p>${post.user.fullName}</p>
+                            <p>${post.user.age}</p>
+                        </div>
+                        <div>
+                            <p>${post.user.nickName}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="top-right-area">
+                    <button onclick="toggleImage(this.children[0])">
+                        <img src="${pageContext.request.contextPath}/assets/heart_off.png" alt="Heart">
+                    </button>
+                    <div>
+                        <p>I am</p>
+                        <p>${post.user.gender.name}</p>
+                        <p>Looking for</p>
+                        <p>${post.user.preferenceGender.name}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="content_area">
+                <p>${post.content}</p>
+                <img src="${post.imageUrl}" alt="Post image">
+            </div>
+            <hr>
+            <div class="comment-area">
+                <c:forEach var="comment" items="${comments}">
+                    <jsp:include page="c-comment.jsp">
+                        <jsp:param name="user_image_url" value="${comment.user.imageUrl}" />
+                        <jsp:param name="user_name" value="${comment.user.fullName}" />
+                        <jsp:param name="content" value="${comment.content}" />
+                    </jsp:include>
+                </c:forEach>
+            </div>
+            <jsp:include page="c-create-comment.jsp">
+                <jsp:param name="post_id" value="${post.id}" />
+            </jsp:include>
+        </div>
+    </body>
+</html>

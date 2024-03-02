@@ -75,8 +75,16 @@ public class CommentDTO {
     }
 
     // Constructors
-    public CommentDTO(long id) {
-        this.id = id;
+    public CommentDTO() {
+    }
+
+    public CommentDTO(PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO reply) {
+        this.post = post;
+        this.user = user;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.status = status;
+        this.reply = reply;
     }
 
     public CommentDTO(long id, PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO reply) {

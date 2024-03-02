@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public interface ICommentDAO {
     CompletableFuture<CommentDTO> getCommentById(long id);
     CompletableFuture<List<CommentDTO>> getCommentsByPost(long postId);
+    CompletableFuture<CommentDTO> getTopCommentByPost(long postId);
     CompletableFuture<List<CommentDTO>> getChildComments(long id);
     CompletableFuture<Void> insertComment(CommentDTO comment);
     CompletableFuture<Void> updateComment(CommentDTO comment);

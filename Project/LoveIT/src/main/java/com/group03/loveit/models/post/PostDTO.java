@@ -1,6 +1,7 @@
 package com.group03.loveit.models.post;
 
 import com.group03.loveit.models.account.AccountDTO;
+import com.group03.loveit.models.comment.CommentDTO;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class PostDTO {
     private int commentTotal;
     private String status;
     private String imageUrl;
+    private CommentDTO topComment;
 
     // Getters and Setters
     public long getId() {
@@ -81,6 +83,12 @@ public class PostDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+    public CommentDTO getTopComment() {
+        return topComment;
+    }
+    public void setTopComment(CommentDTO topComment) {
+        this.topComment = topComment;
     }
 
     // Constructors

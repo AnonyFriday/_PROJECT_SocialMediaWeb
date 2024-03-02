@@ -192,7 +192,6 @@ public class PostDAO implements IPostDAO {
                     ps.setInt(5, post.getCommentTotal());
                     ps.setString(6, post.getStatus());
                     ps.setString(7, post.getImageUrl());
-                    System.out.println("Inserting post 2");
                     ps.executeUpdate();
                 }
             } catch (SQLException ex) {

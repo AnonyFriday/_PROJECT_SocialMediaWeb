@@ -1,0 +1,10 @@
+.create-comment-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-comment-div input[type="text"] {
+    flex-grow: 1;
+    margin-right: 10px;
+}

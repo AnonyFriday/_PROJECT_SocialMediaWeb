@@ -1,0 +1,20 @@
+.comment-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.comment-div img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.comment-div div {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-right: 10px;
+    width: 100%;
+}
