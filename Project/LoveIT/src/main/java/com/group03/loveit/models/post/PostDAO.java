@@ -52,15 +52,8 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new RuntimeException("Connection is null");
                 }
-                String query = "SELECT p." + COL_ID
-                        + ", p." + COL_USER_ID
-                        + ", p." + COL_CONTENT
-                        + ", p." + COL_CREATED_AT
-                        + ", p." + COL_HEARTS_TOTAL
-                        + ", p." + COL_COMMENT_TOTAL
-                        + ", p." + COL_STATUS
-                        + ", p." + COL_IMAGE_URL
-                        + ", u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
+                String query = "SELECT p.*, "
+                        + "u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
                         + "FROM Post p JOIN [User] u ON p." + COL_USER_ID + " = u.Id WHERE p." + COL_ID + " = ?";
 
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -118,15 +111,8 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new RuntimeException("Connection is null");
                 }
-                String query = "SELECT p." + COL_ID
-                        + ", p." + COL_USER_ID
-                        + ", p." + COL_CONTENT
-                        + ", p." + COL_CREATED_AT
-                        + ", p." + COL_HEARTS_TOTAL
-                        + ", p." + COL_COMMENT_TOTAL
-                        + ", p." + COL_STATUS
-                        + ", p." + COL_IMAGE_URL
-                        + ", u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
+                String query = "SELECT p.*, "
+                        + "u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
                         + "FROM Post p JOIN [User] u ON p." + COL_USER_ID + " = u.Id";
 
                 try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
