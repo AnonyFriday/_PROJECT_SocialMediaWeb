@@ -3,15 +3,15 @@
     <!-- Packages -->
     <servlet>
         <servlet-name>LoginController</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.LoginController</servlet-class>
+        <servlet-class>com.group03.loveit.controllers.authentication.LoginController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterController</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.RegisterController</servlet-class>
+        <servlet-class>com.group03.loveit.controllers.authentication.RegisterController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>WelcomeController</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.WelcomeController</servlet-class>
+        <servlet-class>com.group03.loveit.controllers.welcome.WelcomeController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PeopleZoneServlet</servlet-name>
@@ -33,11 +33,10 @@
         <servlet-name>CreateCommentController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.CreateCommentController</servlet-class>
     </servlet>
-    
     <!-- Mappings -->
     <servlet>
         <servlet-name>ProfileController</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.ProfileController</servlet-class>
+        <servlet-class>com.group03.loveit.controllers.profile.ProfileController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
@@ -75,16 +74,14 @@
         <servlet-name>CreateCommentController</servlet-name>
         <url-pattern>/create-comment</url-pattern>
     </servlet-mapping>
-    
     <!-- Session -->
     <session-config>
         <session-timeout>
             60
         </session-timeout>
     </session-config>
-    
     <!-- Welcome File -->
     <welcome-file-list>
-        <welcome-file>/welcome</welcome-file>
+        <welcome-file>views/welcome/welcome.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

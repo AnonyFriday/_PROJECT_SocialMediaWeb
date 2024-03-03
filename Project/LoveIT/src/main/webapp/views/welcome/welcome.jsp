@@ -4,14 +4,14 @@
     Author     : duyvu
 --%>
 
+<%@taglib prefix="LoveIT" tagdir="/WEB-INF/tags/" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
+
+    <LoveIT:generic_page pageTitle="welcome" 
+                         pageStyleUrl="${pageContext.request.contextPath}/css/index.css">
+
         <main>
             <div>
                 <a href="/login">Already a member?</a>
@@ -32,7 +32,10 @@
                 </form>
 
                 <a href="">Others</a>
+
             </div>
         </main>
-    </body>
+
+    </LoveIT:generic_page>
+
 </html>
