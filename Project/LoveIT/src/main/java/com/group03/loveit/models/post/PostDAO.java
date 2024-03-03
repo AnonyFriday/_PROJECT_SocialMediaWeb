@@ -48,63 +48,53 @@ public class PostDAO implements IPostDAO {
     @Override
     public CompletableFuture<PostDTO> getPostById(long id) {
         return CompletableFuture.supplyAsync(() -> {
-            Connection conn = null;
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            try {
-                conn = DBUtils.getConnection();
+            try (Connection conn = DBUtils.getConnection()) {
                 if (conn == null) {
                     throw new RuntimeException("Connection is null");
                 }
-                String query = "SELECT p.Id as p_Id, p.Content as p_Content, p.Created_At as p_Created_At, p.Hearts_Total as p_Hearts_Total, p.Comment_Total as p_Comment_Total, p.Status as p_Status, p.Image_Url as p_Image_Url, "
-                        + "u.Id as u_Id, u.Age as u_Age, u.Gender_Id as u_Gender_Id, u.Preference_Id as u_Preference_Id, u.Nickname as u_Nickname, u.Fullname as u_Fullname, u.Email as u_Email, u.Image_Url as u_Image_Url, u.Status as u_Status, u.Role as u_Role "
-                        + "FROM Post p JOIN [User] u ON p.User_Id = u.Id WHERE p." + COL_ID + " = ?";
+                String query = "SELECT p." + COL_ID
+                        + ", p." + COL_USER_ID
+                        + ", p." + COL_CONTENT
+                        + ", p." + COL_CREATED_AT
+                        + ", p." + COL_HEARTS_TOTAL
+                        + ", p." + COL_COMMENT_TOTAL
+                        + ", p." + COL_STATUS
+                        + ", p." + COL_IMAGE_URL
+                        + ", u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
+                        + "FROM Post p JOIN [User] u ON p." + COL_USER_ID + " = u.Id WHERE p." + COL_ID + " = ?";
 
-                ps = conn.prepareStatement(query);
-                ps.setLong(1, id);
-                rs = ps.executeQuery();
-                if (rs.next()) {
-                    UserDTO user = new UserDTO(
-                            rs.getLong("u_Id"),
-                            rs.getByte("u_Age"),
-                            GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Gender_Id")),
-                            GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Preference_Id")),
-                            rs.getString("u_Nickname"),
-                            rs.getString("u_Fullname"),
-                            rs.getString("u_Email"),
-                            rs.getString("u_Image_Url"),
-                            EAccountStatus.valueOf(rs.getString("u_Status")),
-                            EAccountRole.valueOf(rs.getString("u_Role"))
-                    );
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    ps.setLong(1, id);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            UserDTO user = new UserDTO(
+                                    rs.getLong("u_id"),
+                                    rs.getByte("Age"),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
+                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
+                                    rs.getString("Nickname"),
+                                    rs.getString("Fullname"),
+                                    rs.getString("Email"),
+                                    rs.getString("u_image_url"),
+                                    EAccountStatus.valueOf(rs.getString("u_status")),
+                                    EAccountRole.valueOf(rs.getString("Role"))
+                            );
 
-                    return new PostDTO(
-                            rs.getLong("p_Id"),
-                            user,
-                            rs.getString("p_Content"),
-                            rs.getTimestamp("p_Created_At").toLocalDateTime(),
-                            rs.getInt("p_Hearts_Total"),
-                            rs.getInt("p_Comment_Total"),
-                            rs.getString("p_Status"),
-                            rs.getString("p_Image_Url")
-                    );
+                            return new PostDTO(
+                                    rs.getLong(COL_ID),
+                                    user,
+                                    rs.getString(COL_CONTENT),
+                                    rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
+                                    rs.getInt(COL_HEARTS_TOTAL),
+                                    rs.getInt(COL_COMMENT_TOTAL),
+                                    rs.getString(COL_STATUS),
+                                    rs.getString(COL_IMAGE_URL)
+                            );
+                        }
+                    }
                 }
-            } catch (SQLException ex) {
-                System.out.println("Cannot get post by ID: " + ex.getMessage());
-                ex.printStackTrace();
-            } finally {
-                try {
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    System.out.println("Error closing resources: " + ex.getMessage());
-                }
+            } catch (SQLException e) {
+                System.out.println("Cannot get post by ID: " + e.getMessage());
             }
             return null;
         });
@@ -128,36 +118,41 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new RuntimeException("Connection is null");
                 }
-                String query = "SELECT p.Id as p_Id, p.Content as p_Content, p.Created_At as p_Created_At, p.Hearts_Total as p_Hearts_Total, p.Comment_Total as p_Comment_Total, p.Status as p_Status, p.Image_Url as p_Image_Url, "
-                        + "u.Id as u_Id, u.Age as u_Age, u.Gender_Id as u_Gender_Id, u.Preference_Id as u_Preference_Id, u.Nickname as u_Nickname, u.Fullname as u_Fullname, u.Email as u_Email, u.Image_Url as u_Image_Url, u.Status as u_Status, u.Role as u_Role "
-                        + "FROM Post p JOIN [User] u ON p.User_Id = u.Id";
+                String query = "SELECT p." + COL_ID
+                        + ", p." + COL_USER_ID
+                        + ", p." + COL_CONTENT
+                        + ", p." + COL_CREATED_AT
+                        + ", p." + COL_HEARTS_TOTAL
+                        + ", p." + COL_COMMENT_TOTAL
+                        + ", p." + COL_STATUS
+                        + ", p." + COL_IMAGE_URL
+                        + ", u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
+                        + "FROM Post p JOIN [User] u ON p." + COL_USER_ID + " = u.Id";
 
                 try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         UserDTO user = new UserDTO(
-                                rs.getLong("u_Id"),
-                                rs.getByte("u_Age"),
-                                GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Gender_Id")),
-                                GenderDAO.getInstance().getGenderMap().get(rs.getLong("u_Preference_Id")),
-                                rs.getString("u_Nickname"),
-                                rs.getString("u_Fullname"),
-                                rs.getString("u_Email"),
-                                rs.getString("u_Image_Url"),
-                                // EAccountStatus.valueOf(rs.getString("u_Status")),
-                                // EAccountRole.valueOf(rs.getString("u_Role"))
-                                EAccountStatus.ACTIVE, //! Having Error here on ENUM, will fix later
-                                EAccountRole.ADMIN
+                                rs.getLong("u_id"),
+                                rs.getByte("Age"),
+                                GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
+                                GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
+                                rs.getString("Nickname"),
+                                rs.getString("Fullname"),
+                                rs.getString("Email"),
+                                rs.getString("u_image_url"),
+                                EAccountStatus.valueOf(rs.getString("u_status")),
+                                EAccountRole.valueOf(rs.getString("Role"))
                         );
 
                         PostDTO post = new PostDTO(
-                                rs.getLong("p_Id"),
+                                rs.getLong(COL_ID),
                                 user,
-                                rs.getString("p_Content"),
-                                rs.getTimestamp("p_Created_At").toLocalDateTime(),
-                                rs.getInt("p_Hearts_Total"),
-                                rs.getInt("p_Comment_Total"),
-                                rs.getString("p_Status"),
-                                rs.getString("p_Image_Url")
+                                rs.getString(COL_CONTENT),
+                                rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
+                                rs.getInt(COL_HEARTS_TOTAL),
+                                rs.getInt(COL_COMMENT_TOTAL),
+                                rs.getString(COL_STATUS),
+                                rs.getString(COL_IMAGE_URL)
                         );
                         posts.add(post);
                     }
@@ -184,7 +179,15 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Post (" + COL_USER_ID + ", " + COL_CONTENT + ", " + COL_CREATED_AT + ", " + COL_HEARTS_TOTAL + ", " + COL_COMMENT_TOTAL + ", " + COL_STATUS + ", " + COL_IMAGE_URL + ") VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Post ("
+                        + COL_USER_ID + ", "
+                        + COL_CONTENT + ", "
+                        + COL_CREATED_AT + ", "
+                        + COL_HEARTS_TOTAL + ", "
+                        + COL_COMMENT_TOTAL + ", "
+                        + COL_STATUS + ", "
+                        + COL_IMAGE_URL
+                        + ") VALUES (?, ?, ?, ?, ?, ?, ?)")) {
                     ps.setLong(1, post.getUser().getId());
                     ps.setString(2, post.getContent());
                     ps.setTimestamp(3, java.sql.Timestamp.valueOf(post.getCreatedAt()));
@@ -215,7 +218,14 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                try (PreparedStatement ps = conn.prepareStatement("UPDATE Post SET " + COL_USER_ID + " = ?, " + COL_CONTENT + " = ?, " + COL_CREATED_AT + " = ?, " + COL_HEARTS_TOTAL + " = ?, " + COL_COMMENT_TOTAL + " = ?, " + COL_STATUS + " = ?, " + COL_IMAGE_URL + " = ? WHERE " + COL_ID + " = ?")) {
+                try (PreparedStatement ps = conn.prepareStatement("UPDATE Post SET "
+                        + COL_USER_ID + " = ?, "
+                        + COL_CONTENT + " = ?, "
+                        + COL_CREATED_AT + " = ?, "
+                        + COL_HEARTS_TOTAL + " = ?, "
+                        + COL_COMMENT_TOTAL + " = ?, "
+                        + COL_STATUS + " = ?, "
+                        + COL_IMAGE_URL + " = ? WHERE " + COL_ID + " = ?")) {
                     ps.setLong(1, post.getUser().getId());
                     ps.setString(2, post.getContent());
                     ps.setTimestamp(3, java.sql.Timestamp.valueOf(post.getCreatedAt()));
@@ -256,11 +266,5 @@ public class PostDAO implements IPostDAO {
             }
             return null;
         });
-    }
-
-    // Testing
-    public static void main(String[] args) {
-        PostDAO post = new PostDAO();
-        System.out.println(post.getAllPosts().join());
     }
 }
