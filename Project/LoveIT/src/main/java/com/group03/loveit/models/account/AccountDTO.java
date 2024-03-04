@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * @author duyvu
  */
-public abstract class AccountDTO implements Serializable {
+public class AccountDTO implements Serializable {
 
     // ===========================
     // == Fields
@@ -130,52 +130,57 @@ public abstract class AccountDTO implements Serializable {
     public long getId() {
         return id;
     }
-
+    
     public String getEmail() {
         return email;
     }
-
+    
     public void setEmail(String email) {
         this.email = email;
     }
-
+    
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public String getFullName() {
         return fullName;
     }
-
+    
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-
+    
     public String getImageUrl() {
         return imageUrl;
     }
-
+    
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
+    
     public EAccountStatus getStatus() {
         return status;
     }
-
+    
     public void setStatus(EAccountStatus status) {
         this.status = status;
     }
-
+    
     public EAccountRole getRole() {
         return role;
     }
-
+    
     public void setRole(EAccountRole role) {
         this.role = role;
     }
+    
+//    public static void main(String[] args) {
+//        System.out.println(EAccountRole.getEnumFromName("Admin"));
+//        System.out.println(EAccountStatus.getEnumFromName("Blocked"));
+//    }
 }

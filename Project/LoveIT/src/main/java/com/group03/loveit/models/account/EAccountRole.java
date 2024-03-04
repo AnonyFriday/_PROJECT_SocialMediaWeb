@@ -4,6 +4,9 @@
  */
 package com.group03.loveit.models.account;
 
+import java.util.Arrays;
+import java.util.function.Predicate;
+
 /**
  * Define 2 objects only of roles
  */
@@ -41,5 +44,20 @@ public enum EAccountRole {
      */
     public String getRole() {
         return role;
+    }
+
+    /**
+     * Get the enum object based on the string form
+     *
+     * @param name
+     * @return
+     */
+    public static EAccountRole getEnumFromName(String name) {
+        return Arrays.stream(EAccountRole.values()).filter(new Predicate<EAccountRole>() {
+            @Override
+            public boolean test(EAccountRole t) {
+                return t.getRole().equalsIgnoreCase(name);
+            }
+        }).findFirst().get();
     }
 }
