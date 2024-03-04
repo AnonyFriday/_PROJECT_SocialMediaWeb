@@ -18,13 +18,9 @@ public abstract class DBUtils {
     private final static String instance = "";
     //private final static String instance = "MSSQLSERVER_2019";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
 
-    // DUY Database
-    private final static String userID = "admin";
-    private final static String password = "admin";
-
-    // Nhat Database
-//    private final static String userID = "sa";
-//    private final static String password = "123456789";
+    // Don't change these values, change the environment variables instead
+    private final static String userID = System.getenv("LIT_DB_USER");
+    private final static String password = System.getenv("LIT_DB_PASS");
     /**
      * Close the connection
      *
