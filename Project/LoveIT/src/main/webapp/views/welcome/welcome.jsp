@@ -4,38 +4,33 @@
     Author     : duyvu
 --%>
 
-<%@taglib prefix="LoveIT" tagdir="/WEB-INF/tags/" %>
+<%@taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<html>
+<DN:GenericPage pageTitle="welcome" 
+                pageStyleUrl="${pageContext.request.contextPath}/css/index.css">
 
-    <LoveIT:generic_page pageTitle="welcome" 
-                         pageStyleUrl="${pageContext.request.contextPath}/css/index.css">
+    <main>
+        <a href="/login">Already a member?</a>
 
-        <main>
-            <div>
-                <a href="/login">Already a member?</a>
-            </div>
-            <div>
-                <img src="/assets/KhanhLeTutTut.png" alt="profile-picture" width="200" height="300"/>
+        <div>
+            <img src="/assets/KhanhLeTutTut.png" alt="profile-picture" width="200" height="300"/>
 
-                <form method="GET" action="WelcomeController">
-                    <div>
-                        <label>I'm a woman</label>
-                        <input type="text" name="gender" value="woman">I'm a woman</input>
-                    </div>
+            <form method="GET" action="WelcomeController">
+                <div>
+                    <label class="">I'm a woman</label>
+                    <input type="text" name="gender" value="woman">I'm a woman</input>
+                </div>
 
-                    <div>
-                        <label>I'm a man</label>
-                        <input type="text" name="gender" value="man">I'm a woman</input>
-                    </div>
-                </form>
+                <div>
+                    <label>I'm a man</label>
+                    <input type="text" name="gender" value="man">I'm a woman</input>
+                </div>
+            </form>
 
-                <a href="">Others</a>
+            <a href="">Others</a>
+        </div>
+    </main>
 
-            </div>
-        </main>
+</DN:GenericPage>
 
-    </LoveIT:generic_page>
-
-</html>
