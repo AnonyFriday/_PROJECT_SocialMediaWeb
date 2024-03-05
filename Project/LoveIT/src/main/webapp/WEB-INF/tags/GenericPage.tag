@@ -27,7 +27,8 @@
 
         <!-- Bootstrap and Custom SCSS style -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/bootstrap/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/index.css">
+        <!--<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/index.css">-->
+        <link rel="stylesheet" href="${pageStyleUrl}">
 
     </head>
 

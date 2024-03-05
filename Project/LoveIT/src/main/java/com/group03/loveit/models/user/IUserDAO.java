@@ -19,9 +19,9 @@ public interface IUserDAO {
 
     public UserDTO getUserById(long id);
 
-    public void create(UserDTO user);
+    public void insertUser(UserDTO user);
 
-    public void update(UserDTO user);
+    public void updateUser(UserDTO user);
 
-    public void delete(long id);
+    public void deleteUser(long id);
 }

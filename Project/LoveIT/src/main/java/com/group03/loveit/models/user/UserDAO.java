@@ -33,7 +33,7 @@ public final class UserDAO implements IUserDAO {
     // == Fields
     // ===========================
     private final String TABLE_NAME = "[User]";
-    private final String COL_ID = "Id";
+    private final String COL_ID = "[Id]";
     private final String COL_EMAIL = "Email";
     private final String COL_NICKNAME = "Nickname";
     private final String COL_PASSWORD = "Password";
@@ -42,6 +42,7 @@ public final class UserDAO implements IUserDAO {
     private final String COL_STATUS = "Status";
     private final String COL_ROLE = "Role";
     private final String COL_AGE = "Age";
+    private final String COL_CREATE_AT = "Created_At";
     private final String COL_GENDER_ID = "Gender_Id";
     private final String COL_GENDER_PREFERENCE_ID = "Preference_Id";
 
@@ -63,7 +64,7 @@ public final class UserDAO implements IUserDAO {
 
                 // SQL query
                 String sql = " SELECT * "
-                        + " FROM [User] ";
+                        + " FROM " + TABLE_NAME;
 
                 List<UserDTO> list = new ArrayList<>();
 
@@ -169,6 +170,12 @@ public final class UserDAO implements IUserDAO {
         return future;
     }
 
+    /**
+     * Create User By Id
+     *
+     * @param userId
+     * @return
+     */
     @Override
     public UserDTO getUserById(long userId) {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = ? ";
@@ -202,19 +209,42 @@ public final class UserDAO implements IUserDAO {
     }
 
     @Override
-    public void create(UserDTO udto
+    public void insertUser(UserDTO user) {
+//        String sql = "INSERT INTO " + TABLE_NAME + " ("
+//                + COL_FULLNAME + ", "
+//                + COL_NICKNAME + ", "
+//                + COL_EMAIL + ", "
+//                + COL_PASSWORD + ", "
+//                + COL_AGE + ", "
+//                + COL_STATUS + ", "
+//                + COL_ROLE + ", "
+//                + COL_GENDER_ID + ", "
+//                + COL_GENDER_PREFERENCE_ID + ", "
+//                + COL_CREATE_AT + ", "
+//                + COL_IMAGEURL
+//                + ") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+//
+//        try (Connection conn = DBUtils.getConnection()) {
+//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//                ps.setNString(1, user.getFullName());
+//                ps.setNString(2, user.getNickName());
+//                ps.setNString(3, user.getPassword());
+//                ps.setByte(3, user.getAge());
+//                
+//            }
+//        } catch (SQLException ex) {
+//
+//        }
+    }
+
+    @Override
+    public void updateUser(UserDTO udto
     ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void update(UserDTO udto
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void delete(long l
+    public void deleteUser(long l
     ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }

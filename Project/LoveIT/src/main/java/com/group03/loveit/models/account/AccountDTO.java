@@ -178,7 +178,7 @@ public class AccountDTO implements Serializable {
     public void setRole(EAccountRole role) {
         this.role = role;
     }
-    
+
 //    public static void main(String[] args) {
 //        System.out.println(EAccountRole.getEnumFromName("Admin"));
 //        System.out.println(EAccountStatus.getEnumFromName("Blocked"));
