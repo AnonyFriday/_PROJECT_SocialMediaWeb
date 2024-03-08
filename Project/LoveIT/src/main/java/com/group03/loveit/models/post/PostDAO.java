@@ -69,8 +69,8 @@ public class PostDAO implements IPostDAO {
                                     rs.getString("Fullname"),
                                     rs.getString("Email"),
                                     rs.getString("u_image_url"),
-                                    EAccountStatus.valueOf(rs.getString("u_status")),
-                                    EAccountRole.valueOf(rs.getString("Role"))
+                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
+                                    EAccountRole.getEnumFromName(rs.getString("Role"))
                             );
 
                             return new PostDTO(
@@ -126,8 +126,8 @@ public class PostDAO implements IPostDAO {
                                 rs.getString("Fullname"),
                                 rs.getString("Email"),
                                 rs.getString("u_image_url"),
-                                EAccountStatus.valueOf(rs.getString("u_status")),
-                                EAccountRole.valueOf(rs.getString("Role"))
+                                EAccountStatus.getEnumFromName(rs.getString("u_status")),
+                                EAccountRole.getEnumFromName(rs.getString("Role"))
                         );
 
                         PostDTO post = new PostDTO(
@@ -145,6 +145,8 @@ public class PostDAO implements IPostDAO {
                 }
             } catch (SQLException ex) {
                 System.out.println("Cannot get posts: " + ex.getMessage());
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
             }
             return posts;
         });

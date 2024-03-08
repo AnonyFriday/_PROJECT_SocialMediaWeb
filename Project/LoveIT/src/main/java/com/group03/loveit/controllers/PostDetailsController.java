@@ -36,4 +36,26 @@ public class PostDetailsController extends HttpServlet {
             log("Error: " + e.getMessage());
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        System.out.println("action in post detail: " + action);
+        if (action != null) {
+            switch (action) {
+                case "create_comment":
+                    String postId = request.getParameter("post_id");
+                    String content = request.getParameter("content");
+                    System.out.println("post_id in post detail: " + postId);
+
+                    if (postId != null && content != null) {
+                        request.getRequestDispatcher("/create-comment?post_id = " + postId + "&content = " + content).forward(request, response);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }

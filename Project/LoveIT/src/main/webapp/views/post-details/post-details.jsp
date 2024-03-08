@@ -7,19 +7,15 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-    <head>
-        <title>LoveIt</title>
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/post-details/post-details.css">
-    </head>
-    <body>
+
+<DN:GenericPage pageTitle="welcome"
+                pageStyleUrl="${pageContext.request.contextPath}/css/post-details/post-details.css">
+    <main>
         <script>
             function toggleImage(img) {
                 img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/heart_on.png" : "${pageContext.request.contextPath}/assets/heart_off.png";
             }
         </script>
-
-        <jsp:include page="../../header.html" />
 
         <div class="post">
             <div class="top-area">
@@ -65,5 +61,5 @@
                 <jsp:param name="post_id" value="${post.id}" />
             </jsp:include>
         </div>
-    </body>
-</html>
+    </main>
+</DN:GenericPage>

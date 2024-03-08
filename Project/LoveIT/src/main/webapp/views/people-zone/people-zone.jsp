@@ -1,13 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
-    <head>
-        <title>LoveIt</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/people-zone/people-zone.css">
-    </head>
-    <body>
-        <jsp:include page="../../header.html" />
+
+<DN:GenericPage pageTitle="welcome"
+                pageStyleUrl="${pageContext.request.contextPath}/css/people-zone/people-zone.css">
+    <main>
         <div class="search-bar">
             <form action="${pageContext.request.contextPath}/search" method="get">
                 <label>
@@ -33,5 +29,5 @@
                 <jsp:param name="tcomment_content" value="${post.topComment.content}" />
             </jsp:include>
         </c:forEach>
-    </body>
-</html>
+    </main>
+</DN:GenericPage>

@@ -33,7 +33,7 @@ public final class UserDAO implements IUserDAO {
     // == Fields
     // ===========================
     private final String TABLE_NAME = "[User]";
-    private final String COL_ID = "[Id]";
+    private final String COL_ID = "Id";
     private final String COL_EMAIL = "Email";
     private final String COL_NICKNAME = "Nickname";
     private final String COL_PASSWORD = "Password";
@@ -80,8 +80,8 @@ public final class UserDAO implements IUserDAO {
                                     rs.getNString(COL_FULLNAME),
                                     rs.getString(COL_EMAIL),
                                     rs.getString(COL_IMAGEURL),
-                                    EAccountStatus.valueOf(rs.getString(COL_STATUS)),
-                                    EAccountRole.valueOf(rs.getString(COL_ROLE)));
+                                    EAccountStatus.getEnumFromName(rs.getString(COL_STATUS)),
+                                    EAccountRole.getEnumFromName(rs.getString(COL_ROLE)));
                             list.add(user);
                         }
 
@@ -151,8 +151,8 @@ public final class UserDAO implements IUserDAO {
                                     rs.getNString(COL_FULLNAME),
                                     rs.getString(COL_EMAIL),
                                     rs.getString(COL_IMAGEURL),
-                                    EAccountStatus.valueOf(rs.getString(COL_STATUS)),
-                                    EAccountRole.valueOf(rs.getString(COL_ROLE)));
+                                    EAccountStatus.getEnumFromName(rs.getString(COL_STATUS)),
+                                    EAccountRole.getEnumFromName(rs.getString(COL_ROLE)));
                             list.add(user);
                         }
 
@@ -192,8 +192,8 @@ public final class UserDAO implements IUserDAO {
                         String fullName = resultSet.getNString(COL_FULLNAME);
                         String nickName = resultSet.getNString(COL_NICKNAME);
                         String imageUrl = resultSet.getString(COL_IMAGEURL);
-                        EAccountStatus status = EAccountStatus.valueOf(resultSet.getString(COL_STATUS));
-                        EAccountRole role = EAccountRole.valueOf(resultSet.getString(COL_ROLE));
+                        EAccountStatus status = EAccountStatus.getEnumFromName(resultSet.getString(COL_STATUS));
+                        EAccountRole role = EAccountRole.getEnumFromName(resultSet.getString(COL_ROLE));
                         byte age = resultSet.getByte(COL_AGE);
                         GenderDTO gender = new GenderDTO(resultSet.getLong(COL_GENDER_ID));
                         GenderDTO preferenceGender = new GenderDTO(resultSet.getInt(COL_GENDER_PREFERENCE_ID));

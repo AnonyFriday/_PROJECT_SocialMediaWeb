@@ -64,8 +64,9 @@
                     </c:otherwise>
                 </c:choose>
 
-                <form action="${pageContext.request.contextPath}/post-details" method="get">
-                    <input type="hidden" name="post_id" value="${param.post_id}" />
+                <form action="${pageContext.request.contextPath}/people-zone" method="get">
+                    <input type="hidden" name="action" value="post_details">
+                    <input type="hidden" name="post_id" value="${param.post_id}">
                     <button type="submit">Discuss Now ></button>
                 </form>
             </div>

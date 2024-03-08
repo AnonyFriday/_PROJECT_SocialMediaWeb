@@ -74,8 +74,8 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString("Fullname"),
                                     rs.getString("Email"),
                                     rs.getString("u_image_url"),
-                                    EAccountStatus.valueOf(rs.getString("u_status")),
-                                    EAccountRole.valueOf(rs.getString("Role")));
+                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
+                                    EAccountRole.getEnumFromName(rs.getString("Role")));
                             PostDTO post = new PostDTO(
                                     rs.getLong("p_id"),
                                     user,
@@ -141,8 +141,8 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString("Fullname"),
                                     rs.getString("Email"),
                                     rs.getString("u_image_url"),
-                                    EAccountStatus.valueOf(rs.getString("u_status")),
-                                    EAccountRole.valueOf(rs.getString("Role")));
+                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
+                                    EAccountRole.getEnumFromName(rs.getString("Role")));
                             PostDTO post = new PostDTO(
                                     rs.getLong("p_id"),
                                     user,
@@ -208,8 +208,8 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString("Fullname"),
                                     rs.getString("Email"),
                                     rs.getString("u_image_url"),
-                                    EAccountStatus.valueOf(rs.getString("u_status")),
-                                    EAccountRole.valueOf(rs.getString("Role")));
+                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
+                                    EAccountRole.getEnumFromName(rs.getString("Role")));
                             PostDTO post = new PostDTO(
                                     rs.getLong("p_id"),
                                     user,
@@ -235,6 +235,8 @@ public class CommentDAO implements ICommentDAO {
                 }
             } catch (SQLException ex) {
                 System.out.println("Cannot get top comment by post id: " + ex.getMessage());
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
             }
             return topComment;
         });
@@ -276,8 +278,8 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString("Fullname"),
                                     rs.getString("Email"),
                                     rs.getString("u_image_url"),
-                                    EAccountStatus.valueOf(rs.getString("u_status")),
-                                    EAccountRole.valueOf(rs.getString("Role")));
+                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
+                                    EAccountRole.getEnumFromName(rs.getString("Role")));
                             PostDTO post = new PostDTO(
                                     rs.getLong("p_id"),
                                     user,

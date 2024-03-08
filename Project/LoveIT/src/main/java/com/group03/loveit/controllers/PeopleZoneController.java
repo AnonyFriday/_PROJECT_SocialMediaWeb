@@ -21,9 +21,41 @@ public class PeopleZoneController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processPostList(request, response);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/people-zone/people-zone.jsp");
-        dispatcher.forward(request, response);
+        String action = request.getParameter("action");
+        RequestDispatcher dispatcher;
+        if (action != null) {
+            switch (action) {
+                case "post_details":
+                    String postId = request.getParameter("post_id");
+                    if (postId != null) {
+                        dispatcher = request.getRequestDispatcher("/post-details?post_id=" + postId);
+                        dispatcher.forward(request, response);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            processPostList(request, response);
+            dispatcher = request.getRequestDispatcher("/views/people-zone/people-zone.jsp");
+            dispatcher.forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action != null) {
+            switch (action) {
+                case "create_post":
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/create-post");
+                    dispatcher.forward(request, response);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void processPostList(HttpServletRequest request, HttpServletResponse response) {

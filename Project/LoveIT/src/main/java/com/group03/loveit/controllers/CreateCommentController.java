@@ -20,6 +20,7 @@ public class CreateCommentController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             long post_id = Long.parseLong(request.getParameter("post_id"));
+            System.out.println("post_id in create comment: " + post_id);
             String content = request.getParameter("content");
 
             PostDAO postDAO = new PostDAO();
