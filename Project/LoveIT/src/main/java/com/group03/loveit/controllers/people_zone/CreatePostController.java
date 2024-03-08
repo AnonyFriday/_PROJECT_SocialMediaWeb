@@ -1,4 +1,4 @@
-package com.group03.loveit.controllers;
+package com.group03.loveit.controllers.people_zone;
 
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 public class CreatePostController extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String content = request.getParameter("content");
             String imageUrl = request.getParameter("imageUrl");

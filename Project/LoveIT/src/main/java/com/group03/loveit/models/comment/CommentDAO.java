@@ -1,9 +1,8 @@
 package com.group03.loveit.models.comment;
 
-import com.group03.loveit.models.account.EAccountRole;
-import com.group03.loveit.models.account.EAccountStatus;
-import com.group03.loveit.models.gender.GenderDAO;
+import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
+import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
 
@@ -14,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * This class provides the Data Access Object (DAO) for the Comment entity. It
@@ -54,39 +52,24 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT c.*, "
-                        + "p.Id as p_id, p.Content as p_content, p.Created_At as p_created_at, p.Status as p_status, p.Image_Url as p_image_url, p.*, "
-                        + "u.Id as u_id, u.Image_Url as u_image_url, u.Status as u_status, u.* "
-                        + "FROM Comment c "
-                        + "JOIN Post p ON c.Post_Id = p.Id "
-                        + "JOIN [User] u ON c.User_Id = u.Id "
-                        + "WHERE c." + COL_ID + " = ?";
+                String query = "SELECT * FROM Comment WHERE " + COL_ID + " = ?";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, id);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                    rs.getLong("u_id"),
-                                    rs.getByte("Age"),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
-                                    rs.getString("Nickname"),
-                                    rs.getString("Fullname"),
-                                    rs.getString("Email"),
-                                    rs.getString("u_image_url"),
-                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
-                                    EAccountRole.getEnumFromName(rs.getString("Role")));
-                            PostDTO post = new PostDTO(
-                                    rs.getLong("p_id"),
-                                    user,
-                                    rs.getString("p_content"),
-                                    rs.getTimestamp("p_created_at").toLocalDateTime(),
-                                    rs.getInt("Hearts_Total"),
-                                    rs.getInt("Comment_Total"),
-                                    rs.getString("p_status"),
-                                    rs.getString("p_image_url")
-                            );
-                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
+                            long userId = rs.getLong(COL_USER_ID);
+                            UserDAO userDAO = new UserDAO();
+                            UserDTO user = userDAO.getUserById(userId);
+
+                            long postId = rs.getLong(COL_POST_ID);
+                            PostDAO postDAO = new PostDAO();
+                            PostDTO post = postDAO.getPostById(postId).join();
+
+                            CommentDTO parentCmt = null;
+                            if (rs.getLong(COL_REPLY_ID) != 0) {
+                                parentCmt = getCommentById(rs.getLong(COL_REPLY_ID)).join();
+                            }
+
                             comment = new CommentDTO(
                                     rs.getLong(COL_ID),
                                     post,
@@ -94,7 +77,7 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString(COL_CONTENT),
                                     rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
                                     rs.getString(COL_STATUS),
-                                    reply
+                                    parentCmt
                             );
                         }
                     }
@@ -121,39 +104,18 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT c.*, "
-                        + "p.Id as p_id, p.Content as p_content, p.Created_At as p_created_at, p.Status as p_status, p.Image_Url as p_image_url, p.*, "
-                        + "u.Id as u_id, u.Image_Url as u_image_url, u.Status as u_status, u.* "
-                        + "FROM Comment c "
-                        + "JOIN Post p ON c.Post_Id = p.Id "
-                        + "JOIN [User] u ON c.User_Id = u.Id "
-                        + "WHERE c." + COL_POST_ID + " = ?";
+                String query = "SELECT * FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL ORDER BY " + COL_CREATED_AT + " DESC";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                    rs.getLong("u_id"),
-                                    rs.getByte("Age"),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
-                                    rs.getString("Nickname"),
-                                    rs.getString("Fullname"),
-                                    rs.getString("Email"),
-                                    rs.getString("u_image_url"),
-                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
-                                    EAccountRole.getEnumFromName(rs.getString("Role")));
-                            PostDTO post = new PostDTO(
-                                    rs.getLong("p_id"),
-                                    user,
-                                    rs.getString("p_content"),
-                                    rs.getTimestamp("p_created_at").toLocalDateTime(),
-                                    rs.getInt("Hearts_Total"),
-                                    rs.getInt("Comment_Total"),
-                                    rs.getString("p_status"),
-                                    rs.getString("p_image_url")
-                            );
-                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).get();
+                            long userId = rs.getLong(COL_USER_ID);
+                            UserDAO userDAO = new UserDAO();
+                            UserDTO user = userDAO.getUserById(userId);
+
+                            PostDAO postDAO = new PostDAO();
+                            PostDTO post = postDAO.getPostById(postId).join();
+
                             comments.add(new CommentDTO(
                                     rs.getLong(COL_ID),
                                     post,
@@ -161,12 +123,12 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString(COL_CONTENT),
                                     rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
                                     rs.getString(COL_STATUS),
-                                    reply
+                                    null
                             ));
                         }
                     }
                 }
-            } catch (SQLException | InterruptedException | ExecutionException e) {
+            } catch (SQLException e) {
                 System.out.println("Cannot get comments by post id: " + e.getMessage());
             }
             return comments;
@@ -187,40 +149,18 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT TOP 1 c.*, "
-                        + "p.Id as p_id, p.Content as p_content, p.Created_At as p_created_at, p.Status as p_status, p.Image_Url as p_image_url, p.*, "
-                        + "u.Id as u_id, u.Image_Url as u_image_url, u.Status as u_status, u.* "
-                        + "FROM Comment c "
-                        + "JOIN Post p ON c.Post_Id = p.Id "
-                        + "JOIN [User] u ON c.User_Id = u.Id "
-                        + "WHERE c." + COL_POST_ID + " = ? "
-                        + "ORDER BY c.Created_At ASC";
+                String query = "SELECT TOP 1 * FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL ORDER BY " + COL_CREATED_AT + " DESC";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                    rs.getLong("u_id"),
-                                    rs.getByte("Age"),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
-                                    rs.getString("Nickname"),
-                                    rs.getString("Fullname"),
-                                    rs.getString("Email"),
-                                    rs.getString("u_image_url"),
-                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
-                                    EAccountRole.getEnumFromName(rs.getString("Role")));
-                            PostDTO post = new PostDTO(
-                                    rs.getLong("p_id"),
-                                    user,
-                                    rs.getString("p_content"),
-                                    rs.getTimestamp("p_created_at").toLocalDateTime(),
-                                    rs.getInt("Hearts_Total"),
-                                    rs.getInt("Comment_Total"),
-                                    rs.getString("p_status"),
-                                    rs.getString("p_image_url")
-                            );
-                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
+                            long userId = rs.getLong(COL_USER_ID);
+                            UserDAO userDAO = new UserDAO();
+                            UserDTO user = userDAO.getUserById(userId);
+
+                            PostDAO postDAO = new PostDAO();
+                            PostDTO post = postDAO.getPostById(postId).join();
+
                             topComment = new CommentDTO(
                                     rs.getLong(COL_ID),
                                     post,
@@ -228,7 +168,7 @@ public class CommentDAO implements ICommentDAO {
                                     rs.getString(COL_CONTENT),
                                     rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
                                     rs.getString(COL_STATUS),
-                                    reply
+                                    null
                             );
                         }
                     }
@@ -236,77 +176,57 @@ public class CommentDAO implements ICommentDAO {
             } catch (SQLException ex) {
                 System.out.println("Cannot get top comment by post id: " + ex.getMessage());
             } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
+                System.out.println("Unexpected error while getting top comment: " + e.getMessage());
             }
             return topComment;
         });
     }
 
     /**
-     * Retrieves all child comments of a comment.
+     * Retrieves all replies associated with a comment.
      *
-     * @param id The ID of the comment to retrieve child comments for.
+     * @param parentId The ID of the parent comment to retrieve replies for.
      * @return The CompletableFuture that returns a list of CommentDTO objects
-     * representing the child comments, or an empty list if no child comments
-     * are found.
+     * representing the replies, or an empty list if no replies are found.
      */
     @Override
-    public CompletableFuture<List<CommentDTO>> getChildComments(long id) {
+    public CompletableFuture<List<CommentDTO>> getRepliesByComment(long parentId) {
         return CompletableFuture.supplyAsync(() -> {
-            List<CommentDTO> childComments = new ArrayList<>();
+            List<CommentDTO> replies = new ArrayList<>();
             try (Connection conn = DBUtils.getConnection()) {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT c.*, "
-                        + "p.Id as p_id, p.Content as p_content, p.Created_At as p_created_at, p.Status as p_status, p.Image_Url as p_image_url, p.*, "
-                        + "u.Id as u_id, u.Image_Url as u_image_url, u.Status as u_status, u.* "
-                        + "FROM Comment c "
-                        + "JOIN Post p ON c.Post_Id = p.Id "
-                        + "JOIN [User] u ON c.User_Id = u.Id "
-                        + "WHERE c." + COL_REPLY_ID + " = ?";
+                String query = "SELECT * FROM Comment WHERE " + COL_REPLY_ID + " = ?";
+                CommentDTO parentCmt = getCommentById(parentId).join();
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
-                    ps.setLong(1, id);
+                    ps.setLong(1, parentId);
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                    rs.getLong("u_id"),
-                                    rs.getByte("Age"),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
-                                    rs.getString("Nickname"),
-                                    rs.getString("Fullname"),
-                                    rs.getString("Email"),
-                                    rs.getString("u_image_url"),
-                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
-                                    EAccountRole.getEnumFromName(rs.getString("Role")));
-                            PostDTO post = new PostDTO(
-                                    rs.getLong("p_id"),
-                                    user,
-                                    rs.getString("p_content"),
-                                    rs.getTimestamp("p_created_at").toLocalDateTime(),
-                                    rs.getInt("Hearts_Total"),
-                                    rs.getInt("Comment_Total"),
-                                    rs.getString("p_status"),
-                                    rs.getString("p_image_url")
-                            );
-                            CommentDTO reply = getCommentById(rs.getLong(COL_REPLY_ID)).join();
-                            childComments.add(new CommentDTO(
+                            long userId = rs.getLong(COL_USER_ID);
+                            UserDAO userDAO = new UserDAO();
+                            UserDTO user = userDAO.getUserById(userId);
+
+                            long postId = rs.getLong(COL_POST_ID);
+                            PostDAO postDAO = new PostDAO();
+                            PostDTO post = postDAO.getPostById(postId).join();
+
+                            replies.add(new CommentDTO(
                                     rs.getLong(COL_ID),
                                     post,
                                     user,
                                     rs.getString(COL_CONTENT),
                                     rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
                                     rs.getString(COL_STATUS),
-                                    reply
+                                    parentCmt
                             ));
                         }
                     }
                 }
-            } catch (SQLException ex) {
-                System.out.println("Cannot get child comments: " + ex.getMessage());
+            } catch (SQLException e) {
+                System.out.println("Cannot get replies by comment id: " + e.getMessage());
             }
-            return childComments;
+            return replies;
         });
     }
 
@@ -331,10 +251,10 @@ public class CommentDAO implements ICommentDAO {
                     ps.setString(3, comment.getContent());
                     ps.setTimestamp(4, java.sql.Timestamp.valueOf(comment.getCreatedAt()));
                     ps.setString(5, comment.getStatus());
-                    if (comment.getReply() == null) {
+                    if (comment.getParentCmt() == null) {
                         ps.setNull(6, java.sql.Types.BIGINT);
                     } else {
-                        ps.setLong(6, comment.getReply().getId());
+                        ps.setLong(6, comment.getParentCmt().getId());
                     }
                     ps.executeUpdate();
                 }
@@ -366,7 +286,7 @@ public class CommentDAO implements ICommentDAO {
                     ps.setString(3, comment.getContent());
                     ps.setTimestamp(4, java.sql.Timestamp.valueOf(comment.getCreatedAt()));
                     ps.setString(5, comment.getStatus());
-                    ps.setLong(6, comment.getReply().getId());
+                    ps.setLong(6, comment.getParentCmt().getId());
                     ps.setLong(7, comment.getId());
                     ps.executeUpdate();
                 }

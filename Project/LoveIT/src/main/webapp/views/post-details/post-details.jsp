@@ -10,6 +10,11 @@
 
 <DN:GenericPage pageTitle="welcome"
                 pageStyleUrl="${pageContext.request.contextPath}/css/post-details/post-details.css">
+    <head>
+        <!-- Temporary -->
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/post-details/post-details.css">
+        <title></title>
+    </head>
     <main>
         <script>
             function toggleImage(img) {
@@ -50,7 +55,10 @@
             <hr>
             <div class="comment-area">
                 <c:forEach var="comment" items="${comments}">
+                    <c:set var="replies" value="${comment.replies}" scope="request" />
                     <jsp:include page="c-comment.jsp">
+                        <jsp:param name="post_id" value="${post.id}" />
+                        <jsp:param name="comment_id" value="${comment.id}" />
                         <jsp:param name="user_image_url" value="${comment.user.imageUrl}" />
                         <jsp:param name="user_name" value="${comment.user.fullName}" />
                         <jsp:param name="content" value="${comment.content}" />

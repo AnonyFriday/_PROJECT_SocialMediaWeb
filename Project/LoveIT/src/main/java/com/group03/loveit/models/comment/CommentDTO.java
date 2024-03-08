@@ -1,6 +1,8 @@
 package com.group03.loveit.models.comment;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import com.group03.loveit.models.post.PostDTO;
 import com.group03.loveit.models.user.UserDTO;
 
@@ -15,7 +17,8 @@ public class CommentDTO {
     private String content;
     private LocalDateTime createdAt;
     private String status;
-    private CommentDTO reply;
+    private CommentDTO parentCmt;
+    private List<CommentDTO> replies;
 
     // Getters and Setters
     public long getId() {
@@ -66,35 +69,41 @@ public class CommentDTO {
         this.status = status;
     }
 
-    public CommentDTO getReply() {
-        return reply;
+    public CommentDTO getParentCmt() {
+        return parentCmt;
     }
 
-    public void setReply(CommentDTO reply) {
-        this.reply = reply;
+    public void setParentCmt(CommentDTO parentCmt) {
+        this.parentCmt = parentCmt;
+    }
+    public List<CommentDTO> getReplies() {
+        return replies;
+    }
+    public void setReplies(List<CommentDTO> replies) {
+        this.replies = replies;
     }
 
     // Constructors
     public CommentDTO() {
     }
 
-    public CommentDTO(PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO reply) {
-        this.post = post;
-        this.user = user;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.status = status;
-        this.reply = reply;
-    }
-
-    public CommentDTO(long id, PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO reply) {
+    public CommentDTO(long id, PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO parentCmt) {
         this.id = id;
         this.post = post;
         this.user = user;
         this.content = content;
         this.createdAt = createdAt;
         this.status = status;
-        this.reply = reply;
+        this.parentCmt = parentCmt;
+    }
+
+    public CommentDTO(PostDTO post, UserDTO user, String content, LocalDateTime createdAt, String status, CommentDTO parentCmt) {
+        this.post = post;
+        this.user = user;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.status = status;
+        this.parentCmt = parentCmt;
     }
 
     // Override Methods
@@ -126,6 +135,6 @@ public class CommentDTO {
 
     @Override
     public String toString() {
-        return "CommentDTO{" + "id=" + id + ", post=" + post + ", user=" + user + ", content=" + content + ", createdAt=" + createdAt + ", status=" + status + ", reply=" + reply + '}';
+        return "CommentDTO{" + "id=" + id + ", post=" + post + ", user=" + user + ", content=" + content + ", createdAt=" + createdAt + ", status=" + status + ", reply=" + parentCmt + '}';
     }
 }

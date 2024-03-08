@@ -1,4 +1,4 @@
-package com.group03.loveit.controllers;
+package com.group03.loveit.controllers.people_zone;
 
 import com.group03.loveit.models.comment.CommentDAO;
 import com.group03.loveit.models.comment.CommentDTO;
