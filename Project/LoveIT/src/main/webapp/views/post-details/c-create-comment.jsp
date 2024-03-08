@@ -12,9 +12,7 @@
         <title></title>
     </head>
     <body>
-        <form action="${pageContext.request.contextPath}/post-details" method="post">
-            <input type="hidden" name="action" value="create_comment">
-            <input type="hidden" name="post_id" value="${post.id}">
+        <form action="${pageContext.request.contextPath}/post-details?action=create_comment&post_id=${post.id}" method="post">
             <div class="create-comment-div">
                 <label>
                     <input type="text" name="content" placeholder="Your comment...">

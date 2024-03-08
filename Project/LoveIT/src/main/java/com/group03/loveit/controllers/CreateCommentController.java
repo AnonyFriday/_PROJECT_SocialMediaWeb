@@ -19,21 +19,20 @@ public class CreateCommentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            long post_id = Long.parseLong(request.getParameter("post_id"));
-            System.out.println("post_id in create comment: " + post_id);
+            long postId = Long.parseLong(request.getParameter("post_id"));
             String content = request.getParameter("content");
 
             PostDAO postDAO = new PostDAO();
-            PostDTO post = postDAO.getPostById(post_id).get();
+            PostDTO post = postDAO.getPostById(postId).get();
 
             UserDAO userDAO = new UserDAO();
             UserDTO user = userDAO.getUserById(2);
 
             CommentDAO commentDAO = new CommentDAO();
             CommentDTO comment = new CommentDTO(post, user, content, LocalDateTime.now(), "Active", null);
-            commentDAO.insertComment(comment);
+            commentDAO.insertComment(comment).get();
 
-            response.sendRedirect(request.getContextPath() + "/post-details?post_id=" + post_id);
+            response.sendRedirect(request.getContextPath() + "/post-details?post_id=" + postId);
         } catch (ExecutionException | InterruptedException | NumberFormatException e) {
             log("Error creating comment: " + e.getMessage());
         }

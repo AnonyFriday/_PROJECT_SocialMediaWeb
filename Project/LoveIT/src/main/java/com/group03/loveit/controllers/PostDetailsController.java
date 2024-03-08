@@ -47,7 +47,6 @@ public class PostDetailsController extends HttpServlet {
                 case "create_comment":
                     String postId = request.getParameter("post_id");
                     String content = request.getParameter("content");
-                    System.out.println("post_id in post detail: " + postId);
 
                     if (postId != null && content != null) {
                         request.getRequestDispatcher("/create-comment?post_id = " + postId + "&content = " + content).forward(request, response);

@@ -12,8 +12,7 @@
         <title></title>
     </head>
     <body>
-        <form action="${pageContext.request.contextPath}/people-zone" method="post">
-            <input type="hidden" name="action" value="create_post">
+        <form action="${pageContext.request.contextPath}/people-zone?action=create_post" method="post">
             <div class="create_post">
                 <label>
                     <input type="text" name="content" placeholder="Enter text here...">

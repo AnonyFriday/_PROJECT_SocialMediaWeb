@@ -12,21 +12,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
 
 public class CreatePostController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String content = request.getParameter("content");
-        String imageUrl = request.getParameter("imageUrl");
+        try {
+            String content = request.getParameter("content");
+            String imageUrl = request.getParameter("imageUrl");
 
-        UserDAO userDAO = new UserDAO();
-        UserDTO user = userDAO.getUserById(2);
+            UserDAO userDAO = new UserDAO();
+            UserDTO user = userDAO.getUserById(2);
 
-        PostDTO post = new PostDTO(user, content, LocalDateTime.now(), 0, 0, "Active", imageUrl);
-        PostDAO postDAO = new PostDAO();
-        postDAO.insertPost(post);
+            PostDTO post = new PostDTO(user, content, LocalDateTime.now(), 0, 0, "Active", imageUrl);
+            PostDAO postDAO = new PostDAO();
+            postDAO.insertPost(post).get();
 
-        response.sendRedirect(request.getContextPath() + "/people-zone");
+            response.sendRedirect(request.getContextPath() + "/people-zone");
+        } catch (InterruptedException | ExecutionException e) {
+            log("Error creating post: " + e.getMessage());
+        }
     }
 }
