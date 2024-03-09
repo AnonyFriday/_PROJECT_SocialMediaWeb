@@ -18,7 +18,7 @@
     <main>
         <script>
             function toggleImage(img) {
-                img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/heart_on.png" : "${pageContext.request.contextPath}/assets/heart_off.png";
+                img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/img/heart_on.png" : "${pageContext.request.contextPath}/assets/img/heart_off.png";
             }
         </script>
 
@@ -38,7 +38,7 @@
                 </div>
                 <div class="top-right-area">
                     <button onclick="toggleImage(this.children[0])">
-                        <img src="${pageContext.request.contextPath}/assets/heart_off.png" alt="Heart">
+                        <img src="${pageContext.request.contextPath}/assets/img/heart_off.png" alt="Heart">
                     </button>
                     <div>
                         <p>I am</p>
