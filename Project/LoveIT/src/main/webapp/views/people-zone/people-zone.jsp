@@ -5,9 +5,10 @@
                 pageStyleUrl="${pageContext.request.contextPath}/css/people-zone/people-zone.css">
     <main>
         <div class="search-bar">
-            <form action="${pageContext.request.contextPath}/search" method="get">
+            <form action="${pageContext.request.contextPath}/people-zone" method="get">
+                <input type="hidden" name="action" value="search">
                 <label>
-                    <input type="text" name="query" placeholder="e.g. Sarah">
+                    <input type="text" name="keyword" placeholder="e.g. Sarah">
                 </label>
             </form>
         </div>

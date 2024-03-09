@@ -35,11 +35,19 @@ public class PeopleZoneController extends HttpServlet {
                         dispatcher.forward(request, response);
                     }
                     break;
+                case "search":
+                    String keyword = request.getParameter("keyword");
+                    if (keyword != null) {
+                        processPostList(request, keyword);
+                        dispatcher = request.getRequestDispatcher("/views/people-zone/people-zone.jsp");
+                        dispatcher.forward(request, response);
+                    }
+                    break;
                 default:
                     break;
             }
         } else {
-            processPostList(request, response);
+            processPostList(request, null);
             dispatcher = request.getRequestDispatcher("/views/people-zone/people-zone.jsp");
             dispatcher.forward(request, response);
         }
@@ -61,12 +69,17 @@ public class PeopleZoneController extends HttpServlet {
         }
     }
 
-    private void processPostList(HttpServletRequest request, HttpServletResponse response) {
+    private void processPostList(HttpServletRequest request, String keyword) {
         PostDAO postDAO = new PostDAO();
         CommentDAO commentDAO = new CommentDAO();
         List<PostDTO> posts = null;
         try {
-            posts = postDAO.getAllPosts().get();
+            if (keyword != null) {
+                posts = postDAO.getPostsByCondition(keyword).get();
+            } else {
+                posts = postDAO.getAllPosts().get();
+            }
+
             for (PostDTO post : posts) {
                 CommentDTO topComment = commentDAO.getTopCommentByPost(post.getId()).get();
                 post.setTopComment(topComment);

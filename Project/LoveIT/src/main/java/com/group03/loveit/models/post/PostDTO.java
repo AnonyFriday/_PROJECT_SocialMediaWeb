@@ -2,6 +2,7 @@ package com.group03.loveit.models.post;
 
 import com.group03.loveit.models.account.AccountDTO;
 import com.group03.loveit.models.comment.CommentDTO;
+import com.group03.loveit.models.user.UserDTO;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class PostDTO {
     // Fields
     private long id;
-    private AccountDTO user;
+    private UserDTO user;
     private String content;
     private LocalDateTime createdAt;
     private int heartTotal;
@@ -29,11 +30,11 @@ public class PostDTO {
         this.id = id;
     }
 
-    public AccountDTO getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(AccountDTO user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
@@ -95,7 +96,7 @@ public class PostDTO {
     public PostDTO() {
     }
 
-    public PostDTO(AccountDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
+    public PostDTO(UserDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
         this.user = user;
         this.content = content;
         this.createdAt = createdAt;
@@ -105,7 +106,7 @@ public class PostDTO {
         this.imageUrl = imageUrl;
     }
 
-    public PostDTO(long id, AccountDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
+    public PostDTO(long id, UserDTO user, String content, LocalDateTime createdAt, int heartTotal, int commentTotal, String status, String imageUrl) {
         this.id = id;
         this.user = user;
         this.content = content;

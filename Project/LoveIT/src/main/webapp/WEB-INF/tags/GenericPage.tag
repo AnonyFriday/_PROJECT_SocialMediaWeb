@@ -36,7 +36,7 @@
     <body>
 
         <!-- Include header -->
-        <DN:Header logoUrl="${pageContext.request.contextPath}/assets/heart_off.png" />
+        <DN:Header logoUrl="${pageContext.request.contextPath}/assets/img/heart_off.png" />
 
         <!-- Body content -->
         <jsp:doBody />

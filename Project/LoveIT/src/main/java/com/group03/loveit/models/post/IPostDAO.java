@@ -9,7 +9,8 @@ import java.util.concurrent.CompletableFuture;
 public interface IPostDAO {
 
     CompletableFuture<PostDTO> getPostById(long id);
-    public CompletableFuture<List<PostDTO>> getAllPosts();
+    CompletableFuture<List<PostDTO>> getAllPosts();
+    CompletableFuture<List<PostDTO>> getPostsByCondition(String keyword);
 
     CompletableFuture<Void> insertPost(PostDTO post);
 

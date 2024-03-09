@@ -3,6 +3,7 @@ package com.group03.loveit.models.post;
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
 import com.group03.loveit.models.gender.GenderDAO;
+import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
 
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class provides the Data Access Object (DAO) for the Post entity. It
@@ -52,26 +54,15 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new RuntimeException("Connection is null");
                 }
-                String query = "SELECT p.*, "
-                        + "u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
-                        + "FROM Post p JOIN [User] u ON p." + COL_USER_ID + " = u.Id WHERE p." + COL_ID + " = ?";
+                String query = "SELECT * FROM Post WHERE " + COL_ID + " = ?";
 
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, id);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                    rs.getLong("u_id"),
-                                    rs.getByte("Age"),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
-                                    rs.getString("Nickname"),
-                                    rs.getString("Fullname"),
-                                    rs.getString("Email"),
-                                    rs.getString("u_image_url"),
-                                    EAccountStatus.getEnumFromName(rs.getString("u_status")),
-                                    EAccountRole.getEnumFromName(rs.getString("Role"))
-                            );
+                            long userId = rs.getLong(COL_USER_ID);
+                            UserDAO userDAO = new UserDAO();
+                            UserDTO user = userDAO.getUserById(userId);
 
                             return new PostDTO(
                                     rs.getLong(COL_ID),
@@ -111,24 +102,13 @@ public class PostDAO implements IPostDAO {
                 if (conn == null) {
                     throw new RuntimeException("Connection is null");
                 }
-                String query = "SELECT p.*, "
-                        + "u.Id AS u_id, u.Image_Url AS u_image_url, u.Status AS u_status, u.* "
-                        + "FROM Post p JOIN [User] u ON p." + COL_USER_ID + " = u.Id";
+                String query = "SELECT * FROM Post";
 
                 try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        UserDTO user = new UserDTO(
-                                rs.getLong("u_id"),
-                                rs.getByte("Age"),
-                                GenderDAO.getInstance().getGenderMap().get(rs.getLong("Gender_Id")),
-                                GenderDAO.getInstance().getGenderMap().get(rs.getLong("Preference_Id")),
-                                rs.getString("Nickname"),
-                                rs.getString("Fullname"),
-                                rs.getString("Email"),
-                                rs.getString("u_image_url"),
-                                EAccountStatus.getEnumFromName(rs.getString("u_status")),
-                                EAccountRole.getEnumFromName(rs.getString("Role"))
-                        );
+                        long userId = rs.getLong(COL_USER_ID);
+                        UserDAO userDAO = new UserDAO();
+                        UserDTO user = userDAO.getUserById(userId);
 
                         PostDTO post = new PostDTO(
                                 rs.getLong(COL_ID),
@@ -143,12 +123,35 @@ public class PostDAO implements IPostDAO {
                         posts.add(post);
                     }
                 }
-            } catch (SQLException ex) {
-                System.out.println("Cannot get posts: " + ex.getMessage());
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
+            } catch (SQLException e) {
+                System.out.println("Cannot get posts: " + e.getMessage());
             }
             return posts;
+        });
+    }
+
+    /**
+     * Retrieves all posts from the database where either the post content or the user's full name contains the provided keyword.
+     *
+     * @param keyword The keyword to search for in the post content and user's full name.
+     * @return A CompletableFuture that completes with a List of PostDTO objects
+     * representing all posts in the database where either the post content or the user's full name contains the provided keyword.
+     * Each PostDTO object contains the post details and the associated user details.
+     * If there are no posts in the database that meet the condition, the CompletableFuture completes with an empty list.
+     */
+    @Override
+    public CompletableFuture<List<PostDTO>> getPostsByCondition(String keyword) {
+        String lowerCaseKeyword = keyword.toLowerCase();
+        return getAllPosts().thenApply(posts -> {
+            List<PostDTO> filteredPosts = new ArrayList<>();
+            for (PostDTO post : posts) {
+                if (post.getContent().toLowerCase().contains(lowerCaseKeyword)
+                    || post.getUser().getFullName().toLowerCase().contains(lowerCaseKeyword)
+                    || post.getUser().getNickName().toLowerCase().contains(lowerCaseKeyword)) {
+                    filteredPosts.add(post);
+                }
+            }
+            return filteredPosts;
         });
     }
 
