@@ -1,5 +1,6 @@
 .reply-content {
     display: flex;
+    justify-content: flex-start;
 }
 
 .reply-content img {

@@ -7,4 +7,5 @@
 .create-comment-div input[type="text"] {
     flex-grow: 1;
     margin-right: 10px;
+    width: 500px;
 }

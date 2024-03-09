@@ -49,7 +49,6 @@ public class CreateCommentController extends HttpServlet {
         PostDTO post = postDAO.getPostById(postId).join();
 
         UserDAO userDAO = new UserDAO();
-        UserDTO user = userDAO.getUserById(2);
 
         CommentDAO commentDAO = new CommentDAO();
         CommentDTO comment = new CommentDTO(post, getCurrentUser(), content, LocalDateTime.now(), "Active", null);
