@@ -1,7 +1,10 @@
 package com.group03.loveit.controllers.people_zone;
 
+import com.group03.loveit.controllers.post_details.CreateCommentController;
 import com.group03.loveit.models.comment.CommentDAO;
 import com.group03.loveit.models.comment.CommentDTO;
+import com.group03.loveit.models.favourite.FavoriteDAO;
+import com.group03.loveit.models.favourite.FavoriteDTO;
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
 
@@ -11,10 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -55,17 +60,43 @@ public class PeopleZoneController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getParameter("action");
         if (action != null) {
-            switch (action) {
-                case "create_post":
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/create-post");
-                    dispatcher.forward(request, response);
-                    break;
-                default:
-                    break;
+            try {
+                switch (action) {
+                    case "create_post":
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/create-post");
+                        dispatcher.forward(request, response);
+                        break;
+                    case "favorite":
+                        String postId = request.getParameter("post_id");
+
+                        if (postId != null) {
+                            PostDAO postDAO = new PostDAO();
+                            PostDTO post = postDAO.getPostById(Long.parseLong(postId)).join();
+
+                            FavoriteDAO favoriteDAO = new FavoriteDAO();
+                            List<FavoriteDTO> favourites = favoriteDAO.getFavoritesByUser(CreateCommentController.getCurrentUser().getId()).join();
+                            boolean isFavorite = favourites.stream().anyMatch(fav -> fav.getPost().getId() == post.getId());
+                            if (isFavorite) {
+                                favoriteDAO.deleteFavorite(post.getId(), CreateCommentController.getCurrentUser().getId());
+                            } else {
+                                FavoriteDTO favorite = new FavoriteDTO(post, CreateCommentController.getCurrentUser(), LocalDateTime.now());
+                                favoriteDAO.insertFavorite(favorite);
+                            }
+                            response.sendRedirect(request.getContextPath() + "/people-zone");
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                log("Invalid post ID: " + e.getMessage());
+            } catch (ServletException | IOException e) {
+                log("Error forwarding request: " + e.getMessage());
+            } catch (Exception e) {
+                log("Unexpected error: " + e.getMessage());
             }
         }
     }
@@ -73,17 +104,31 @@ public class PeopleZoneController extends HttpServlet {
     private void processPostList(HttpServletRequest request, String keyword) {
         PostDAO postDAO = new PostDAO();
         CommentDAO commentDAO = new CommentDAO();
+        FavoriteDAO favoriteDAO = new FavoriteDAO();
         List<PostDTO> posts = null;
         try {
+            // Fetch all posts based on the keyword
             if (keyword != null) {
-                posts = postDAO.getPostsByCondition(keyword).get();
+                posts = postDAO.getPostsByCondition(keyword).join();
             } else {
                 posts = postDAO.getAllPosts().get();
             }
 
+            // Fetch the top comment for each post
             for (PostDTO post : posts) {
-                CommentDTO topComment = commentDAO.getTopCommentByPost(post.getId()).get();
+                CommentDTO topComment = commentDAO.getTopCommentByPost(post.getId()).join();
                 post.setTopComment(topComment);
+            }
+
+            // Fetch all favorite posts for the current user in a single database call
+            List<FavoriteDTO> favourites = favoriteDAO.getFavoritesByUser(CreateCommentController.getCurrentUser().getId()).join();
+
+            // Map the favorite posts by their ID for quick lookup
+            Map<Long, FavoriteDTO> favouriteMap = favourites.stream().collect(Collectors.toMap(fav -> fav.getPost().getId(), Function.identity()));
+
+            // Iterate over the posts and determine if the post is a favorite by checking the map
+            for (PostDTO post : posts) {
+                post.setIsFavorite(favouriteMap.containsKey(post.getId()));
             }
         } catch (InterruptedException | ExecutionException e) {
             log("Error getting posts or top comments: " + e.getMessage());

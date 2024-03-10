@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
 
@@ -17,6 +17,7 @@
         <jsp:include page="c-create-post.jsp" />
         <hr>
         <c:forEach var="post" items="${posts}">
+            <c:set var="is_favorite" value="${post.isFavorite}" scope="request" />
             <jsp:include page="c-post.jsp">
                 <jsp:param name="post_id" value="${post.id}" />
                 <jsp:param name="user_image_url" value="${post.user.imageUrl}" />

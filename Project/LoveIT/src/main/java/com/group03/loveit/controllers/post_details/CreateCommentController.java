@@ -51,8 +51,6 @@ public class CreateCommentController extends HttpServlet {
         PostDAO postDAO = new PostDAO();
         PostDTO post = postDAO.getPostById(postId).join();
 
-        UserDAO userDAO = new UserDAO();
-
         CommentDAO commentDAO = new CommentDAO();
         CommentDTO comment = new CommentDTO(post, getCurrentUser(), content, LocalDateTime.now(), "Active", null);
         commentDAO.insertComment(comment).join();
@@ -70,7 +68,7 @@ public class CreateCommentController extends HttpServlet {
     }
 
     // Temporary method to get the current user
-    private UserDTO getCurrentUser() {
+    public static UserDTO getCurrentUser() {
         UserDAO userDAO = new UserDAO();
         return userDAO.getUserById(2);
     }

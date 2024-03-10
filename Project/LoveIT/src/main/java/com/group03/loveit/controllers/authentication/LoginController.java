@@ -42,7 +42,9 @@ public class LoginController extends HttpServlet {
 
         try {
             UserDAO userDAO = new UserDAO();
-            UserDTO user = userDAO.login(email, password);
+            // Change this back once the login method is implemented
+            //UserDTO user = userDAO.login(email, password);
+            UserDTO user = userDAO.getUserById(2);
 
             if (user != null) {
                 request.getSession(true).setAttribute("USER-SESSION", user);
