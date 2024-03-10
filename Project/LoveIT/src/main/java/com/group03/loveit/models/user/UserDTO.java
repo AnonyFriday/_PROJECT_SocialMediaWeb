@@ -34,6 +34,18 @@ public class UserDTO extends AccountDTO implements Serializable {
     }
 
     /**
+     * Constructor for login
+     *
+     * @param email
+     * @param password
+     * @param nickName
+     */
+    public UserDTO(String email, String password, String nickName) {
+        super(email, password);
+        this.nickName = nickName;
+    }
+
+    /**
      * Constructor for fetching data
      *
      * @param id

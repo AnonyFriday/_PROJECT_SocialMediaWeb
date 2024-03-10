@@ -4,6 +4,7 @@
  */
 package com.group03.loveit.models.user;
 
+import com.group03.loveit.models.account.AccountDTO;
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
 import com.group03.loveit.models.gender.GenderDAO;
@@ -49,6 +50,41 @@ public final class UserDAO implements IUserDAO {
     // ===========================
     // == Methods
     // ===========================
+    /**
+     * Login using username and password
+     *
+     * @param email
+     * @param password
+     * @return a user model
+     */
+    public UserDTO login(String email, String password) {
+        String sql = "SELECT u.Email, u.Password, u.Fullname\n"
+                + "FROM [User] as u\n"
+                + "WHERE u.Email = ? AND u.Password = ?";
+
+        try (Connection conn = DBUtils.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, email);
+                stmt.setString(2, password);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        UserDTO user = new UserDTO(
+                                rs.getString(COL_EMAIL),
+                                rs.getString(COL_PASSWORD),
+                                rs.getString(COL_FULLNAME)
+                        );
+                        return user;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
     // ===========================
     // == Override Methods
     // ===========================

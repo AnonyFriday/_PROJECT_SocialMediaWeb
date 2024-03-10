@@ -33,6 +33,7 @@
         <servlet-name>CreateCommentController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.post_details.CreateCommentController</servlet-class>
     </servlet>
+    
     <!-- Mappings -->
     <servlet>
         <servlet-name>ProfileController</servlet-name>
@@ -74,12 +75,14 @@
         <servlet-name>CreateCommentController</servlet-name>
         <url-pattern>/create-comment</url-pattern>
     </servlet-mapping>
+    
     <!-- Session -->
     <session-config>
         <session-timeout>
             60
         </session-timeout>
     </session-config>
+    
     <!-- Welcome File -->
     <welcome-file-list>
         <welcome-file>welcome</welcome-file>
