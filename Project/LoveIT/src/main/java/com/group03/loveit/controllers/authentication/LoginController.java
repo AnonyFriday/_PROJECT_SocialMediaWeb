@@ -43,9 +43,10 @@ public class LoginController extends HttpServlet {
         try {
             UserDAO userDAO = new UserDAO();
             // Change this back once the login method is implemented
-            //UserDTO user = userDAO.login(email, password);
-            UserDTO user = userDAO.getUserById(2);
+            UserDTO user = userDAO.login(email, password);
 
+            // Bro i just had a math test. i'm dune here
+//            UserDTO user = userDAO.getUserById(2);
             if (user != null) {
                 request.getSession(true).setAttribute("USER-SESSION", user);
                 response.sendRedirect("people-zone");
