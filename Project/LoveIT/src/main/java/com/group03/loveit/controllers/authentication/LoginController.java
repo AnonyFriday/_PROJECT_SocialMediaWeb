@@ -4,57 +4,56 @@
  */
 package com.group03.loveit.controllers.authentication;
 
+import com.group03.loveit.models.user.UserDAO;
+import com.group03.loveit.models.user.UserDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Login Controller
+ *
+ * - not done unsimplified path
+ *
+ * - not done attached to the entire session
  *
  * @author duyvu
  */
 public class LoginController extends HttpServlet {
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-    }
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+        try {
+            UserDAO userDAO = new UserDAO();
+            UserDTO user = userDAO.login(email, password);
+
+            if (user != null) {
+                request.getSession(true).setAttribute("USER-SESSION", user);
+                response.sendRedirect("people-zone");
+            } else {
+                request.setAttribute("error", "Wrong email or password. Please try again");
+                request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
+            }
+
+        } catch (IOException | ServletException e) {
+            log("Error on login: " + e.getMessage());
+        }
+    }
 }
