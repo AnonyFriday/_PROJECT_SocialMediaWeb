@@ -21,6 +21,7 @@ public abstract class DBUtils {
     // Don't change these values, change the environment variables instead
     private final static String userID = System.getenv("LIT_DB_USER");
     private final static String password = System.getenv("LIT_DB_PASS");
+
     /**
      * Close the connection
      *

@@ -46,7 +46,7 @@
                     <target>1.8</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>f
+                    </compilerArguments>
                 </configuration>
             </plugin>
             <plugin>

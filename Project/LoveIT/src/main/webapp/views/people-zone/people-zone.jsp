@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
 
-<DN:GenericPage pageTitle="welcome"
-                pageStyleUrl="${pageContext.request.contextPath}/css/people-zone/people-zone.css">
+<DN:GenericPage
+    pageStyleUrl="${pageContext.request.contextPath}/css/people-zone/people-zone.css">
+    
     <main>
         <div class="search-bar">
             <form action="${pageContext.request.contextPath}/people-zone" method="get">

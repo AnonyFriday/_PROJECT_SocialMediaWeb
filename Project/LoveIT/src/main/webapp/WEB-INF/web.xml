@@ -82,6 +82,6 @@
     </session-config>
     <!-- Welcome File -->
     <welcome-file-list>
-        <welcome-file>views/welcome/welcome.jsp</welcome-file>
+        <welcome-file>welcome</welcome-file>
     </welcome-file-list>
 </web-app>

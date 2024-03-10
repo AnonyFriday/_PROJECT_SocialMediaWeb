@@ -6,15 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<DN:GenericPage pageTitle="welcome"
-                pageStyleUrl="${pageContext.request.contextPath}/css/post-details/post-details.css">
-    <head>
-        <!-- Temporary -->
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/post-details/post-details.css">
-        <title></title>
-    </head>
+<DN:GenericPage 
+    pageStyleUrl="${pageContext.request.contextPath}/css/post-details/post-details.css">
+
     <main>
         <script>
             function toggleImage(img) {

@@ -9,7 +9,6 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/people-zone/c-create-post.css">
-        <title></title>
     </head>
     <body>
         <form action="${pageContext.request.contextPath}/people-zone?action=create_post" method="post">

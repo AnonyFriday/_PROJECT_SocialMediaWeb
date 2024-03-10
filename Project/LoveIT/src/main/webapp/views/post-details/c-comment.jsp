@@ -10,7 +10,6 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/post-details/c-comment.css">
-        <title></title>
         <script>
             function showReplyForm(event) {
                 const replyButton = event.target;

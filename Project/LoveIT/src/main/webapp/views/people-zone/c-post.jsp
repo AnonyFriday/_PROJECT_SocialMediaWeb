@@ -10,14 +10,14 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/people-zone/c-post.css">
-        <title></title>
-    </head>
-    <body>
+
         <script>
             function toggleImage(img) {
                 img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/img/heart_on.png" : "${pageContext.request.contextPath}/assets/img/heart_off.png";
             }
         </script>
+    </head>
+    <body>
 
         <div class="post">
             <div class="top-area">

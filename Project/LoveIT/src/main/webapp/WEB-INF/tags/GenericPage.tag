@@ -7,7 +7,6 @@
 <%@tag description="Overall Page Template" pageEncoding="UTF-8"%>
 <%@taglib tagdir="/WEB-INF/tags/" prefix="DN"%>
 
-<%@attribute name="pageTitle" required="true" %>
 <%@attribute name="pageStyleUrl" required="true" %>
 
 <!DOCTYPE html>

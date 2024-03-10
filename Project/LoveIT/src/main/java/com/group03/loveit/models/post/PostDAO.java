@@ -131,13 +131,17 @@ public class PostDAO implements IPostDAO {
     }
 
     /**
-     * Retrieves all posts from the database where either the post content or the user's full name contains the provided keyword.
+     * Retrieves all posts from the database where either the post content or
+     * the user's full name contains the provided keyword.
      *
-     * @param keyword The keyword to search for in the post content and user's full name.
+     * @param keyword The keyword to search for in the post content and user's
+     * full name.
      * @return A CompletableFuture that completes with a List of PostDTO objects
-     * representing all posts in the database where either the post content or the user's full name contains the provided keyword.
-     * Each PostDTO object contains the post details and the associated user details.
-     * If there are no posts in the database that meet the condition, the CompletableFuture completes with an empty list.
+     * representing all posts in the database where either the post content or
+     * the user's full name contains the provided keyword. Each PostDTO object
+     * contains the post details and the associated user details. If there are
+     * no posts in the database that meet the condition, the CompletableFuture
+     * completes with an empty list.
      */
     @Override
     public CompletableFuture<List<PostDTO>> getPostsByCondition(String keyword) {
@@ -146,8 +150,8 @@ public class PostDAO implements IPostDAO {
             List<PostDTO> filteredPosts = new ArrayList<>();
             for (PostDTO post : posts) {
                 if (post.getContent().toLowerCase().contains(lowerCaseKeyword)
-                    || post.getUser().getFullName().toLowerCase().contains(lowerCaseKeyword)
-                    || post.getUser().getNickName().toLowerCase().contains(lowerCaseKeyword)) {
+                        || post.getUser().getFullName().toLowerCase().contains(lowerCaseKeyword)
+                        || post.getUser().getNickName().toLowerCase().contains(lowerCaseKeyword)) {
                     filteredPosts.add(post);
                 }
             }
