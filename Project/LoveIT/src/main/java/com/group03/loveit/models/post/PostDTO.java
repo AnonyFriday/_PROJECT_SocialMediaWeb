@@ -20,6 +20,7 @@ public class PostDTO {
     private String status;
     private String imageUrl;
     private CommentDTO topComment;
+    private boolean isFavorite;
 
     // Getters and Setters
     public long getId() {
@@ -90,6 +91,12 @@ public class PostDTO {
     }
     public void setTopComment(CommentDTO topComment) {
         this.topComment = topComment;
+    }
+    public boolean getIsFavorite() {
+        return isFavorite;
+    }
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 
     // Constructors

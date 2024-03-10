@@ -3,13 +3,16 @@ package com.group03.loveit.models.favourite;
 import com.group03.loveit.models.post.PostDTO;
 import com.group03.loveit.models.user.UserDTO;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Nhat
  */
-public class FavouriteDTO {
+public class FavoriteDTO {
     // Fields
     private PostDTO post;
     private UserDTO user;
+    private LocalDateTime createdAt;
 
     public PostDTO getPost() {
         return post;
@@ -26,10 +29,17 @@ public class FavouriteDTO {
     public void setUser(UserDTO user) {
         this.user = user;
     }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-    public FavouriteDTO(PostDTO post, UserDTO user) {
+    public FavoriteDTO(PostDTO post, UserDTO user, LocalDateTime createdAt) {
         this.post = post;
         this.user = user;
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -52,7 +62,7 @@ public class FavouriteDTO {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FavouriteDTO other = (FavouriteDTO) obj;
+        final FavoriteDTO other = (FavoriteDTO) obj;
         if (post == null) {
             if (other.post != null) {
                 return false;

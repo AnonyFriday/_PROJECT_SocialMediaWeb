@@ -33,7 +33,11 @@
         <servlet-name>CreateCommentController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.post_details.CreateCommentController</servlet-class>
     </servlet>
-    
+    <servlet>
+        <servlet-name>FavoritesController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.favorites.FavoritesController</servlet-class>
+    </servlet>
+
     <!-- Mappings -->
     <servlet>
         <servlet-name>ProfileController</servlet-name>
@@ -75,7 +79,14 @@
         <servlet-name>CreateCommentController</servlet-name>
         <url-pattern>/create-comment</url-pattern>
     </servlet-mapping>
+<<<<<<< HEAD
     
+    =======
+    <servlet-mapping>
+        <servlet-name>FavoritesController</servlet-name>
+        <url-pattern>/favorites</url-pattern>
+    </servlet-mapping>
+    >>>>>>> 94310ce4764d7d9c18a0826dbe6a2c8735ad2d76
     <!-- Session -->
     <session-config>
         <session-timeout>
