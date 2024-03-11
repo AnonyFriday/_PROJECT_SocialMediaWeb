@@ -10,6 +10,7 @@ import com.group03.loveit.models.account.EAccountStatus;
 import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.utilities.AsyncUtils;
+import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DBUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -51,6 +52,13 @@ public final class UserDAO implements IUserDAO {
     // == Methods
     // ===========================
     /**
+     * Authenticated
+     *
+     * @param typedPassword
+     * @param encryptedPassword
+     * @return
+     */
+    /**
      * Login using username and password
      *
      * @param email
@@ -69,12 +77,14 @@ public final class UserDAO implements IUserDAO {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        UserDTO user = new UserDTO(
-                                rs.getString(COL_EMAIL),
-                                rs.getString(COL_PASSWORD),
-                                rs.getString(COL_FULLNAME)
-                        );
-                        return user;
+                        if (CryptoUtils.verify(password, rs.getString(COL_PASSWORD))) {
+                            UserDTO user = new UserDTO(
+                                    rs.getString(COL_EMAIL),
+                                    rs.getString(COL_PASSWORD),
+                                    rs.getString(COL_FULLNAME)
+                            );
+                            return user;
+                        }
                     }
                 }
             }

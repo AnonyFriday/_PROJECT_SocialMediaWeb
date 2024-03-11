@@ -79,7 +79,6 @@
         <servlet-name>CreateCommentController</servlet-name>
         <url-pattern>/create-comment</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>FavoritesController</servlet-name>
         <url-pattern>/favorites</url-pattern>
