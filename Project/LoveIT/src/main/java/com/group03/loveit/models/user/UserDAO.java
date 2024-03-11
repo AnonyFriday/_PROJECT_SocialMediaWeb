@@ -231,18 +231,18 @@ public final class UserDAO implements IUserDAO {
             }
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setLong(1, userId);
-                try (ResultSet resultSet = ps.executeQuery()) {
-                    if (resultSet.next()) {
-                        long id = resultSet.getLong(COL_ID);
-                        String email = resultSet.getNString(COL_EMAIL);
-                        String fullName = resultSet.getNString(COL_FULLNAME);
-                        String nickName = resultSet.getNString(COL_NICKNAME);
-                        String imageUrl = resultSet.getString(COL_IMAGEURL);
-                        EAccountStatus status = EAccountStatus.getEnumFromName(resultSet.getString(COL_STATUS));
-                        EAccountRole role = EAccountRole.getEnumFromName(resultSet.getString(COL_ROLE));
-                        byte age = resultSet.getByte(COL_AGE);
-                        GenderDTO gender = new GenderDTO(resultSet.getLong(COL_GENDER_ID));
-                        GenderDTO preferenceGender = new GenderDTO(resultSet.getInt(COL_GENDER_PREFERENCE_ID));
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        long id = rs.getLong(COL_ID);
+                        String email = rs.getNString(COL_EMAIL);
+                        String fullName = rs.getNString(COL_FULLNAME);
+                        String nickName = rs.getNString(COL_NICKNAME);
+                        String imageUrl = rs.getString(COL_IMAGEURL);
+                        EAccountStatus status = EAccountStatus.getEnumFromName(rs.getString(COL_STATUS));
+                        EAccountRole role = EAccountRole.getEnumFromName(rs.getString(COL_ROLE));
+                        byte age = rs.getByte(COL_AGE);
+                        GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID));
+                        GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID));
 
                         return new UserDTO(id, age, gender, preferenceGender, nickName, fullName, email, imageUrl, status, role);
                     }
