@@ -38,9 +38,9 @@ public final class UserDAO implements IUserDAO {
     private final String TABLE_NAME = "[User]";
     private final String COL_ID = "Id";
     private final String COL_EMAIL = "Email";
-    private final String COL_NICKNAME = "Nickname";
     private final String COL_PASSWORD = "Password";
     private final String COL_FULLNAME = "FullName";
+    private final String COL_NICKNAME = "Nickname";
     private final String COL_IMAGEURL = "Image_Url";
     private final String COL_STATUS = "Status";
     private final String COL_ROLE = "Role";
@@ -52,47 +52,6 @@ public final class UserDAO implements IUserDAO {
     // ===========================
     // == Methods
     // ===========================
-    /**
-     * Login using username and password (ERROR on hashing)
-     *
-     * @param email
-     * @param password
-     * @return a user model
-     */
-    public UserDTO login(String email, String password) {
-        String sql = "SELECT u.Email, u.Password, u.Fullname\n"
-                + "FROM [User] as u\n"
-                + "WHERE u.Email = ?";
-
-        // Fetching data
-        try (Connection conn = DBUtils.getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, email);
-
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-
-                        byte[] storedPassword = rs.getString(COL_PASSWORD).getBytes();
-                        boolean isVerified = CryptoUtils.verify(password, storedPassword);
-
-                        if (isVerified) {
-                            UserDTO user = new UserDTO(
-                                    rs.getString(COL_EMAIL),
-                                    rs.getString(COL_PASSWORD),
-                                    rs.getString(COL_FULLNAME)
-                            );
-                            return user;
-                        }
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return null;
-    }
-
     // ===========================
     // == Override Methods
     // ===========================

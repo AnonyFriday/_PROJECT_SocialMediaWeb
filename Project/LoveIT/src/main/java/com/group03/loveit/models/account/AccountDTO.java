@@ -72,10 +72,16 @@ public class AccountDTO implements Serializable {
      *
      * @param email
      * @param password
+     * @param fullName
+     * @param role
+     * @param status
      */
-    public AccountDTO(String email, String password) {
+    public AccountDTO(String email, String password, String fullName, EAccountRole role, EAccountStatus status) {
         this.email = email;
         this.password = password;
+        this.fullName = fullName;
+        this.role = role;
+        this.status = status;
     }
 
     /**
@@ -130,51 +136,51 @@ public class AccountDTO implements Serializable {
     public long getId() {
         return id;
     }
-    
+
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getPassword() {
         return password;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public String getFullName() {
         return fullName;
     }
-    
+
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-    
+
     public String getImageUrl() {
         return imageUrl;
     }
-    
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    
+
     public EAccountStatus getStatus() {
         return status;
     }
-    
+
     public void setStatus(EAccountStatus status) {
         this.status = status;
     }
-    
+
     public EAccountRole getRole() {
         return role;
     }
-    
+
     public void setRole(EAccountRole role) {
         this.role = role;
     }

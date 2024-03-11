@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * SHA-512 algorithm for hashing sensitive string
  *
  * @author duyvu
  */
@@ -33,30 +34,6 @@ public final class CryptoUtils {
     // =============================
     // == Private Methods
     // =============================
-    /**
-     * Hash and Salt the message using salt values
-     *
-     * @param rawString
-     * @param salt
-     * @return
-     */
-    public static String hashAndSalt(String rawString, byte[] salt) {
-        try {
-            // Combine raw bytes array + trailing salt byte arrays
-            byte[] combined = concatenateArrays(rawString.getBytes(), salt);
-
-            // Encrypt using sha 512
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
-            byte[] hashedBytes = messageDigest.digest(combined);
-
-            // Combining the leading salt byte arrays + hashed bytes again as the identity
-            // Encode the combination using base64
-            return Base64.getEncoder().encodeToString(concatenateArrays(salt, hashedBytes));
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing and salting", e);
-        }
-    }
-
     /**
      * Generate random to encrypt the msg - To simplify the process, i will use
      * static salt only
@@ -86,6 +63,30 @@ public final class CryptoUtils {
     // =============================
     // == Public Methods
     // =============================
+    /**
+     * Hash and Salt the message using salt values
+     *
+     * @param rawString
+     * @param salt
+     * @return
+     */
+    public static String hashAndSalt(String rawString, byte[] salt) {
+        try {
+            // Combine raw bytes array + trailing salt byte arrays
+            byte[] combined = concatenateArrays(rawString.getBytes(), salt);
+
+            // Encrypt using sha 512
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+            byte[] hashedBytes = messageDigest.digest(combined);
+
+            // Combining the leading salt byte arrays + hashed bytes again as the identity
+            // Encode the combination using base64
+            return Base64.getEncoder().encodeToString(concatenateArrays(salt, hashedBytes));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing and salting", e);
+        }
+    }
+
     /**
      * Verify
      *
@@ -134,20 +135,25 @@ public final class CryptoUtils {
      * @param encodedString
      * @return
      */
-    public static byte[] decodeBase64(byte[] encodedString) {
+    private static byte[] decodeBase64(byte[] encodedString) {
         return Base64.getDecoder().decode(encodedString);
     }
 
     public static void main(String[] args) {
-        String usr = "duy";
+        // ACTIVE - USER
         String email = "duy@gmail.com";
         String msg = "duy123";
 
-        String usr1 = "nhut";
+        // ACTIVE - ADMIN
+        String email1 = "nhut@gmail.com";
         String msg1 = "nhut123";
 
-        String encodedString = encode(msg);
-        boolean isVerified = verify(msg, encodedString.getBytes());
+        // DISABLE - USER
+        String email2 = "duydie@gmail.com";
+        String msg2 = "duydie123";
+
+        String encodedString = encode(msg2);
+        boolean isVerified = verify(msg2, encodedString.getBytes());
 
         System.out.println("Encoded msg: " + encodedString);
         System.out.println("is verified: " + isVerified);
