@@ -12,6 +12,7 @@ import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.utilities.AsyncUtils;
 import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DBUtils;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,14 +53,7 @@ public final class UserDAO implements IUserDAO {
     // == Methods
     // ===========================
     /**
-     * Authenticated
-     *
-     * @param typedPassword
-     * @param encryptedPassword
-     * @return
-     */
-    /**
-     * Login using username and password
+     * Login using username and password (ERROR on hashing)
      *
      * @param email
      * @param password
@@ -68,16 +62,20 @@ public final class UserDAO implements IUserDAO {
     public UserDTO login(String email, String password) {
         String sql = "SELECT u.Email, u.Password, u.Fullname\n"
                 + "FROM [User] as u\n"
-                + "WHERE u.Email = ? AND u.Password = ?";
+                + "WHERE u.Email = ?";
 
+        // Fetching data
         try (Connection conn = DBUtils.getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, email);
-                stmt.setString(2, password);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        if (CryptoUtils.verify(password, rs.getString(COL_PASSWORD))) {
+
+                        byte[] storedPassword = rs.getString(COL_PASSWORD).getBytes();
+                        boolean isVerified = CryptoUtils.verify(password, storedPassword);
+
+                        if (isVerified) {
                             UserDTO user = new UserDTO(
                                     rs.getString(COL_EMAIL),
                                     rs.getString(COL_PASSWORD),

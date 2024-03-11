@@ -22,99 +22,135 @@ import java.util.logging.Logger;
  */
 public final class CryptoUtils {
 
-    private static int saltSize = 16;
-
+    // =============================
+    // == Fields
+    // =============================
     /**
-     * Decode into byte arrays from encrypted string
-     *
-     * @param encryptedString
-     * @return
+     * Set default size of the salt to 16
      */
-    private final static byte[] decode(String encryptedString) {
-        return Base64.getDecoder().decode(encryptedString);
-    }
+    private static final int SALT_SIZE = 16;
 
+    // =============================
+    // == Private Methods
+    // =============================
     /**
-     * Verify encrypted and input string
-     *
-     * @param enteredString
-     * @param encryptedString
-     * @return
-     */
-    public final static boolean verify(String enteredString, String encryptedString) {
-        try {
-            // Decode the stored password from Base64
-            byte[] storedBytes = decode(encryptedString);
-
-            // Extract the salt from the encrypted String
-            byte[] salt = new byte[saltSize]; // Assuming a 16-byte salt
-            System.arraycopy(storedBytes, 0, salt, 0, salt.length);
-
-            // Combine entered String and stored salt
-            byte[] combined = new byte[enteredString.length() + salt.length];
-            System.arraycopy(enteredString.getBytes(), 0, combined, 0, enteredString.length());
-            System.arraycopy(salt, 0, combined, enteredString.length(), salt.length);
-
-            // Hash the combined value using SHA-512
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
-            byte[] hashedBytes = messageDigest.digest(combined);
-
-            // Compare the hashed value with the stored hash
-            for (int i = 0; i < hashedBytes.length; i++) {
-                if (hashedBytes[i] != storedBytes[salt.length + i]) {
-                    return false; // Passwords do not match
-                }
-            }
-
-            return true; // Passwords match
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace(); // Handle the exception appropriately
-            return false;
-        }
-    }
-
-    /**
-     * Encoding the data string using the SHA-256
+     * Hash and Salt the message using salt values
      *
      * @param rawString
+     * @param salt
      * @return
      */
-    private final static String encode(String rawString) {
+    public static String hashAndSalt(String rawString, byte[] salt) {
         try {
-            // Generate a random salt
-            byte[] salt = generateSalt();
+            // Combine raw bytes array + trailing salt byte arrays
+            byte[] combined = concatenateArrays(rawString.getBytes(), salt);
 
-            // Combine password and salt
-            byte[] combined = new byte[rawString.length() + salt.length];
-            System.arraycopy(rawString.getBytes(), 0, combined, 0, rawString.length());
-            System.arraycopy(salt, 0, combined, rawString.length(), salt.length);
-
-            // Hash the combined value using SHA-512
+            // Encrypt using sha 512
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
             byte[] hashedBytes = messageDigest.digest(combined);
 
-            // Combine the salt and hashed password for storage
-            byte[] storedPassword = new byte[salt.length + hashedBytes.length];
-            System.arraycopy(salt, 0, storedPassword, 0, salt.length);
-            System.arraycopy(hashedBytes, 0, storedPassword, salt.length, hashedBytes.length);
-
-            // Encode the combined value to Base64 for storage
-            return Base64.getEncoder().encodeToString(storedPassword);
+            // Combining the leading salt byte arrays + hashed bytes again as the identity
+            // Encode the combination using base64
+            return Base64.getEncoder().encodeToString(concatenateArrays(salt, hashedBytes));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace(); // Handle the exception appropriatel
+            throw new RuntimeException("Error hashing and salting", e);
         }
-        return null;
     }
 
     /**
-     * Generate the Salt for SHA-512
+     * Generate random to encrypt the msg - To simplify the process, i will use
+     * static salt only
      *
      * @return
      */
     private static byte[] generateSalt() {
-        byte[] salt = new byte[saltSize];
-        SecureRandom random = new SecureRandom();
-        random.nextBytes(salt);
+        byte[] salt = new byte[SALT_SIZE];
+        new SecureRandom().nextBytes(salt);
         return salt;
+    }
+
+    /**
+     * Combining 2 arrays into 1 byte array
+     *
+     * @param array1
+     * @param array2
+     * @return
+     */
+    private static byte[] concatenateArrays(byte[] array1, byte[] array2) {
+        byte[] result = new byte[array1.length + array2.length];
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        return result;
+    }
+
+    // =============================
+    // == Public Methods
+    // =============================
+    /**
+     * Verify
+     *
+     * @param enteredString
+     * @param storedBytes
+     * @return
+     */
+    public static boolean verify(String enteredString, byte[] storedBytes) {
+
+        byte[] decodedStoredBytes = decodeBase64(storedBytes);
+        byte[] enteredBytes = enteredString.getBytes(StandardCharsets.UTF_8);
+        byte[] salt = new byte[SALT_SIZE];
+
+        // Copy the salt bytes from encoded leading salt + hashed bytes
+        System.arraycopy(decodedStoredBytes, 0, salt, 0, SALT_SIZE);
+
+        // Generate the hashed enteredString to match with storedBytes
+        byte[] combined = concatenateArrays(enteredBytes, salt);
+
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error verifying password", e);
+        }
+
+        byte[] hashedBytes = messageDigest.digest(combined);
+
+        return MessageDigest.isEqual(concatenateArrays(salt, hashedBytes), decodedStoredBytes);
+    }
+
+    /**
+     * Wrapper class for hashAndSalt method to hidden the salt generated
+     *
+     * @param rawString
+     * @return
+     */
+    public static String encode(String rawString) {
+        byte[] salt = generateSalt();
+        return hashAndSalt(rawString, salt);
+    }
+
+    /**
+     * Decode into base64
+     *
+     * @param encodedString
+     * @return
+     */
+    public static byte[] decodeBase64(byte[] encodedString) {
+        return Base64.getDecoder().decode(encodedString);
+    }
+
+    public static void main(String[] args) {
+        String usr = "duy";
+        String email = "duy@gmail.com";
+        String msg = "duy123";
+
+        String usr1 = "nhut";
+        String msg1 = "nhut123";
+
+        String encodedString = encode(msg);
+        boolean isVerified = verify(msg, encodedString.getBytes());
+
+        System.out.println("Encoded msg: " + encodedString);
+        System.out.println("is verified: " + isVerified);
+        System.out.println("Encoded msg Length: " + encodedString.length());
     }
 }
