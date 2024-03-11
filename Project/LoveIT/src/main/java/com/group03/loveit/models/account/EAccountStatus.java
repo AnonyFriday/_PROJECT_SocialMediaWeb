@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
- * Define 3 objects only of roles
+ * Define 2 objects only of roles
+ *
+ *
  *
  * @author duyvu
  */
@@ -16,12 +18,17 @@ public enum EAccountStatus {
     // ===========================
     // == No. objects
     // ===========================
-    ACTIVE("Active"), BLOCKED("Blocked"), HIDDEN("Hidden");
+    /**
+     * - Active: the current active account
+     *
+     * - Disable: disabled account will be blocked to login from the system
+     */
+    ACTIVE("Active"), DISABLE("Disable");
 
     // ===========================
     // == Fields
     // ===========================
-    private String status;
+    private final String status;
 
     // ===========================
     // == Constructor
