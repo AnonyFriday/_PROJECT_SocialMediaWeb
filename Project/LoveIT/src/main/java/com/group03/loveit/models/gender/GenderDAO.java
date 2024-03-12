@@ -86,9 +86,24 @@ public final class GenderDAO {
     /**
      * Return the unmodified HashMap to avoid outside modification
      *
+     * - entry: id - GenderDTO
+     *
      * @return unmodified HashMap
      */
     public final Map<Long, GenderDTO> getGenderMap() {
         return Collections.unmodifiableMap(genderMap);
+    }
+
+    /**
+     * Return the unmodified
+     *
+     * @return
+     */
+    public final ArrayList<GenderDTO> getGenderList() {
+        return new ArrayList<>(genderMap.values());
+    }
+
+    public static void main(String[] args) {
+        System.out.println(GenderDAO.getInstance().getGenderList());
     }
 }

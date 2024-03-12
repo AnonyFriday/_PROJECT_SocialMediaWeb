@@ -4,27 +4,18 @@
  */
 package com.group03.loveit.models.user;
 
-import com.group03.loveit.models.account.AccountDTO;
 import com.group03.loveit.models.account.EAccountRole;
 import com.group03.loveit.models.account.EAccountStatus;
 import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
-import com.group03.loveit.utilities.AsyncUtils;
-import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DBUtils;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -52,6 +43,10 @@ public final class UserDAO implements IUserDAO {
     // ===========================
     // == Methods
     // ===========================
+    public void registerAccountUser() {
+
+    }
+
     // ===========================
     // == Override Methods
     // ===========================

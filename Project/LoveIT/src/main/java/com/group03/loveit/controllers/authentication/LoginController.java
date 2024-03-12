@@ -7,17 +7,12 @@ package com.group03.loveit.controllers.authentication;
 import com.group03.loveit.models.account.AccountDAO;
 import com.group03.loveit.models.account.AccountDTO;
 import com.group03.loveit.models.account.EAccountRole;
-import com.group03.loveit.models.user.UserDAO;
-import com.group03.loveit.models.user.UserDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Login Controller
@@ -27,7 +22,8 @@ import javax.servlet.http.HttpSession;
  * @author duyvu
  */
 public class LoginController extends HttpServlet {
-
+    
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -48,7 +44,6 @@ public class LoginController extends HttpServlet {
 
             // Check if having user then added to session else showing error
             if (user != null) {
-                request.getSession(true).setAttribute("USER-SESSION", user);
 
                 // Checking account status
                 switch (user.getStatus()) {
@@ -57,6 +52,7 @@ public class LoginController extends HttpServlet {
                         break;
                     }
                     case ACTIVE: {
+                        request.getSession(true).setAttribute("USER-SESSION", user);
                         redirectToRolePage(user.getRole(), response);
                         break;
                     }
