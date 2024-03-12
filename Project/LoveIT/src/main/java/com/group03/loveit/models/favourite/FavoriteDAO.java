@@ -207,6 +207,8 @@ public class FavoriteDAO implements IFavoriteDAO {
                 }
             } catch (SQLException ex) {
                 System.out.println("Cannot delete favourite: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting favourite: " + ex.getMessage());
             }
         });
     }
