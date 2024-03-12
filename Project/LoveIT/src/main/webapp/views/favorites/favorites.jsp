@@ -20,5 +20,20 @@
                 </label>
             </form>
         </div>
+        <div class="favorite-posts-grid">
+            <c:forEach var="post" items="${favorite_posts}">
+                <jsp:include page="c-favorite-post.jsp">
+                    <jsp:param name="p_id" value="${post.id}" />
+                    <jsp:param name="p_image_url" value="${post.imageUrl}" />
+                    <jsp:param name="p_content" value="${post.content}" />
+                    <jsp:param name="u_image_url" value="${post.user.imageUrl}"/>
+                    <jsp:param name="u_age" value="${post.user.age}"/>
+                    <jsp:param name="u_usn" value="${post.user.fullName}"/>
+                    <jsp:param name="u_nickname" value="${post.user.nickName}"/>
+                    <jsp:param name="u_gender" value="${post.user.gender.name}"/>
+                    <jsp:param name="u_pref_gender" value="${post.user.preferenceGender.name}"/>
+                </jsp:include>
+            </c:forEach>
+        </div>
     </main>
 </DN:GenericPage>

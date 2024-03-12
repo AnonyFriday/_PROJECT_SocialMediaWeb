@@ -8,18 +8,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <DN:GenericPage 
     pageStyleUrl="${pageContext.request.contextPath}/css/post-details/post-details.css">
 
     <main>
-        <script>
-            function toggleImage(img) {
-                img.src = img.src.endsWith("heart_off.png") ? "${pageContext.request.contextPath}/assets/img/heart_on.png" : "${pageContext.request.contextPath}/assets/img/heart_off.png";
-            }
-        </script>
-
         <div class="post">
             <div class="top-area">
                 <div class="top-left-area">
@@ -35,9 +29,18 @@
                     </div>
                 </div>
                 <div class="top-right-area">
-                    <button onclick="toggleImage(this.children[0])">
-                        <img src="${pageContext.request.contextPath}/assets/img/heart_off.png" alt="Heart">
-                    </button>
+                    <form action="${pageContext.request.contextPath}/post-details?action=toggle_favorite&post_id=${post.id}" method="post">
+                        <button>
+                            <c:choose>
+                                <c:when test="${post.isFavorite}">
+                                    <img src="${pageContext.request.contextPath}/assets/img/heart_on.png" alt="Heart">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${pageContext.request.contextPath}/assets/img/heart_off.png" alt="Heart">
+                                </c:otherwise>
+                            </c:choose>
+                        </button>
+                    </form>
                     <div>
                         <p>I am</p>
                         <p>${post.user.gender.name}</p>

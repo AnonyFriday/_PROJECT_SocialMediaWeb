@@ -20,6 +20,7 @@
             <c:set var="is_favorite" value="${post.isFavorite}" scope="request" />
             <jsp:include page="c-post.jsp">
                 <jsp:param name="post_id" value="${post.id}" />
+                <jsp:param name="post_is_favorite" value="${post.isFavorite}" />
                 <jsp:param name="user_image_url" value="${post.user.imageUrl}" />
                 <jsp:param name="user_name" value="${post.user.fullName}" />
                 <jsp:param name="user_nickname" value="${post.user.nickName}" />
