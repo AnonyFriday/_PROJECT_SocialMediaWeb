@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
     <!-- Packages -->
     <servlet>
         <servlet-name>LoginController</servlet-name>
@@ -47,6 +48,10 @@
         <servlet-name>ProfileController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.profile.ProfileController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.authentication.LogoutController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -93,12 +98,16 @@
     </servlet-mapping>
 
     <!-- Session -->
+    <servlet-mapping>
+        <servlet-name>LogoutController</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             60
         </session-timeout>
     </session-config>
-    
+
     <!-- Welcome File -->
     <welcome-file-list>
         <welcome-file>welcome</welcome-file>

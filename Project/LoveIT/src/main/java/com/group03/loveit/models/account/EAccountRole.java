@@ -15,12 +15,17 @@ public enum EAccountRole {
     // ===========================
     // == No. objects
     // ===========================
+    /**
+     * Admin: go to the admin panel
+     *
+     * User: go to the homepage
+     */
     ADMIN("Admin"), USER("User");
 
     // ===========================
     // == Fields
     // ===========================
-    private String role;
+    private final String role;
 
     // ===========================
     // == Constructor
