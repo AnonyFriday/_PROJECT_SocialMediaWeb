@@ -31,7 +31,7 @@
                     <form action="${pageContext.request.contextPath}/people-zone?action=favorite&post_id=${param.post_id}" method="post">
                         <button type="submit">
                             <c:choose>
-                                <c:when test="${is_favorite}">
+                                <c:when test="${param.post_is_favorite}">
                                     <img src="${pageContext.request.contextPath}/assets/img/heart_on.png" alt="Favorite button">
                                 </c:when>
                                 <c:otherwise>
