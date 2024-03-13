@@ -139,24 +139,24 @@ public final class CryptoUtils {
         return Base64.getDecoder().decode(encodedString);
     }
 
-    public static void main(String[] args) {
-        // ACTIVE - USER
-        String email = "duy@gmail.com";
-        String msg = "duy123";
-
-        // ACTIVE - ADMIN
-        String email1 = "nhut@gmail.com";
-        String msg1 = "nhut123";
-
-        // DISABLE - USER
-        String email2 = "duydie@gmail.com";
-        String msg2 = "duydie123";
-
-        String encodedString = encode(msg2);
-        boolean isVerified = verify(msg2, encodedString.getBytes());
-
-        System.out.println("Encoded msg: " + encodedString);
-        System.out.println("is verified: " + isVerified);
-        System.out.println("Encoded msg Length: " + encodedString.length());
-    }
+//    public static void main(String[] args) {
+//        // ACTIVE - USER
+//        String email = "duy@gmail.com";
+//        String msg = "duy123";
+//
+//        // ACTIVE - ADMIN
+//        String email1 = "nhut@gmail.com";
+//        String msg1 = "nhut123";
+//
+//        // DISABLE - USER
+//        String email2 = "duydie@gmail.com";
+//        String msg2 = "duydie123";
+//
+//        String encodedString = encode(msg2);
+//        boolean isVerified = verify(msg2, encodedString.getBytes());
+//
+//        System.out.println("Encoded msg: " + encodedString);
+//        System.out.println("is verified: " + isVerified);
+//        System.out.println("Encoded msg Length: " + encodedString.length());
+//    }
 }

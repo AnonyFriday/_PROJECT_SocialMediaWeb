@@ -10,6 +10,7 @@ import com.group03.loveit.models.account.EAccountRole;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author duyvu
  */
 public class LoginController extends HttpServlet {
-    
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,23 +37,42 @@ public class LoginController extends HttpServlet {
         AccountDAO accountDAO = new AccountDAO();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String isRememberMe = request.getParameter("remember-me");
         String errorMsg = null;
 
+        // Add cookies if 
+        if (isRememberMe != null) {
+            Cookie cEmail = new Cookie("cEmail", email);
+            Cookie cPass = new Cookie("cPass", password);
+            Cookie cRememberMe = new Cookie("cRememberMe", isRememberMe);
+            cEmail.setMaxAge(60 * 60 * 24);
+            cPass.setMaxAge(60 * 60 * 24);
+            cRememberMe.setMaxAge(60 * 60 * 24);
+            response.addCookie(cEmail);
+            response.addCookie(cPass);
+            response.addCookie(cRememberMe);
+        } else {
+            deleteCookies(request);
+        }
+
         try {
-            AccountDTO user = accountDAO.login(email, password);
+            AccountDTO account = accountDAO.login(email, password);
 
             // Check if having user then added to session else showing error
-            if (user != null) {
+            if (account != null) {
 
                 // Checking account status
-                switch (user.getStatus()) {
+                switch (account.getStatus()) {
                     case DISABLE: {
                         errorMsg = "Your account has been disabled. Please contact the phone 0909189999";
                         break;
                     }
                     case ACTIVE: {
-                        request.getSession(true).setAttribute("USER-SESSION", user);
-                        redirectToRolePage(user.getRole(), response);
+
+                        // Add session to create user session
+                        request.getSession(true).setAttribute("USER-SESSION", account);
+
+                        redirectToRolePage(account.getRole(), response);
                         break;
                     }
                 }
@@ -91,6 +110,39 @@ public class LoginController extends HttpServlet {
                 response.sendRedirect("people-zone");
                 break;
             }
+        }
+    }
+
+    /**
+     * Function to add cookies
+     *
+     * @param account
+     * @param response //
+     */
+//    private void setCookies(AccountDTO account, String isRememberMe, HttpServletResponse response) {
+//        // Cookie to store username, not password
+//        Cookie cEmail = new Cookie("cEmail", account.getEmail());
+//        Cookie cPass = new Cookie("cPass", account.getPassword());
+//        Cookie cRememberMe = new Cookie("cRememberMe", isRememberMe);
+//        cEmail.setMaxAge(60 * 60 * 24);
+//        cPass.setMaxAge(60 * 60 * 24);
+//        cRememberMe.setMaxAge(60 * 60 * 24);
+//        response.addCookie(cEmail);
+//        response.addCookie(cPass);
+//        response.addCookie(cRememberMe);
+//    }
+    /**
+     * Function to delete cookies
+     *
+     * -1: delete when exit the chrome
+     *
+     * 0: remove the cookie
+     *
+     * @param request
+     */
+    private void deleteCookies(HttpServletRequest request) {
+        for (Cookie cookie : request.getCookies()) {
+            cookie.setMaxAge(-1);
         }
     }
 }
