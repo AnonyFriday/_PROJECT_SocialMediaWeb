@@ -36,7 +36,7 @@ public enum EStatus {
     /**
      * By default the enum constructor is private
      *
-     * @param role: shorten form of enum object
+     * @param status: shorten form of enum object
      */
     private EStatus(String status) {
         this.status = status;
@@ -50,22 +50,17 @@ public enum EStatus {
      *
      * @return string status
      */
-    public String getStatus() {
+    public String getStringFromEnum() {
         return status;
     }
 
     /**
      * Get the enum object based on the string form
      *
-     * @param name
-     * @return
+     * @param name string form of enum object
+     * @return enum object
      */
     public static EStatus getEnumFromName(String name) {
-        return Arrays.stream(EStatus.values()).filter(new Predicate<EStatus>() {
-            @Override
-            public boolean test(EStatus t) {
-                return t.getStatus().equalsIgnoreCase(name);
-            }
-        }).findFirst().get();
+        return Arrays.stream(EStatus.values()).filter(t -> t.status.equalsIgnoreCase(name)).findFirst().get();
     }
 }

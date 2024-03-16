@@ -90,8 +90,8 @@ public final class DataProcessingUtils {
      * @param dob
      * @return age
      */
-    public static byte convertDateToAge(LocalDate dob) {
-        return (byte) LocalDate.now().minusYears(dob.getYear()).getYear();
+    public static int convertDateToAge(LocalDate dob) {
+        return LocalDate.now().minusYears(dob.getYear()).getYear();
     }
 
     /**

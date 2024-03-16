@@ -47,7 +47,7 @@ public enum EAccountRole {
      *
      * @return string role
      */
-    public String getRole() {
+    public String getStringFromEnum() {
         return role;
     }
 
@@ -61,7 +61,7 @@ public enum EAccountRole {
         return Arrays.stream(EAccountRole.values()).filter(new Predicate<EAccountRole>() {
             @Override
             public boolean test(EAccountRole t) {
-                return t.getRole().equalsIgnoreCase(name);
+                return t.role.equalsIgnoreCase(name);
             }
         }).findFirst().get();
     }

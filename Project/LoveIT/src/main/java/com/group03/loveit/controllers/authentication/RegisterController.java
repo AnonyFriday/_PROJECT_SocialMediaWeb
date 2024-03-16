@@ -9,6 +9,7 @@ import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.ConstantUtils;
+import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DataProcessingUtils;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -70,13 +71,6 @@ public class RegisterController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check if user in session, invalidate and sendRedirect to login page
-        HttpSession session = request.getSession(false);
-        if (session.getAttribute(ConstantUtils.SESSION_USER) == null) {
-            session.invalidate();
-            response.sendRedirect(request.getContextPath().concat("/views/authentication/login.jsp"));
-        }
-
         // Check action
         String action = request.getParameter("action");
         List<GenderDTO> genders = GenderDAO.getInstance().getGenderList();
@@ -89,7 +83,6 @@ public class RegisterController extends HttpServlet {
         } else if ("check".equals(action)) {
             handleRegister(request, response);
         }
-
     }
 
     /**
@@ -98,8 +91,9 @@ public class RegisterController extends HttpServlet {
      * @param request
      * @param response
      */
-    private void handleRegister(HttpServletRequest request, HttpServletResponse response) {
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String fullName = request.getParameter("fullName");
+        String nickName = request.getParameter("nickName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String genderId = request.getParameter("gender");
@@ -120,6 +114,10 @@ public class RegisterController extends HttpServlet {
             errorMessages.put("errorFullName", "Please enter full name in the right format and from length of 8 to 32");
         }
 
+        if (!DataProcessingUtils.isNickNameValid(fullName, 8, 32)) {
+            errorMessages.put("errorNickName", "Please enter nick name in the right format and from length of 8 to 32");
+        }
+
         if (!DataProcessingUtils.isPasswordValid(password)) {
             errorMessages.put("errorPassword", "Please enter password in the right format");
         }
@@ -138,23 +136,22 @@ public class RegisterController extends HttpServlet {
             errorMessages.forEach((errName, errMsg) -> {
                 request.setAttribute(errName, errMsg);
             });
+
         } else {
 
-            try {
-                // After registation, move to login
-                // Register only User account
-                GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(genderId));
-                GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(preferenceGenderId));
-                byte age = DataProcessingUtils.convertDateToAge(date);
+            // After registation, move to login
+            // Register only User account
+            GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(genderId));
+            GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(preferenceGenderId));
+            int age = DataProcessingUtils.convertDateToAge(date);
 
-                UserDAO userDAO = new UserDAO();
-                UserDTO user = new UserDTO(email, password, fullName, age, gender, preferenceGender);
-                userDAO.insertUser(user);
+            UserDAO userDAO = new UserDAO();
+            UserDTO user = new UserDTO(email, CryptoUtils.encode(password), fullName, nickName, age, gender, preferenceGender);
+            userDAO.insertUser(user);
 
-                response.sendRedirect("login");
-            } catch (IOException ex) {
-                Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            request.setAttribute("success", "You register the account successfully.");
         }
+
+        request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
     }
 }

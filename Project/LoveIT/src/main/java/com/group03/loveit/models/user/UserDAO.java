@@ -8,10 +8,12 @@ import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DBUtils;
+import com.group03.loveit.utilities.DataProcessingUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -33,6 +35,7 @@ public final class UserDAO implements IUserDAO {
     private final String COL_PASSWORD = "Password";
     private final String COL_FULLNAME = "FullName";
     private final String COL_NICKNAME = "Nickname";
+
     private final String COL_IMAGEURL = "Image_Url";
     private final String COL_STATUS = "Status";
     private final String COL_ROLE = "Role";
@@ -73,6 +76,7 @@ public final class UserDAO implements IUserDAO {
                         if (isVerified) {
                             long id = rs.getLong(COL_ID);
                             String userEmail = rs.getNString(COL_EMAIL);
+                            String userPassword = rs.getNString(COL_PASSWORD);
                             String fullName = rs.getNString(COL_FULLNAME);
                             String nickName = rs.getNString(COL_NICKNAME);
                             String imageUrl = rs.getString(COL_IMAGEURL);
@@ -82,7 +86,7 @@ public final class UserDAO implements IUserDAO {
                             GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID));
                             GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID));
 
-                            return new UserDTO(id, age, gender, preferenceGender, nickName, fullName, userEmail, imageUrl, status, role);
+                            return new UserDTO(id, age, userPassword, gender, preferenceGender, nickName, fullName, userEmail, imageUrl, status, role);
                         }
                     }
                 }
@@ -177,42 +181,70 @@ public final class UserDAO implements IUserDAO {
     }
 
     @Override
-    public void insertUser(UserDTO user) {
-//        String sql = "INSERT INTO " + TABLE_NAME + " ("
-//                + COL_FULLNAME + ", "
-//                + COL_NICKNAME + ", "
-//                + COL_EMAIL + ", "
-//                + COL_PASSWORD + ", "
-//                + COL_AGE + ", "
-//                + COL_STATUS + ", "
-//                + COL_ROLE + ", "
-//                + COL_GENDER_ID + ", "
-//                + COL_GENDER_PREFERENCE_ID + ", "
-//                + COL_CREATE_AT + ", "
-//                + COL_IMAGEURL
-//                + ") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-//
-//        try (Connection conn = DBUtils.getConnection()) {
-//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-//                ps.setNString(1, user.getFullName());
-//                ps.setNString(2, user.getNickName());
-//                ps.setNString(3, user.getPassword());
-//                ps.setByte(3, user.getAge());
-//                
-//            }
-//        } catch (SQLException ex) {
-//
-//        }
+    public boolean insertUser(UserDTO user) {
+        String sql = " INSERT INTO [User](Fullname, Nickname, Email, Password, Age, Status, Role, Gender_Id, Preference_Id, Created_At, Image_Url) "
+                + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBUtils.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setNString(1, user.getFullName());
+                ps.setNString(2, user.getNickName());
+                ps.setNString(3, user.getEmail());
+                ps.setNString(4, CryptoUtils.encode(user.getPassword()));
+                ps.setInt(5, user.getAge());
+                ps.setString(6, user.getStatus().getStringFromEnum());
+                ps.setString(7, user.getRole().getStringFromEnum());
+                ps.setLong(8, user.getGender().getId());
+                ps.setLong(9, user.getPreferenceGender().getId());
+                ps.setTimestamp(10, Timestamp.valueOf(user.getCreatedAt()));
+                ps.setString(11, user.getImageUrl());
+
+                return ps.executeUpdate() != 0;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Cannot insert user : " + ex.getMessage());
+        }
+
+        return false;
     }
 
     @Override
-    public void updateUser(UserDTO udto
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean updateUser(UserDTO user) {
+        String sql
+                = " UPDATE [User] "
+                + " SET "
+                + "	Fullname = ?, "
+                + "	Nickname = ?, "
+                + "	Email = ?, "
+                + "	Password = ?, "
+                + "	Age = ?, "
+                + "	Gender_Id = ?,"
+                + "	Preference_Id = ? "
+                + " WHERE Id = ? ";
+
+        try (Connection conn = DBUtils.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setNString(1, user.getFullName());
+                stmt.setNString(2, user.getNickName());
+                stmt.setNString(3, user.getEmail());
+                stmt.setNString(4, CryptoUtils.encode(user.getPassword()));
+                stmt.setInt(5, user.getAge());
+                stmt.setLong(6, user.getGender().getId());
+                stmt.setLong(7, user.getGender().getId());
+                stmt.setLong(8, user.getId());
+
+                return stmt.executeUpdate() != 0;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Cannot update user by id: " + ex.getMessage());
+        }
+
+        return false;
     }
 
     @Override
-    public void deleteUser(long l
+    public boolean deleteUser(long l
     ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -222,7 +254,11 @@ public final class UserDAO implements IUserDAO {
 //        UserDTO user = userDAO.login("duy@gmail.com", "duy123");
 //
 //        System.out.println(user.getId());
-        UserDTO user = userDAO.getUserById(1);
-        System.out.println(user.getAge());
+//        UserDTO user = userDAO.getUserById(3);
+//        System.out.println(user);
+//
+//        user.setPassword("vu kim duy");
+//        System.out.println(userDAO.updateUser(user));
+
     }
 }

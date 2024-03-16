@@ -21,14 +21,14 @@ public class UserDTO implements Serializable {
     private String email;
     private String password;
     private String fullName;
+    private String nickName;
     private String imageUrl;
     private EStatus status;
     private EAccountRole role;
     private LocalDateTime createdAt;
-    private byte age;
+    private int age;
     private GenderDTO gender;
     private GenderDTO preferenceGender;
-    private String nickName;
 
     // ===========================
     // == Constructors
@@ -40,7 +40,47 @@ public class UserDTO implements Serializable {
     }
 
     /**
-     * Constructor for fetching data
+     * Constructor for Storing Session
+     *
+     * @param id
+     * @param age
+     * @param password
+     * @param gender
+     * @param preferenceGender
+     * @param nickName
+     * @param fullName
+     * @param email
+     * @param imageUrl
+     * @param status
+     * @param role
+     */
+    public UserDTO(
+            long id,
+            int age,
+            String password,
+            GenderDTO gender,
+            GenderDTO preferenceGender,
+            String nickName,
+            String fullName,
+            String email,
+            String imageUrl,
+            EAccountStatus status,
+            EAccountRole role) {
+        this.id = id;
+        this.password = password;
+        this.email = email;
+        this.fullName = fullName;
+        this.imageUrl = imageUrl;
+        this.status = status;
+        this.role = role;
+        this.age = age;
+        this.gender = gender;
+        this.preferenceGender = preferenceGender;
+        this.nickName = nickName;
+    }
+
+    /**
+     * Constructor for getting user
      *
      * @param id
      * @param age
@@ -55,7 +95,7 @@ public class UserDTO implements Serializable {
      */
     public UserDTO(
             long id,
-            byte age,
+            int age,
             GenderDTO gender,
             GenderDTO preferenceGender,
             String nickName,
@@ -82,13 +122,15 @@ public class UserDTO implements Serializable {
      * @param age
      * @param gender
      * @param preferenceGender
+     * @param nickName
      * @param email
      * @param password
      * @param fullName
      */
-    public UserDTO(String email, String password, String fullName, byte age, GenderDTO gender, GenderDTO preferenceGender) {
+    public UserDTO(String email, String password, String fullName, String nickName, int age, GenderDTO gender, GenderDTO preferenceGender) {
         this.email = email;
         this.fullName = fullName;
+        this.nickName = nickName;
         this.password = password;
         this.age = age;
         this.gender = gender;
@@ -96,6 +138,7 @@ public class UserDTO implements Serializable {
         this.status = EStatus.ACTIVE;
         this.role = EAccountRole.USER;
         this.createdAt = LocalDateTime.now();
+        this.imageUrl = "https://picsum.photos/200/300"; // Set Default
     }
 
     // ===========================
@@ -122,6 +165,10 @@ public class UserDTO implements Serializable {
     // ===========================
     // == Getters & Setters
     // ===========================
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     public long getId() {
         return id;
     }
@@ -178,11 +225,11 @@ public class UserDTO implements Serializable {
         this.role = role;
     }
 
-    public byte getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(byte age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
