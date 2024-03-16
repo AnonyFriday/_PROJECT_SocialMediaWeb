@@ -254,7 +254,7 @@ public class PostDAO implements IPostDAO {
                 }
                 String query = "UPDATE Post SET " + COL_STATUS + " = ? WHERE " + COL_ID + " = ?";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
-                    ps.setString(1, isActive ? EStatus.ACTIVE.getStatus() : EStatus.DISABLE.getStatus());
+                    ps.setString(1, isActive ? EStatus.ACTIVE.getStringFromEnum() : EStatus.DISABLE.getStringFromEnum());
                     ps.setLong(2, id);
                     ps.executeUpdate();
                 }

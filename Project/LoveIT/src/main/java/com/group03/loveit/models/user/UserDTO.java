@@ -64,7 +64,7 @@ public class UserDTO implements Serializable {
             String fullName,
             String email,
             String imageUrl,
-            EAccountStatus status,
+            EStatus status,
             EAccountRole role) {
         this.id = id;
         this.password = password;

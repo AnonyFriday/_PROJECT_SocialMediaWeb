@@ -76,7 +76,7 @@
                                 <button type="submit">Delete</button>
                             </form>
                             <form action="${pageContext.request.contextPath}/admin?action=flag_cmt&id=${comment.id}" method="post">
-                                <button type="submit">${comment.status == 'ACTIVE' ? 'Flag' : 'Unflag'}</button>
+                                <button type="submit">${comment.status == 'Active' ? 'Flag' : 'Unflag'}</button>
                             </form>
                         </td>
                     </tr>

@@ -75,7 +75,7 @@ public class AdminController extends HttpServlet {
         long id = Long.parseLong(request.getParameter("id"));
         PostDAO postDAO = new PostDAO();
         PostDTO post = postDAO.getPostById(id).join();
-        postDAO.flagPost(id, !post.getStatus().equals(EStatus.ACTIVE.getStatus()));
+        postDAO.flagPost(id, !post.getStatus().equals(EStatus.ACTIVE.getStringFromEnum()));
         response.sendRedirect(request.getContextPath() + "/admin");
     }
 
@@ -90,7 +90,7 @@ public class AdminController extends HttpServlet {
         long id = Long.parseLong(request.getParameter("id"));
         CommentDAO commentDAO = new CommentDAO();
         CommentDTO comment = commentDAO.getCommentById(id).join();
-        commentDAO.flagComment(id, !comment.getStatus().equals(EStatus.ACTIVE.getStatus()));
+        commentDAO.flagComment(id, !comment.getStatus().equals(EStatus.ACTIVE.getStringFromEnum()));
         response.sendRedirect(request.getContextPath() + "/admin");
     }
 }
