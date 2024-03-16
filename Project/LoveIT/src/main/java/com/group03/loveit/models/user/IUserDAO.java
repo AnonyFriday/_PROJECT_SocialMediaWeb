@@ -15,8 +15,6 @@ public interface IUserDAO {
 
     public CompletableFuture<List<UserDTO>> getUsers();
 
-    public CompletableFuture<List<UserDTO>> getUsersByConditions(UserSearchCriteria criteria);
-
     public UserDTO getUserById(long id);
 
     public void insertUser(UserDTO user);

@@ -43,24 +43,38 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text required col-3">Full Name</span>
                                 <input class="form-control" type="text" name="fullName" placeholder="Enter your name here">
+                                <c:if test="${errorFullName != null}">
+                                    <p>${errorFullName}</p>
+                                </c:if>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text required col-3">Email</span>
                                 <input class="form-control" type="text" name="email" placeholder="Enter your email here">
+                                <c:if test="${errorEmail != null}">
+                                    <p>${errorEmail}</p>
+                                </c:if>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text required col-3">Date of birth</span>
                                 <input class="form-control"  type="date" name="dob">
+                                <c:if test="${errorDob != null}">
+                                    <p>${errorDob}</p>
+                                </c:if>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text required col-3">Password</span>
                                 <input class="form-control" type="password" name="password" placeholder="Enter your password here">
+                                <c:if test="${errorPassword != null}">
+                                    <p>${errorPassword}</p>
+                                </c:if>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text required col-3">Re-type password</span>
                                 <input class="form-control" type="password" name="retypePassword" placeholder="Re-type your password here">
+                                <c:if test="${errorRetypePassword != null}">
+                                    <p>${errorRetypePassword}</p>
+                                </c:if>
                             </div>
-
                         </div>
                         <div class="row">
                             <button class="btn btn-primary d-block w-100 btn-pink shadow" type="submit">Sign up</button>

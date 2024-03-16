@@ -75,9 +75,9 @@
                         <div class="me-3">
                             <a href="#">
                                 <c:choose>
-                                    <c:when test="${sessionScope.USER_SESSION ne null}">
+                                    <c:when test="${sessionScope.SESSION_USER ne null}">
                                         <a class="nav-link" href="#">
-                                            <img class="card-border" height="60px" src="${sessionScope.USER_SESSION.imageUrl}">
+                                            <img class="card-border" height="60px" src="${sessionScope.SESSION_USER.imageUrl}">
                                         </a>
                                     </c:when>
                                     <c:otherwise>

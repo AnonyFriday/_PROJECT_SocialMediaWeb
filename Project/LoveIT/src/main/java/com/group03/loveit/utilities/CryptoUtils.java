@@ -135,8 +135,18 @@ public final class CryptoUtils {
      * @param encodedString
      * @return
      */
-    private static byte[] decodeBase64(byte[] encodedString) {
+    public static byte[] decodeBase64(byte[] encodedString) {
         return Base64.getDecoder().decode(encodedString);
+    }
+
+    /**
+     * Encode to base64
+     *
+     * @param objectBytes
+     * @return
+     */
+    public static String encodeBase64(byte[] objectBytes) {
+        return Base64.getEncoder().encodeToString(objectBytes);
     }
 
 //    public static void main(String[] args) {

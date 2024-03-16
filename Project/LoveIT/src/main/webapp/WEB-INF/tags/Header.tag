@@ -31,9 +31,9 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <c:choose>
-                            <c:when test="${sessionScope.USER_SESSION ne null}">
+                            <c:when test="${sessionScope.SESSION_USER ne null}">
                                 <a class="nav-link" href="#">
-                                    <img class="card-border pfp" height="40px" src="${sessionScope.USER_SESSION.imageUrl}">
+                                    <img class="card-border pfp" height="40px" src="${sessionScope.SESSION_USER.imageUrl}">
                                 </a>
                             </c:when>
                             <c:otherwise>
@@ -41,7 +41,12 @@
                             </c:otherwise>
                         </c:choose>
                     </li>
-                </ul>
+                    <c:if test="${sessionScope.SESSION_USER ne null}">
+                        <li class="nav-item d-flex align-items-center">
+                             <a class="nav-link nav-link-button" href="logout"><i class="fa fa-sign-in me-2"></i>Sign out</a>
+                        </li>
+                    </c:if>
+                </ul>               
             </div>
         </div>
     </nav>

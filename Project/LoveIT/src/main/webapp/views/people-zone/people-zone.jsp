@@ -12,9 +12,9 @@
                         <div class="row">
                             <div class="col-md-12 col-lg-12 ps-4 w-75">
                                 <c:choose>
-                                    <c:when test="${sessionScope.USER_SESSION ne null}">
+                                    <c:when test="${sessionScope.SESSION_USER ne null}">
                                         <a class="nav-link" style="width: 35px;" href="#">
-                                            <img class="card-border" height="35px" src="${sessionScope.USER_SESSION.imageUrl}">
+                                            <img class="card-border" height="35px" src="${sessionScope.SESSION_USER.imageUrl}">
                                         </a>
                                     </c:when>
                                     <c:otherwise>

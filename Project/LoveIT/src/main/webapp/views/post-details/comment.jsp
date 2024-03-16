@@ -10,7 +10,7 @@
 <div class="d-flex flex-row p-2">
     <div class="me-3">
         <a href="#">
-            <img class="card-border" height="80px" src="${param.user_image_url}">
+            <img class="card-border" height="80px" width="80px" src="${param.user_image_url}">
         </a>
     </div>
     <div><a href="#"><strong>${param.user_name}</strong></a>
@@ -46,9 +46,9 @@
     <div class="me-3">
         <a href="#">
             <c:choose>
-                <c:when test="${sessionScope.USER_SESSION ne null}">
+                <c:when test="${sessionScope.SESSION_USER ne null}">
                     <a class="nav-link" href="#">
-                        <img class="card-border" height="60px" width="60px" src="${sessionScope.USER_SESSION.imageUrl}">
+                        <img class="card-border" height="60px" width="60px" src="${sessionScope.SESSION_USER.imageUrl}">
                     </a>
                 </c:when>
                 <c:otherwise>
