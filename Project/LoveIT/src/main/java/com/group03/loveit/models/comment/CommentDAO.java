@@ -2,6 +2,7 @@ package com.group03.loveit.models.comment;
 
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
+import com.group03.loveit.models.user.EStatus;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
@@ -230,6 +231,58 @@ public class CommentDAO implements ICommentDAO {
         });
     }
 
+
+    /**
+     * Retrieves all comments from the database.
+     *
+     * @return The CompletableFuture that returns a list of CommentDTO objects
+     * representing all the comments, or an empty list if no comments are found.
+     */
+    @Override
+    public CompletableFuture<List<CommentDTO>> getAllComments() {
+        return CompletableFuture.supplyAsync(() -> {
+            List<CommentDTO> comments = new ArrayList<>();
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                String query = "SELECT * FROM Comment";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            long userId = rs.getLong(COL_USER_ID);
+                            UserDAO userDAO = new UserDAO();
+                            UserDTO user = userDAO.getUserById(userId);
+
+                            long postId = rs.getLong(COL_POST_ID);
+                            PostDAO postDAO = new PostDAO();
+                            PostDTO post = postDAO.getPostById(postId).join();
+
+                            CommentDTO parentCmt = null;
+                            if (rs.getLong(COL_REPLY_ID) != 0) {
+                                parentCmt = getCommentById(rs.getLong(COL_REPLY_ID)).join();
+                            }
+
+                            comments.add(new CommentDTO(
+                                    rs.getLong(COL_ID),
+                                    post,
+                                    user,
+                                    rs.getString(COL_CONTENT),
+                                    rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
+                                    rs.getString(COL_STATUS),
+                                    parentCmt
+                            ));
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println("Cannot get all comments: " + e.getMessage());
+            }
+            return comments;
+        });
+    }
+
+
     /**
      * Inserts a new comment into the database.
      *
@@ -292,6 +345,34 @@ public class CommentDAO implements ICommentDAO {
                 }
             } catch (SQLException ex) {
                 System.out.println("Cannot update comment: " + ex.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Flags a comment in the database by changing its status.
+     * If isActive is true, the status of the comment will be set to "ACTIVE".
+     * If isActive is false, the status of the comment will be set to "DISABLED".
+     *
+     * @param id The ID of the comment to flag.
+     * @param isActive A boolean indicating whether the comment should be active.
+     * @return A CompletableFuture that represents the completion of the flagging operation.
+     */
+    @Override
+    public CompletableFuture<Void> flagComment(long id, boolean isActive) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                String query = "UPDATE Comment SET " + COL_STATUS + " = ? WHERE " + COL_ID + " = ?";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    ps.setString(1, isActive ? EStatus.ACTIVE.getStringFromEnum() : EStatus.DISABLE.getStringFromEnum());
+                    ps.setLong(2, id);
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot flag comment: " + ex.getMessage());
             }
         });
     }

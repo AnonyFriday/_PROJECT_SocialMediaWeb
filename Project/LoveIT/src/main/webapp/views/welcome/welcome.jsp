@@ -13,8 +13,8 @@
         </div>
 
         <div>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
+            <a href="${pageContext.request.contextPath}/login">Login</a>
+            <a href="${pageContext.request.contextPath}/register">Register</a>
         </div>
 
 

@@ -1,12 +1,13 @@
 package com.group03.loveit.controllers.people_zone;
 
-import com.group03.loveit.controllers.post_details.CreateCommentController;
 import com.group03.loveit.models.comment.CommentDAO;
 import com.group03.loveit.models.comment.CommentDTO;
 import com.group03.loveit.models.favourite.FavoriteDAO;
 import com.group03.loveit.models.favourite.FavoriteDTO;
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
+import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -77,12 +79,13 @@ public class PeopleZoneController extends HttpServlet {
                             PostDTO post = postDAO.getPostById(Long.parseLong(postId)).join();
 
                             FavoriteDAO favoriteDAO = new FavoriteDAO();
-                            List<FavoriteDTO> favourites = favoriteDAO.getFavoritesByUser(CreateCommentController.getCurrentUser().getId()).join();
+                            UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+                            List<FavoriteDTO> favourites = favoriteDAO.getFavoritesByUser(user.getId()).join();
                             boolean isFavorite = favourites.stream().anyMatch(fav -> fav.getPost().getId() == post.getId());
                             if (isFavorite) {
-                                favoriteDAO.deleteFavorite(post.getId(), CreateCommentController.getCurrentUser().getId());
+                                favoriteDAO.deleteFavorite(post.getId(), user.getId());
                             } else {
-                                FavoriteDTO favorite = new FavoriteDTO(post, CreateCommentController.getCurrentUser(), LocalDateTime.now());
+                                FavoriteDTO favorite = new FavoriteDTO(post, user, LocalDateTime.now());
                                 favoriteDAO.insertFavorite(favorite);
                             }
                             response.sendRedirect(request.getContextPath() + "/people-zone");
@@ -121,7 +124,13 @@ public class PeopleZoneController extends HttpServlet {
             }
 
             // Fetch all favorite posts for the current user in a single database call
-            List<FavoriteDTO> favourites = favoriteDAO.getFavoritesByUser(CreateCommentController.getCurrentUser().getId()).join();
+            UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+            List<FavoriteDTO> favourites = new ArrayList<>();
+
+            if (user != null) {
+                favourites = favoriteDAO.getFavoritesByUser(user.getId()).join();
+            }
 
             // Map the favorite posts by their ID for quick lookup
             Map<Long, FavoriteDTO> favouriteMap = favourites.stream().collect(Collectors.toMap(fav -> fav.getPost().getId(), Function.identity()));

@@ -14,7 +14,7 @@ import java.util.function.Predicate;
  *
  * @author duyvu
  */
-public enum EAccountStatus {
+public enum EStatus {
     // ===========================
     // == No. objects
     // ===========================
@@ -36,9 +36,9 @@ public enum EAccountStatus {
     /**
      * By default the enum constructor is private
      *
-     * @param role: shorten form of enum object
+     * @param status: shorten form of enum object
      */
-    private EAccountStatus(String status) {
+    private EStatus(String status) {
         this.status = status;
     }
 
@@ -57,15 +57,10 @@ public enum EAccountStatus {
     /**
      * Get the enum object based on the string form
      *
-     * @param name
-     * @return
+     * @param name string form of enum object
+     * @return enum object
      */
-    public static EAccountStatus getEnumFromName(String name) {
-        return Arrays.stream(EAccountStatus.values()).filter(new Predicate<EAccountStatus>() {
-            @Override
-            public boolean test(EAccountStatus t) {
-                return t.status.equalsIgnoreCase(name);
-            }
-        }).findFirst().get();
+    public static EStatus getEnumFromName(String name) {
+        return Arrays.stream(EStatus.values()).filter(t -> t.status.equalsIgnoreCase(name)).findFirst().get();
     }
 }
