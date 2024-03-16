@@ -6,6 +6,6 @@
 %>
 
 <%-- any content can be specified here e.g.: --%>
-<footer class="footer" style="font-size: 32px;">
-    <p><%= footer_message%></p>
-</footer>
+  <footer class="d-flex align-items-center ps-3 py-4 border-top footer">
+    <p class="col-md-4 mb-0 text-muted"><%= footer_message%></p>
+  </footer>

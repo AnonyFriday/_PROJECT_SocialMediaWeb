@@ -26,13 +26,15 @@
 
         <!-- Bootstrap and Custom SCSS style -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/bootstrap/bootstrap.min.css">
-        <!--<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/index.css">-->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
         <link rel="stylesheet" href="${pageStyleUrl}">
+        
 
     </head>
 
     <!-- Body -->
-    <body>
+    <body style="background: rgb(241, 241, 241);">
 
         <!-- Include header -->
         <DN:Header logoUrl="${pageContext.request.contextPath}/assets/img/heart_off.png" />

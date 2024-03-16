@@ -14,13 +14,13 @@ public abstract class DBUtils {
 
     private final static String serverName = "localhost";
     private final static String dbName = "LoveIt";
-    private final static String portNumber = "1433";
+    private final static String portNumber = "1435";
     private final static String instance = "";
     //private final static String instance = "MSSQLSERVER_2019";//LEAVE THIS ONE EMPTY IF YOUR SQL IS A SINGLE INSTANCE
 
     // Don't change these values, change the environment variables instead
-    private final static String userID = System.getenv("LIT_DB_USER");
-    private final static String password = System.getenv("LIT_DB_PASS");
+    private final static String userID = "sa";
+    private final static String password = "12345";
 
     /**
      * Close the connection

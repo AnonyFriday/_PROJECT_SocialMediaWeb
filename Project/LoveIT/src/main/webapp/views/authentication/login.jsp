@@ -2,45 +2,57 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
 
-<DN:GenericPage pageStyleUrl="${pageContext.request.contextPath}/css/welcome/welcome.css">
+<DN:GenericPage pageStyleUrl="${pageContext.request.contextPath}/assets/css/styles.css">
 
     <main>
-        <div id="login">
-            <h3 class="text-center text-white pt-5">Login form</h3>
+        <section class="position-relative py-4 py-xl-5">
             <div class="container">
-                <div id="login-row" class="row justify-content-center align-items-center">
-                    <div id="login-column" class="col-md-6">
-                        <div id="login-box" class="col-md-12">
-                            <form id="login-form" class="form" action="login" method="post">
-                                <h3 class="text-center text-info">Login</h3>
-                                <c:set var="cookie" value="${pageContext.request.cookies}" />
-                                <div class="form-group">
-                                    <label for="username" class="text-info">Email:</label><br>
-                                    <input type="email" name="email" id="username" class="form-control" value="${cookie.cEmail.value}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password" class="text-info">Password:</label><br>
-                                    <input type="password" name="password" id="password" class="form-control" value="${cookie.cPass.value}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="remember-me" class="text-info"><span>Remember me</span></label>
-                                    <input id="remember-me" name="remember-me" type="checkbox"  ${cookie.cRememberMe != null? 'checked': ''} />
-                                </div>
-                                <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
+                <div class="row mb-5">
+                    <div class="col-md-8 col-xl-6 text-center mx-auto">
+                        <h1 class="txt-main-col">LoveIT</h1>
+                    </div>
+                </div>
 
-                                <div id="register-link" class="text-right">
-                                    <a href="#" class="text-info">Register here</a>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6 col-xl-5">
+                        <div class="card mb-5 bg-transparent">
+                            <h2 class="txt-main-col ms-4">Sign in</h2>
+                            <div class="card-body d-flex flex-column">
+                                <form method="post" class="w-100 p-4 pb-2 mb-3 border border-3 border-dark-subtle rounded shadow bg-light">
+                                    <c:set var="cookie" value="${pageContext.request.cookies}" />
+                                    <div class="mb-3">
+                                        <input class="form-control" type="email" name="email" placeholder="Email" value="${cookie.cEmail.value}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input class="form-control" type="password" name="password" placeholder="Password" value="${cookie.cPass.value}">
+                                    </div>
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <label for="remember-me" class="text-info">Remember me</label>
+                                        <input id="remember-me" name="remember-me" type="checkbox" style="width: 10%;" ${cookie.cRememberMe != null ? 'checked': ''} />
+                                    </div>
+                                    <div class="d-flex flex-wrap justify-content-around">
+                                        <div class="w-100 mb-3">
+                                            <button class="btn btn-primary d-block w-100 shadow btn-pink" type="submit">Login</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <a class="text-center pb-3" href="/LoveIT/register">Does not have an account yet? Register here</a>
+                                <div class="d-flex align-items-center align-content-center">
+                                    <hr class="m-auto w-50">
+                                    <span class="px-3 text-secondary">or</span>
+                                    <hr class="m-auto w-50">
                                 </div>
-
-                                <c:if test="${not empty requestScope.error}">
-                                    <p style="color: red">${requestScope.error}</p>
-                                </c:if>
-                            </form>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="btn btn-light border-dark d-flex justify-content-center align-items-center" type="button">
+                                        <img height="20px" width="20px" class="me-2" src="${pageContext.request.contextPath}/assets/img/Google.png"> Continue with Google
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
 </DN:GenericPage>

@@ -70,7 +70,7 @@ public class LoginController extends HttpServlet {
                     case ACTIVE: {
 
                         // Add session to create user session
-                        request.getSession(true).setAttribute("USER-SESSION", account);
+                        request.getSession(true).setAttribute("USER_SESSION", account);
 
                         redirectToRolePage(account.getRole(), response);
                         break;
