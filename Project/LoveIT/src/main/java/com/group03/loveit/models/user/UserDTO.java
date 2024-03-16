@@ -92,6 +92,7 @@ public class UserDTO implements Serializable {
      * @param imageUrl
      * @param status
      * @param role
+     * @param createdAt
      */
     public UserDTO(
             long id,
@@ -103,7 +104,8 @@ public class UserDTO implements Serializable {
             String email,
             String imageUrl,
             EAccountStatus status,
-            EAccountRole role) {
+            EAccountRole role,
+            LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -114,6 +116,7 @@ public class UserDTO implements Serializable {
         this.gender = gender;
         this.preferenceGender = preferenceGender;
         this.nickName = nickName;
+        this.createdAt = createdAt;
     }
 
     /**

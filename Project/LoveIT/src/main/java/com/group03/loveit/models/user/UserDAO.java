@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -127,7 +128,8 @@ public final class UserDAO implements IUserDAO {
                                     rs.getString(COL_EMAIL),
                                     rs.getString(COL_IMAGEURL),
                                     EAccountStatus.getEnumFromName(rs.getString(COL_STATUS)),
-                                    EAccountRole.getEnumFromName(rs.getString(COL_ROLE)));
+                                    EAccountRole.getEnumFromName(rs.getString(COL_ROLE)),
+                                    rs.getTimestamp(COL_CREATE_AT).toLocalDateTime());
                             list.add(user);
                         }
                         return list;
@@ -169,8 +171,9 @@ public final class UserDAO implements IUserDAO {
                         byte age = rs.getByte(COL_AGE);
                         GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID));
                         GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID));
+                        LocalDateTime createdAt = rs.getTimestamp(COL_CREATE_AT).toLocalDateTime();
 
-                        return new UserDTO(id, age, gender, preferenceGender, nickName, fullName, email, imageUrl, status, role);
+                        return new UserDTO(id, age, gender, preferenceGender, nickName, fullName, email, imageUrl, status, role, createdAt);
                     }
                 }
             }
@@ -254,8 +257,8 @@ public final class UserDAO implements IUserDAO {
 //        UserDTO user = userDAO.login("duy@gmail.com", "duy123");
 //
 //        System.out.println(user.getId());
-//        UserDTO user = userDAO.getUserById(3);
-//        System.out.println(user);
+        UserDTO user = userDAO.getUserById(3);
+        System.out.println(user.getCreatedAt());
 //
 //        user.setPassword("vu kim duy");
 //        System.out.println(userDAO.updateUser(user));

@@ -71,11 +71,12 @@ public class RegisterController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check action
+        // Check Actions
         String action = request.getParameter("action");
         List<GenderDTO> genders = GenderDAO.getInstance().getGenderList();
         request.setAttribute("genders", genders);
 
+        // Check actions then go to page
         if (action == null) {
             request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
         } else if ("goToLogin".equals(action)) {

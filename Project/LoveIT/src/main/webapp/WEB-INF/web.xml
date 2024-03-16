@@ -113,7 +113,7 @@
     <!-- Session -->
     <servlet-mapping>
         <servlet-name>OtherProfileController</servlet-name>
-        <url-pattern>/otherProfile</url-pattern>
+        <url-pattern>/other-profile</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
