@@ -108,11 +108,18 @@
     </servlet-mapping>
 
     <!-- Session -->
+    
     <session-config>
         <session-timeout>
             60
         </session-timeout>
     </session-config>
+
+    <!-- Context Param -->
+    <context-param>
+        <param-name>USER_SESSION</param-name>
+        <param-value>USER_SESSION</param-value>
+    </context-param>
 
     <!-- Welcome File -->
     <welcome-file-list>

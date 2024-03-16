@@ -98,7 +98,7 @@ public final class UserDAO implements IUserDAO {
     // == Override Methods
     // ===========================
     /**
-     * Using Async Function to retrive extensive User list
+     * Using Async Function to retrieve extensive User list
      *
      * @return a future containing the list of users
      */
@@ -107,10 +107,7 @@ public final class UserDAO implements IUserDAO {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection conn = DBUtils.getConnection()) {
 
-                // SQL query
-                String sql = " SELECT * "
-                        + " FROM " + TABLE_NAME;
-
+                String sql = " SELECT * FROM [User] ";
                 List<UserDTO> list = new ArrayList<>();
 
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -129,7 +126,6 @@ public final class UserDAO implements IUserDAO {
                                     EAccountRole.getEnumFromName(rs.getString(COL_ROLE)));
                             list.add(user);
                         }
-
                         return list;
                     }
                 }
@@ -143,18 +139,18 @@ public final class UserDAO implements IUserDAO {
     }
 
     /**
-     * Create User By Id
+     * Get User By Id
      *
      * @param userId
      * @return
      */
     @Override
     public UserDTO getUserById(long userId) {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = ? ";
+        String sql
+                = " SELECT * "
+                + " FROM [User] as u "
+                + " WHERE u.Id = ? AND u.Status = 'Active' ";
         try (Connection conn = DBUtils.getConnection()) {
-            if (conn == null) {
-                throw new SQLException("Cannot get connection");
-            }
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setLong(1, userId);
                 try (ResultSet rs = ps.executeQuery()) {
@@ -223,8 +219,10 @@ public final class UserDAO implements IUserDAO {
 
     public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
-        UserDTO user = userDAO.login("duy@gmail.com", "duy123");
-
-        System.out.println(user.getId());
+//        UserDTO user = userDAO.login("duy@gmail.com", "duy123");
+//
+//        System.out.println(user.getId());
+        UserDTO user = userDAO.getUserById(1);
+        System.out.println(user.getAge());
     }
 }

@@ -5,11 +5,8 @@
  */
 package com.group03.loveit.controllers.authentication;
 
-import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.ConstantUtils;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

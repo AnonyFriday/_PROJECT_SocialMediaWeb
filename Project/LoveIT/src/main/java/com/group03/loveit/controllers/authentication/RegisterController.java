@@ -8,45 +8,27 @@ import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 import com.group03.loveit.utilities.DataProcessingUtils;
-import java.util.ArrayList;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.ServletConfig;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Register Controller
  *
  * @author duyvu
  */
-@WebServlet(name = "RegisterController", urlPatterns = "/register")
 public class RegisterController extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        List<GenderDTO> genders = GenderDAO.getInstance().getGenderList();
-        request.setAttribute("genders", genders);
-        request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
-    }
 
     /**
      * Handle GET request
@@ -73,7 +55,50 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Check if user in session, invalidate and sendRedirect to login page
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute(ConstantUtils.SESSION_USER) == null) {
+            session.invalidate();
+            response.sendRedirect(request.getContextPath().concat("/views/authentication/login.jsp"));
+        }
+
+        // Check action
+        String action = request.getParameter("action");
+        List<GenderDTO> genders = GenderDAO.getInstance().getGenderList();
+        request.setAttribute("genders", genders);
+
+        if (action == null) {
+            request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
+        } else if ("goToLogin".equals(action)) {
+            response.sendRedirect("login");
+        } else if ("check".equals(action)) {
+            handleRegister(request, response);
+        }
+
+    }
+
+    /**
+     * Handling the register by checking each field
+     *
+     * @param request
+     * @param response
+     */
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response) {
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -110,25 +135,26 @@ public class RegisterController extends HttpServlet {
 
         // If having error, redirect to the page immediately
         if (!errorMessages.isEmpty()) {
-
             errorMessages.forEach((errName, errMsg) -> {
                 request.setAttribute(errName, errMsg);
             });
-
-            processRequest(request, response);
         } else {
 
-            // After registation, move to login
-            // Register only User account
-            GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(genderId));
-            GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(preferenceGenderId));
-            byte age = DataProcessingUtils.convertDateToAge(date);
+            try {
+                // After registation, move to login
+                // Register only User account
+                GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(genderId));
+                GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(preferenceGenderId));
+                byte age = DataProcessingUtils.convertDateToAge(date);
 
-            UserDAO userDAO = new UserDAO();
-            UserDTO user = new UserDTO(email, password, fullName, age, gender, preferenceGender);
-            userDAO.insertUser(user);
+                UserDAO userDAO = new UserDAO();
+                UserDTO user = new UserDTO(email, password, fullName, age, gender, preferenceGender);
+                userDAO.insertUser(user);
 
-            response.sendRedirect("login");
+                response.sendRedirect("login");
+            } catch (IOException ex) {
+                Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

@@ -4,12 +4,20 @@
  */
 package com.group03.loveit.controllers.profile;
 
+import com.group03.loveit.models.user.UserDAO;
+import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
+import com.group03.loveit.utilities.CryptoUtils;
+import com.group03.loveit.utilities.DataProcessingUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -17,34 +25,62 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ProfileController extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Checking action
+        HttpSession session = request.getSession(false);
+        String action = request.getParameter("action");
+
+        // Neu user login -> bam vao profile, vao trang profile, hien ra profile cua minh trong session => tu o popup => /profile?action=myProfile
+        // Neu user login -> trong trang profile, co the chinh sua thong tin => /profile?action=update 
+        // Neu user login -> bam vao other profile, vao trang profile, hien ra profile nguoi khac => /profile?action=otherProfile?id=1
+        // Neu user chua login -> bam vao other profile, vao trang profile, hien ra profile ngguoi khac => /profile?action=otherProfile?id=1
+        // Neu user chua login -> khong the nao bam vao trang myProfile => vao trang people-zone (DONE)
+        if (action == null) {
+            response.sendRedirect("people-zone");
+        } else if ("myProfile".equals(action) && session.getAttribute(ConstantUtils.SESSION_USER) != null) {
+            request.setAttribute("action", "update");
+            request.getRequestDispatcher("/views/user/profile.jsp").forward(request, response);
+        } else if ("update".equals(action) && session.getAttribute(ConstantUtils.SESSION_USER) != null) {
+
+            String oldPassword = request.getParameter("newPassword");
+            String newPassword = request.getParameter("newPassword");
+            String retypePassword = request.getParameter("retypePassword");
+
+            // Hash Map contains error
+            Map<String, String> errorMessages = new HashMap<>();
+
+            // Fixing Old Password
+            if (!DataProcessingUtils.isPasswordValid(newPassword)) {
+                errorMessages.put("errorPassword", "Please enter password in the right format");
+            }
+
+            if (!DataProcessingUtils.isRetypedPasswordValid(newPassword, retypePassword)) {
+                errorMessages.put("errorRetypePassword", "Please enter retype password in the right format");
+            }
+
+            UserDTO user = (UserDTO) session.getAttribute(ConstantUtils.SESSION_USER);
+
+        } else if ("otherProfile".equals(action)) {
+            UserDAO userDAO = new UserDAO();
+            long userId = Long.parseLong(request.getParameter("userId"));
+            UserDTO otherUser = userDAO.getUserById(userId);
+            request.setAttribute("user", otherUser);
+            request.getRequestDispatcher("/views/user/profile.jsp").forward(request, response);
+        }
+
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Default redirect to profile.jsp
-        request.getRequestDispatcher("/views/user/profile.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 }

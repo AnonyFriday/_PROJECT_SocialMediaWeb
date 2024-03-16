@@ -34,10 +34,8 @@ public class LoginController extends HttpServlet {
             request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
         } else if ("check".equals(action)) { // ====== Handle the login
             handleCheckingAuthentication(request, response);
-
         } else if ("goToRegister".equals(action)) { // ====== Go to Register Page
             response.sendRedirect("register");
-
         } else if ("forgotPassword".equals(action)) { // ====== Go to Forgot Password
             response.sendRedirect("forgotPassword");
         }

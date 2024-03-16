@@ -4,32 +4,32 @@
     Author     : duyvu
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="DN" tagdir="/WEB-INF/tags/" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-<DN:GenericPage
-    pageStyleUrl="">
+<DN:GenericPage pageStyleUrl="${pageContext.request.contextPath}/css/profile/profile.css">
     <main>
         <div class="container">
-
             <div class="post__avatar">
                 <img src="${pageScope.request.contextPath}/assets/img/post_image.png" width="300" height="300" alt="alt"/>
             </div>
 
             <form class="row">
+                <c:set var="user" value="${requestScope.user}" />
+
                 <div class="mb-3">
                     <label for="exampleInputFullName" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="exampleInputFullName" name="fullName">
+                    <input type="text" class="form-control" id="exampleInputFullName" name="fullName" value="${user.fullName}">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputNickName" class="form-label">Nick Name</label>
-                    <input type="text" class="form-control" id="exampleInputNickName" name="nickName">
+                    <input type="text" class="form-control" id="exampleInputNickName" name="nickName" value="${user.nickName}">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value="${user.email}">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputOldPassword1" class="form-label">Old Password</label>
@@ -44,9 +44,10 @@
                     <input type="password" class="form-control" id="exampleInputRetypeNewPassword1" name="retype-new-pasword">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="exampleRange">Age <span id="ageValue">${requestScope.usersession.age}</span></label>
+                    <label class="form-label" for="exampleRange">Age<span id="ageValue">${user.age}</span></label>
                     <div class="range">
                         <input type="range" class="form-range" id="exampleRange" 
+                               value="${user.age}"
                                min="0" max="100" oninput="updateRangeValue(this.value)"
                                name="age" />
                     </div>
