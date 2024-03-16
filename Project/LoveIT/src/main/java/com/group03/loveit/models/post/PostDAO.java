@@ -1,8 +1,6 @@
 package com.group03.loveit.models.post;
 
-import com.group03.loveit.models.user.EAccountRole;
-import com.group03.loveit.models.user.EAccountStatus;
-import com.group03.loveit.models.gender.GenderDAO;
+import com.group03.loveit.models.user.EStatus;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
 import com.group03.loveit.utilities.DBUtils;
@@ -14,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * This class provides the Data Access Object (DAO) for the Post entity. It
@@ -235,6 +232,35 @@ public class PostDAO implements IPostDAO {
                 System.out.println("Cannot update post: " + ex.getMessage());
             }
             return null;
+        });
+    }
+
+    /**
+     * Flags a post in the database by changing its status.
+     * If isActive is true, the status of the post will be set to "ACTIVE".
+     * If isActive is false, the status of the post will be set to "DISABLED".
+     *
+     * @param id The ID of the post to flag.
+     * @param isActive A boolean indicating whether the post should be active.
+     * @return A CompletableFuture that represents the completion of the flagging operation.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public CompletableFuture<Void> flagPost(long id, boolean isActive) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                String query = "UPDATE Post SET " + COL_STATUS + " = ? WHERE " + COL_ID + " = ?";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    ps.setString(1, isActive ? EStatus.ACTIVE.getStatus() : EStatus.DISABLE.getStatus());
+                    ps.setLong(2, id);
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot flag post: " + ex.getMessage());
+            }
         });
     }
 

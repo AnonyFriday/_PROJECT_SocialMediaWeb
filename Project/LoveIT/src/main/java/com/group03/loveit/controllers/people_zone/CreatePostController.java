@@ -5,6 +5,7 @@ import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,12 @@ public class CreatePostController extends HttpServlet {
             String content = request.getParameter("content");
             String imageUrl = request.getParameter("imageUrl");
 
-            UserDTO user = CreateCommentController.getCurrentUser();
+            UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
 
             PostDTO post = new PostDTO(user, content, LocalDateTime.now(), 0, 0, "Active", imageUrl);
             PostDAO postDAO = new PostDAO();

@@ -22,7 +22,7 @@ public class UserDTO implements Serializable {
     private String password;
     private String fullName;
     private String imageUrl;
-    private EAccountStatus status;
+    private EStatus status;
     private EAccountRole role;
     private LocalDateTime createdAt;
     private byte age;
@@ -62,7 +62,7 @@ public class UserDTO implements Serializable {
             String fullName,
             String email,
             String imageUrl,
-            EAccountStatus status,
+            EStatus status,
             EAccountRole role) {
         this.id = id;
         this.email = email;
@@ -93,7 +93,7 @@ public class UserDTO implements Serializable {
         this.age = age;
         this.gender = gender;
         this.preferenceGender = preferenceGender;
-        this.status = EAccountStatus.ACTIVE;
+        this.status = EStatus.ACTIVE;
         this.role = EAccountRole.USER;
         this.createdAt = LocalDateTime.now();
     }
@@ -162,11 +162,11 @@ public class UserDTO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public EAccountStatus getStatus() {
+    public EStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EAccountStatus status) {
+    public void setStatus(EStatus status) {
         this.status = status;
     }
 

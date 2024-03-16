@@ -4,16 +4,14 @@ import com.group03.loveit.models.comment.CommentDAO;
 import com.group03.loveit.models.comment.CommentDTO;
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
-import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.concurrent.ExecutionException;
 
 /**
  *
@@ -25,18 +23,13 @@ public class CreateCommentController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String action = request.getParameter("action");
-            long postId;
             if (action != null) {
                 switch (action) {
                     case "create_comment":
-                        postId = Long.parseLong(request.getParameter("post_id"));
-                        createComment(request, postId);
-                        response.sendRedirect(request.getContextPath() + "/post-details?post_id=" + postId);
+                        handleCreateComment(request, response);
                         break;
                     case "create_reply":
-                        postId = Long.parseLong(request.getParameter("post_id"));
-                        createReply(request);
-                        response.sendRedirect(request.getContextPath() + "/post-details?post_id=" + postId);
+                        handleCreateReply(request, response);
                         break;
                 }
             }
@@ -47,31 +40,46 @@ public class CreateCommentController extends HttpServlet {
         }
     }
 
-    private void createComment(HttpServletRequest request, long postId) {
+    private void handleCreateComment(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException {
+        long postId = Long.parseLong(request.getParameter("post_id"));
         String content = request.getParameter("content");
 
         PostDAO postDAO = new PostDAO();
         PostDTO post = postDAO.getPostById(postId).join();
 
+        UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         CommentDAO commentDAO = new CommentDAO();
-        CommentDTO comment = new CommentDTO(post, getCurrentUser(), content, LocalDateTime.now(), "Active", null);
+
+        CommentDTO comment = new CommentDTO(post, user, content, LocalDateTime.now(), "Active", null);
         commentDAO.insertComment(comment).join();
+
+        response.sendRedirect(request.getContextPath() + "/post-details?post_id=" + postId);
     }
 
-    private void createReply(HttpServletRequest request) throws NumberFormatException {
+    private void handleCreateReply(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException {
+        long postId = Long.parseLong(request.getParameter("post_id"));
         String content = request.getParameter("reply_content");
+
         long parentCmtId = Long.parseLong(request.getParameter("parent_cmt_id"));
+        UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/people-zone");
+            return;
+        }
 
         CommentDAO commentDAO = new CommentDAO();
         CommentDTO parentComment = commentDAO.getCommentById(parentCmtId).join();
 
-        CommentDTO reply = new CommentDTO(parentComment.getPost(), getCurrentUser(), content, LocalDateTime.now(), "Active", parentComment);
+        CommentDTO reply = new CommentDTO(parentComment.getPost(), user, content, LocalDateTime.now(), "Active", parentComment);
         commentDAO.insertComment(reply).join();
-    }
 
-    // Temporary method to get the current user
-    public static UserDTO getCurrentUser() {
-        UserDAO userDAO = new UserDAO();
-        return userDAO.getUserById(2);
+        response.sendRedirect(request.getContextPath() + "/post-details?post_id=" + postId);
     }
 }

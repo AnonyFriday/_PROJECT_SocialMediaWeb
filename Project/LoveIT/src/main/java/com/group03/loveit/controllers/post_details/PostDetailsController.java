@@ -6,8 +6,8 @@ import com.group03.loveit.models.favourite.FavoriteDAO;
 import com.group03.loveit.models.favourite.FavoriteDTO;
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
-import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,8 +27,14 @@ public class PostDetailsController extends HttpServlet {
             long post_id = Long.parseLong(request.getParameter("post_id"));
             PostDAO postDAO = new PostDAO();
             PostDTO post = postDAO.getPostById(post_id).join();
+            UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
 
-            UserDTO user = CreateCommentController.getCurrentUser();
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+
+
             long userId = user.getId();
 
             FavoriteDAO favoriteDAO = new FavoriteDAO();
@@ -81,7 +87,13 @@ public class PostDetailsController extends HttpServlet {
                 case "toggle_favorite":
                     long postId = Long.parseLong(request.getParameter("post_id"));
 
-                    UserDTO user = CreateCommentController.getCurrentUser();
+                    UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+                    if (user == null) {
+                        response.sendRedirect(request.getContextPath() + "/login");
+                        return;
+                    }
+
                     long userId = user.getId();
 
                     FavoriteDAO favoriteDAO = new FavoriteDAO();

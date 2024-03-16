@@ -76,7 +76,7 @@ public final class UserDAO implements IUserDAO {
                             String fullName = rs.getNString(COL_FULLNAME);
                             String nickName = rs.getNString(COL_NICKNAME);
                             String imageUrl = rs.getString(COL_IMAGEURL);
-                            EAccountStatus status = EAccountStatus.getEnumFromName(rs.getString(COL_STATUS));
+                            EStatus status = EStatus.getEnumFromName(rs.getString(COL_STATUS));
                             EAccountRole role = EAccountRole.getEnumFromName(rs.getString(COL_ROLE));
                             byte age = rs.getByte(COL_AGE);
                             GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID));
@@ -122,7 +122,7 @@ public final class UserDAO implements IUserDAO {
                                     rs.getNString(COL_FULLNAME),
                                     rs.getString(COL_EMAIL),
                                     rs.getString(COL_IMAGEURL),
-                                    EAccountStatus.getEnumFromName(rs.getString(COL_STATUS)),
+                                    EStatus.getEnumFromName(rs.getString(COL_STATUS)),
                                     EAccountRole.getEnumFromName(rs.getString(COL_ROLE)));
                             list.add(user);
                         }
@@ -160,7 +160,7 @@ public final class UserDAO implements IUserDAO {
                         String fullName = rs.getNString(COL_FULLNAME);
                         String nickName = rs.getNString(COL_NICKNAME);
                         String imageUrl = rs.getString(COL_IMAGEURL);
-                        EAccountStatus status = EAccountStatus.getEnumFromName(rs.getString(COL_STATUS));
+                        EStatus status = EStatus.getEnumFromName(rs.getString(COL_STATUS));
                         EAccountRole role = EAccountRole.getEnumFromName(rs.getString(COL_ROLE));
                         byte age = rs.getByte(COL_AGE);
                         GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID));
