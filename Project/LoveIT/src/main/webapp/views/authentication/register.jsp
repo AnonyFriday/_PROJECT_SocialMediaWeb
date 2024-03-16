@@ -37,6 +37,11 @@
             <input type="text" id="fullName" name="fullName" placeholder="Full Name">
         </div>
 
+        <div>
+            <label for="fullName">Nick Name:</label>
+            <input type="text" id="fullName" name="nickName" placeholder="Nick Name">
+        </div>
+
         <!-- Email text field -->
         <div>
             <label for="email">Email:</label>
@@ -62,7 +67,12 @@
         </div>
 
         <!-- Button to trigger the registration -->
+        <input name="action" value="check" hidden="true"/>
         <button type="submit">Register</button>
+
+        <c:if test="${not empty requestScope.success}" >
+            <p>${requestScope.success}</p>
+        </c:if>
     </form>
 
 </DN:GenericPage>

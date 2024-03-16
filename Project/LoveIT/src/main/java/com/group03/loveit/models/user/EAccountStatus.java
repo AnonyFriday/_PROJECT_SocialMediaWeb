@@ -50,7 +50,7 @@ public enum EAccountStatus {
      *
      * @return string status
      */
-    public String getStatus() {
+    public String getStringFromEnum() {
         return status;
     }
 
@@ -64,7 +64,7 @@ public enum EAccountStatus {
         return Arrays.stream(EAccountStatus.values()).filter(new Predicate<EAccountStatus>() {
             @Override
             public boolean test(EAccountStatus t) {
-                return t.getStatus().equalsIgnoreCase(name);
+                return t.status.equalsIgnoreCase(name);
             }
         }).findFirst().get();
     }
