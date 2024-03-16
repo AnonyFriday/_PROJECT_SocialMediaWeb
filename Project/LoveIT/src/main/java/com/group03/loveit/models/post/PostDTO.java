@@ -1,6 +1,5 @@
 package com.group03.loveit.models.post;
 
-import com.group03.loveit.models.account.AccountDTO;
 import com.group03.loveit.models.comment.CommentDTO;
 import com.group03.loveit.models.user.UserDTO;
 
@@ -10,6 +9,7 @@ import java.time.LocalDateTime;
  * @author Nhat
  */
 public class PostDTO {
+
     // Fields
     private long id;
     private UserDTO user;
@@ -86,15 +86,19 @@ public class PostDTO {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
     public CommentDTO getTopComment() {
         return topComment;
     }
+
     public void setTopComment(CommentDTO topComment) {
         this.topComment = topComment;
     }
+
     public boolean getIsFavorite() {
         return isFavorite;
     }
+
     public void setIsFavorite(boolean isFavorite) {
         this.isFavorite = isFavorite;
     }

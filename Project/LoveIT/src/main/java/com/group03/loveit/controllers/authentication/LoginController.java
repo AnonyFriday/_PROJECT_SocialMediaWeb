@@ -4,16 +4,17 @@
  */
 package com.group03.loveit.controllers.authentication;
 
-import com.group03.loveit.models.account.AccountDAO;
-import com.group03.loveit.models.account.AccountDTO;
-import com.group03.loveit.models.account.EAccountRole;
+import com.group03.loveit.models.user.UserDAO;
+import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Login Controller
@@ -24,113 +25,36 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LoginController extends HttpServlet {
 
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // Get action param
+        String action = request.getParameter("action");
+
+        if (action == null) { // ====== Redirect to login page 
+            request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
+        } else if ("check".equals(action)) { // ====== Handle the login
+            handleCheckingAuthentication(request, response);
+
+        } else if ("goToRegister".equals(action)) { // ====== Go to Register Page
+            response.sendRedirect("register");
+
+        } else if ("forgotPassword".equals(action)) { // ====== Go to Forgot Password
+            response.sendRedirect("forgotPassword");
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        AccountDAO accountDAO = new AccountDAO();
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String isRememberMe = request.getParameter("remember-me");
-        String errorMsg = null;
-
-        // Add cookies if 
-        if (isRememberMe != null) {
-            Cookie cEmail = new Cookie("cEmail", email);
-            Cookie cPass = new Cookie("cPass", password);
-            Cookie cRememberMe = new Cookie("cRememberMe", isRememberMe);
-            cEmail.setMaxAge(60 * 60 * 24);
-            cPass.setMaxAge(60 * 60 * 24);
-            cRememberMe.setMaxAge(60 * 60 * 24);
-            response.addCookie(cEmail);
-            response.addCookie(cPass);
-            response.addCookie(cRememberMe);
-        } else {
-            deleteCookies(request);
-        }
-
-        try {
-            AccountDTO account = accountDAO.login(email, password);
-
-            // Check if having user then added to session else showing error
-            if (account != null) {
-
-                // Checking account status
-                switch (account.getStatus()) {
-                    case DISABLE: {
-                        errorMsg = "Your account has been disabled. Please contact the phone 0909189999";
-                        break;
-                    }
-                    case ACTIVE: {
-
-                        // Add session to create user session
-                        request.getSession(true).setAttribute("USER-SESSION", account);
-
-                        redirectToRolePage(account.getRole(), response);
-                        break;
-                    }
-                }
-
-            } else {
-                errorMsg = "Your email or password is not correct. Please check again.";
-            }
-
-            // If having error, sending error with message
-            // then come back to login
-            if (errorMsg != null) {
-                request.setAttribute("error", errorMsg);
-                request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
-            }
-
-        } catch (IOException | ServletException e) {
-            log("Error on login: " + e.getMessage());
-        }
+        processRequest(request, response);
     }
 
-    /**
-     * Sending to page based on account role
-     *
-     * @param role
-     * @param response
-     * @throws IOException
-     */
-    private void redirectToRolePage(EAccountRole role, HttpServletResponse response) throws IOException {
-        switch (role) {
-            case ADMIN: {
-                response.sendRedirect("admin");
-                break;
-            }
-            case USER: {
-                response.sendRedirect("people-zone");
-                break;
-            }
-        }
-    }
-
-    /**
-     * Function to add cookies
-     *
-     * @param account
-     * @param response //
-     */
-//    private void setCookies(AccountDTO account, String isRememberMe, HttpServletResponse response) {
-//        // Cookie to store username, not password
-//        Cookie cEmail = new Cookie("cEmail", account.getEmail());
-//        Cookie cPass = new Cookie("cPass", account.getPassword());
-//        Cookie cRememberMe = new Cookie("cRememberMe", isRememberMe);
-//        cEmail.setMaxAge(60 * 60 * 24);
-//        cPass.setMaxAge(60 * 60 * 24);
-//        cRememberMe.setMaxAge(60 * 60 * 24);
-//        response.addCookie(cEmail);
-//        response.addCookie(cPass);
-//        response.addCookie(cRememberMe);
-//    }
     /**
      * Function to delete cookies
      *
@@ -140,9 +64,78 @@ public class LoginController extends HttpServlet {
      *
      * @param request
      */
-    private void deleteCookies(HttpServletRequest request) {
+    private void deleteCookies(HttpServletRequest request, HttpServletResponse response) {
         for (Cookie cookie : request.getCookies()) {
-            cookie.setMaxAge(-1);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+    }
+
+    private void handleCheckingAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        UserDAO accountDAO = new UserDAO();
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String isRememberMe = request.getParameter("remember-me");
+
+        try {
+            // Checking if having empty input, redirect to login.jsp
+            if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
+                request.setAttribute("error", "Email and Password cannot be empty. Please try again.");
+                request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
+            } else {
+                UserDTO account = accountDAO.login(email, password);
+
+                if (account == null) {
+                    request.setAttribute("error", "Email and Password are wrong. Please try again.");
+                    request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
+                } else {
+                    // Checking account status
+                    switch (account.getStatus()) {
+                        case DISABLE: {
+                            request.setAttribute("error", "Your account has been disabled. Please contact the phone 0909189999");
+                            request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
+                            break;
+                        }
+                        case ACTIVE: {
+
+                            // Add session to create account session
+                            HttpSession session = request.getSession(true);
+                            session.setAttribute(ConstantUtils.SESSION_USER, account);
+                            session.setMaxInactiveInterval(60 * 60);
+
+                            // Add cookies to remember the email (not password for security reason)
+                            if (isRememberMe != null) {
+                                Cookie cEmail = new Cookie(ConstantUtils.COOKIE_EMAIL, email);
+                                Cookie cRememberMe = new Cookie(ConstantUtils.COOKIE_IS_REMEMBER_ME, isRememberMe);
+                                cEmail.setMaxAge(60 * 60 * 24);
+                                cRememberMe.setMaxAge(60 * 60 * 24);
+                                response.addCookie(cEmail);
+                                response.addCookie(cRememberMe);
+                            } else {
+
+                                // delete cookie when isRememberMe is disabled
+                                deleteCookies(request, response);
+                            }
+
+                            // Redirect to page based on role
+                            switch (account.getRole()) {
+                                case ADMIN: {
+                                    response.sendRedirect("admin");
+                                    break;
+                                }
+                                case USER: {
+                                    response.sendRedirect("people-zone");
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException | ServletException e) {
+            log("Error on login: " + e.getMessage());
         }
     }
 }

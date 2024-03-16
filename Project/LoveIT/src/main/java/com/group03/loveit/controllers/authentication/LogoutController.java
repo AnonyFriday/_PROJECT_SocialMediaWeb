@@ -6,12 +6,15 @@
 package com.group03.loveit.controllers.authentication;
 
 import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,7 +33,12 @@ public class LogoutController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getSession().invalidate();
-        response.sendRedirect("login");
+
+        // Check if user in session, invalidate and sendRedirect to login page
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute(ConstantUtils.SESSION_USER) != null) {
+            session.invalidate();
+            response.sendRedirect(request.getContextPath().concat("/views/authentication/login.jsp"));
+        }
     }
 }

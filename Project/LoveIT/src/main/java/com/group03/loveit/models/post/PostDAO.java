@@ -1,7 +1,7 @@
 package com.group03.loveit.models.post;
 
-import com.group03.loveit.models.account.EAccountRole;
-import com.group03.loveit.models.account.EAccountStatus;
+import com.group03.loveit.models.user.EAccountRole;
+import com.group03.loveit.models.user.EAccountStatus;
 import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;

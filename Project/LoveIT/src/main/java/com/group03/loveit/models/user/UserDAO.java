@@ -4,10 +4,9 @@
  */
 package com.group03.loveit.models.user;
 
-import com.group03.loveit.models.account.EAccountRole;
-import com.group03.loveit.models.account.EAccountStatus;
 import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
+import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DBUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,8 +44,54 @@ public final class UserDAO implements IUserDAO {
     // ===========================
     // == Methods
     // ===========================
-    public void registerAccountUser() {
+    /**
+     * Login using username and password
+     *
+     * @param email
+     * @param password
+     * @return an account model
+     */
+    public UserDTO login(String email, String password) {
+        String sql = " SELECT u.Id, u.Email, u.Password, u.Fullname, u.Nickname, u.Role, u.Status, "
+                + "		u.Gender_Id, u.Preference_Id, u.Image_Url, u.Age "
+                + " FROM [User] as u "
+                + " WHERE u.Email = ? ";
 
+        // Fetching data
+        try (Connection conn = DBUtils.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, email);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+
+                        // Checking hash password
+                        byte[] storedPassword = rs.getString(COL_PASSWORD).getBytes();
+                        boolean isVerified = CryptoUtils.verify(password, storedPassword);
+
+                        // Fetching data if verified
+                        if (isVerified) {
+                            long id = rs.getLong(COL_ID);
+                            String userEmail = rs.getNString(COL_EMAIL);
+                            String fullName = rs.getNString(COL_FULLNAME);
+                            String nickName = rs.getNString(COL_NICKNAME);
+                            String imageUrl = rs.getString(COL_IMAGEURL);
+                            EAccountStatus status = EAccountStatus.getEnumFromName(rs.getString(COL_STATUS));
+                            EAccountRole role = EAccountRole.getEnumFromName(rs.getString(COL_ROLE));
+                            byte age = rs.getByte(COL_AGE);
+                            GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID));
+                            GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID));
+
+                            return new UserDTO(id, age, gender, preferenceGender, nickName, fullName, userEmail, imageUrl, status, role);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
 
     // ===========================
@@ -93,79 +140,6 @@ public final class UserDAO implements IUserDAO {
             }
             return null;
         });
-    }
-
-    /**
-     * Getting User based on certain criteria
-     *
-     * @param usc
-     * @return
-     */
-    @Override
-
-    public CompletableFuture<List<UserDTO>> getUsersByConditions(UserSearchCriteria conditions) {
-
-        // Using Future for async data retrieve
-        CompletableFuture<List<UserDTO>> future = CompletableFuture.supplyAsync(() -> {
-
-            // WHERE 1=1 attached WHERE keyword in any scenario
-            String sql = "SELECT * FROM " + TABLE_NAME;
-            sql += " WHERE 1=1 ";
-
-            if (conditions.getFullname() != null) {
-                sql += " AND " + COL_FULLNAME + " LIKE ? ";
-            }
-
-            if (conditions.getNickName() != null) {
-                sql += " OR " + COL_NICKNAME + " LIKE ? ";
-            }
-
-            List<UserDTO> users = new ArrayList<>();
-
-            // 1. Connection
-            try (Connection conn = DBUtils.getConnection()) {
-
-                List<UserDTO> list = new ArrayList<>();
-
-                // 2. Prepare Statement
-                try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    if (conditions.getFullname() != null) {
-                        ps.setNString(1, conditions.getFullname());
-                    }
-
-                    if (conditions.getNickName() != null) {
-                        ps.setNString(2, conditions.getNickName());
-                    }
-
-                    // 3. Execute Query
-                    try (ResultSet rs = ps.executeQuery()) {
-                        while (rs.next()) {
-                            UserDTO user = new UserDTO(
-                                    rs.getLong(COL_ID),
-                                    rs.getByte(COL_AGE),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_ID)),
-                                    GenderDAO.getInstance().getGenderMap().get(rs.getLong(COL_GENDER_PREFERENCE_ID)),
-                                    rs.getNString(COL_NICKNAME),
-                                    rs.getNString(COL_FULLNAME),
-                                    rs.getString(COL_EMAIL),
-                                    rs.getString(COL_IMAGEURL),
-                                    EAccountStatus.getEnumFromName(rs.getString(COL_STATUS)),
-                                    EAccountRole.getEnumFromName(rs.getString(COL_ROLE)));
-                            list.add(user);
-                        }
-
-                        return list;
-                    }
-                }
-            } catch (SQLException ex) {
-                System.out.println("Cannot get list of users");
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            }
-            return null;
-        });
-
-        return future;
     }
 
     /**
@@ -245,5 +219,12 @@ public final class UserDAO implements IUserDAO {
     public void deleteUser(long l
     ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public static void main(String[] args) {
+        UserDAO userDAO = new UserDAO();
+        UserDTO user = userDAO.login("duy@gmail.com", "duy123");
+
+        System.out.println(user.getId());
     }
 }

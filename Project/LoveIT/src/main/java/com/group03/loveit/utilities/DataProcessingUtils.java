@@ -5,10 +5,18 @@
  */
 package com.group03.loveit.utilities;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +25,48 @@ import java.util.regex.Pattern;
  * @author duyvu
  */
 public final class DataProcessingUtils {
+
+    /**
+     * Convert byte array back into Object
+     *
+     * @param <T>
+     * @param byteStreamObject
+     * @return
+     */
+    public static <T> T convertByteStreamToObject(byte[] byteStreamObject) {
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteStreamObject)) {
+            try (ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
+                return (T) objectInputStream.readObject();
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(DataProcessingUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
+    /**
+     * Convert literal object into byte-stream string
+     *
+     * @param <T>
+     * @param Object
+     * @return Byte Stream in String
+     */
+    public static <T> byte[] convertObjectToByteStream(T Object) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+
+                // Convert object into serializabled object
+                objectOutputStream.writeObject(Object);
+                objectOutputStream.flush();
+
+                return byteArrayOutputStream.toByteArray();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DataProcessingUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     /**
      * Parse literal string into the LocalDate object

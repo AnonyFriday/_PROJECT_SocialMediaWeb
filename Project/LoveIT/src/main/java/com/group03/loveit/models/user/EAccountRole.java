@@ -2,33 +2,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.group03.loveit.models.account;
+package com.group03.loveit.models.user;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
  * Define 2 objects only of roles
- *
- *
- *
- * @author duyvu
  */
-public enum EAccountStatus {
+public enum EAccountRole {
+
     // ===========================
     // == No. objects
     // ===========================
     /**
-     * - Active: the current active account
+     * Admin: go to the admin panel
      *
-     * - Disable: disabled account will be blocked to login from the system
+     * User: go to the homepage
      */
-    ACTIVE("Active"), DISABLE("Disable");
+    ADMIN("Admin"), USER("User");
 
     // ===========================
     // == Fields
     // ===========================
-    private final String status;
+    private final String role;
 
     // ===========================
     // == Constructor
@@ -38,20 +35,20 @@ public enum EAccountStatus {
      *
      * @param role: shorten form of enum object
      */
-    private EAccountStatus(String status) {
-        this.status = status;
+    EAccountRole(String role) {
+        this.role = role;
     }
 
     // ===========================
     // == Methods
     // ===========================
     /**
-     * Return the shorten form of status
+     * Get the shorten form of enum object
      *
-     * @return string status
+     * @return string role
      */
-    public String getStatus() {
-        return status;
+    public String getRole() {
+        return role;
     }
 
     /**
@@ -60,11 +57,11 @@ public enum EAccountStatus {
      * @param name
      * @return
      */
-    public static EAccountStatus getEnumFromName(String name) {
-        return Arrays.stream(EAccountStatus.values()).filter(new Predicate<EAccountStatus>() {
+    public static EAccountRole getEnumFromName(String name) {
+        return Arrays.stream(EAccountRole.values()).filter(new Predicate<EAccountRole>() {
             @Override
-            public boolean test(EAccountStatus t) {
-                return t.getStatus().equalsIgnoreCase(name);
+            public boolean test(EAccountRole t) {
+                return t.getRole().equalsIgnoreCase(name);
             }
         }).findFirst().get();
     }

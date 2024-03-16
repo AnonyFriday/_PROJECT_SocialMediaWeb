@@ -3,7 +3,6 @@ package com.group03.loveit.controllers.people_zone;
 import com.group03.loveit.controllers.post_details.CreateCommentController;
 import com.group03.loveit.models.post.PostDAO;
 import com.group03.loveit.models.post.PostDTO;
-import com.group03.loveit.models.account.AccountDTO;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
 
