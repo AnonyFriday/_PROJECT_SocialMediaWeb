@@ -255,7 +255,7 @@ public class PostDAO implements IPostDAO {
             }
 
             // If no more posts are found, get all posts and filter out the fetched IDs
-            if (posts.isEmpty() && !fetchedPostIds.isEmpty()) {
+            if (posts.isEmpty()) {
                 posts = getAllPosts().join();
                 if (pageSize != null) {
                     // Limit the number of posts to the page size

@@ -179,6 +179,12 @@ public class PeopleZoneController extends HttpServlet {
 
             FavoriteDAO favoriteDAO = new FavoriteDAO();
             UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+
             List<FavoriteDTO> favourites = favoriteDAO.getFavoritesByUser(user.getId()).join();
             boolean isFavorite = favourites.stream().anyMatch(fav -> fav.getPost().getId() == post.getId());
             if (isFavorite) {
