@@ -81,6 +81,36 @@ public class PostDAO implements IPostDAO {
         });
     }
 
+//    public Long getPostsCount() {
+//        try (Connection conn = DBUtils.getConnection()) {
+//            String sql
+//                    = " SELECT count(*) "
+//                    + " FROM Post ";
+//
+//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//                while (rs.next()) {
+//                    long userId = rs.getLong(COL_USER_ID);
+//                    UserDAO userDAO = new UserDAO();
+//                    UserDTO user = userDAO.getUserById(userId);
+//
+//                    PostDTO post = new PostDTO(
+//                            rs.getLong(COL_ID),
+//                            user,
+//                            rs.getString(COL_CONTENT),
+//                            rs.getTimestamp(COL_CREATED_AT).toLocalDateTime(),
+//                            rs.getInt(COL_HEARTS_TOTAL),
+//                            rs.getInt(COL_COMMENT_TOTAL),
+//                            rs.getString(COL_STATUS),
+//                            rs.getString(COL_IMAGE_URL)
+//                    );
+//                    posts.add(post);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Cannot get posts: " + e.getMessage());
+//        }
+//        return posts;
+//    }
     /**
      * Retrieves all posts from the database.
      *
@@ -236,13 +266,14 @@ public class PostDAO implements IPostDAO {
     }
 
     /**
-     * Flags a post in the database by changing its status.
-     * If isActive is true, the status of the post will be set to "ACTIVE".
-     * If isActive is false, the status of the post will be set to "DISABLED".
+     * Flags a post in the database by changing its status. If isActive is true,
+     * the status of the post will be set to "ACTIVE". If isActive is false, the
+     * status of the post will be set to "DISABLED".
      *
      * @param id The ID of the post to flag.
      * @param isActive A boolean indicating whether the post should be active.
-     * @return A CompletableFuture that represents the completion of the flagging operation.
+     * @return A CompletableFuture that represents the completion of the
+     * flagging operation.
      * @throws SQLException If a database access error occurs.
      */
     @Override
