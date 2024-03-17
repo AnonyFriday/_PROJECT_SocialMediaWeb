@@ -13,12 +13,14 @@
                             <div class="col-md-12 col-lg-12 ps-4 w-75">
                                 <c:choose>
                                     <c:when test="${sessionScope.SESSION_USER ne null}">
-                                        <a class="nav-link" style="width: 35px;" href="#">
-                                            <img class="card-border" height="35px" src="${sessionScope.SESSION_USER.imageUrl}">
+                                        <a class="nav-link" style="display: inline-block;" href="${pageContext.request.contextPath}/user-profile">
+                                            <img class="card-border" height="45px" src="${sessionScope.SESSION_USER.imageUrl}">
                                         </a>
                                     </c:when>
                                     <c:otherwise>
-                                        <img class="card-border" height="35px" src="${pageContext.request.contextPath}/assets/img/Default_pfp.svg">
+                                        <a class="nav-link" style="display: inline-block;" href="${pageContext.request.contextPath}/login">
+                                            <img class="card-border" height="45px" src="${pageContext.request.contextPath}/assets/img/Default_pfp.svg">
+                                        </a>
                                     </c:otherwise>
                                 </c:choose>
                                 <input type="text" name="content" class="w-75 border-bottom border-3" placeholder="Make a new post...">
@@ -26,7 +28,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-8 offset-lg-1">
-                                <p class="fs-6 fw-normal w-auto">Add an image here:<input type="file" name="imageUrl" class="w-50"></p>
+                                <p class="fs-6 fw-normal w-auto">Add an image here:<input type="text" name="imageUrl" class="ms-2 mt-2 w-50 border" placeholder="Image Url..."></p>
                             </div>
                             <div class="col">
                                 <button class="btn d-flex align-items-center fs-4 p-2 px-3 shadow border border-3 border-dark-subtle" type="submit">
@@ -38,12 +40,18 @@
                 </form>
             </div>
         </div>
-         
+         <div class="d-flex justify-content-end mt-4" style="margin-right: 15%;">
+            <form action="${pageContext.request.contextPath}/people-zone" class="d-flex" method="get">
+                <input type="hidden" name="action" value="search">
+                <input type="text" name="keyword" placeholder="e.g. Sarah"><button type="submit" class="trans-button"><i class="fa fa-search"></i></button>
+            </form>
+        </div> 
         <!-- Posts -->  
         <div class="mt-5">
             <c:forEach var="post" items="${posts}">
                 <jsp:include page="post.jsp">
                     <jsp:param name="post_id" value="${post.id}" />
+                    <jsp:param name="user_id" value="${post.user.id}" />
                     <jsp:param name="user_image_url" value="${post.user.imageUrl}" />
                     <jsp:param name="user_name" value="${post.user.fullName}" />
                     <jsp:param name="user_nickname" value="${post.user.nickName}" />

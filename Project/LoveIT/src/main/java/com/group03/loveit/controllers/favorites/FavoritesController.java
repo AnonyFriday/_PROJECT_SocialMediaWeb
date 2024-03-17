@@ -4,6 +4,8 @@ import com.group03.loveit.controllers.post_details.CreateCommentController;
 import com.group03.loveit.models.favourite.FavoriteDAO;
 import com.group03.loveit.models.favourite.FavoriteDTO;
 import com.group03.loveit.models.post.PostDTO;
+import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +31,14 @@ public class FavoritesController extends HttpServlet {
                 }
             } else {
                 FavoriteDAO favoriteDAO = new FavoriteDAO();
-                List<FavoriteDTO> favorites = favoriteDAO.getFavoritesByUser(CreateCommentController.getCurrentUser().getId()).join();
+                UserDTO user = (UserDTO) request.getSession().getAttribute(ConstantUtils.SESSION_USER);
+
+                if (user == null) {
+                    response.sendRedirect(request.getContextPath() + "/login");
+                    return;
+                }
+
+                List<FavoriteDTO> favorites = favoriteDAO.getFavoritesByUser(user.getId()).join();
                 List<PostDTO> favoritePosts = new ArrayList<>();
                 for (FavoriteDTO favorite : favorites) {
                     favoritePosts.add(favorite.getPost());

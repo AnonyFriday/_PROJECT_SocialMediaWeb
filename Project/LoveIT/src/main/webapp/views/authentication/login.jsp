@@ -41,11 +41,11 @@
                                     </div>
                                 </form>
                                 <a class="text-center pb-3" href="/LoveIT/register">Does not have an account yet? Register here</a>
-                                <div class="d-flex align-items-center align-content-center">
+<!--                                <div class="d-flex align-items-center align-content-center">
                                     <hr class="m-auto w-50">
                                     <span class="px-3 text-secondary">or</span>
                                     <hr class="m-auto w-50">
-                                </div>
+                                </div>-->
                                 <!-- <div class="d-flex justify-content-center mt-3">
                                     <button class="btn btn-light border-dark d-flex justify-content-center align-items-center" type="button">
                                         <img height="20px" width="20px" class="me-2" src="${pageContext.request.contextPath}/assets/img/Google.png"> Continue with Google

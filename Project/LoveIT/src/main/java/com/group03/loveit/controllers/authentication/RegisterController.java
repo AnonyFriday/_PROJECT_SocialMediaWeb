@@ -8,45 +8,28 @@ import com.group03.loveit.models.gender.GenderDAO;
 import com.group03.loveit.models.gender.GenderDTO;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
+import com.group03.loveit.utilities.ConstantUtils;
+import com.group03.loveit.utilities.CryptoUtils;
 import com.group03.loveit.utilities.DataProcessingUtils;
-import java.util.ArrayList;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.ServletConfig;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Register Controller
  *
  * @author duyvu
  */
-@WebServlet(name = "RegisterController", urlPatterns = "/register")
 public class RegisterController extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        List<GenderDTO> genders = GenderDAO.getInstance().getGenderList();
-        request.setAttribute("genders", genders);
-        request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
-    }
 
     /**
      * Handle GET request
@@ -73,8 +56,56 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Check Actions
+        String action = request.getParameter("action");
+        List<GenderDTO> genders = GenderDAO.getInstance().getGenderList();
+        request.setAttribute("genders", genders);
+        
+        String genderId = request.getParameter("picked_gender");
+        String preferenceId = request.getParameter("picked_preference");
+        
+        
+        GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(genderId));
+        GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(preferenceId));
+        
+        request.setAttribute("picked_gender", gender);
+        request.setAttribute("picked_preference", preferenceGender);
+        
+
+        // Check actions then go to page
+        if (action == null) {
+            request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
+        } else if ("goToLogin".equals(action)) {
+            response.sendRedirect("login");
+        } else if ("check".equals(action)) {
+            handleRegister(request, response);
+        }
+    }
+
+    /**
+     * Handling the register by checking each field
+     *
+     * @param request
+     * @param response
+     */
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String fullName = request.getParameter("fullName");
+        String nickName = request.getParameter("nickName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String genderId = request.getParameter("gender");
@@ -95,6 +126,10 @@ public class RegisterController extends HttpServlet {
             errorMessages.put("errorFullName", "Please enter full name in the right format and from length of 8 to 32");
         }
 
+        if (!DataProcessingUtils.isNickNameValid(fullName, 8, 32)) {
+            errorMessages.put("errorNickName", "Please enter nick name in the right format and from length of 8 to 32");
+        }
+
         if (!DataProcessingUtils.isPasswordValid(password)) {
             errorMessages.put("errorPassword", "Please enter password in the right format");
         }
@@ -110,25 +145,25 @@ public class RegisterController extends HttpServlet {
 
         // If having error, redirect to the page immediately
         if (!errorMessages.isEmpty()) {
-
             errorMessages.forEach((errName, errMsg) -> {
                 request.setAttribute(errName, errMsg);
             });
-
-            processRequest(request, response);
+            request.getRequestDispatcher("/views/authentication/register.jsp").forward(request, response);
         } else {
 
             // After registation, move to login
             // Register only User account
             GenderDTO gender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(genderId));
             GenderDTO preferenceGender = GenderDAO.getInstance().getGenderMap().get(Long.parseLong(preferenceGenderId));
-            byte age = DataProcessingUtils.convertDateToAge(date);
+            int age = DataProcessingUtils.convertDateToAge(date);
 
             UserDAO userDAO = new UserDAO();
-            UserDTO user = new UserDTO(email, password, fullName, age, gender, preferenceGender);
+            UserDTO user = new UserDTO(email, CryptoUtils.encode(password), fullName, nickName, age, gender, preferenceGender);
             userDAO.insertUser(user);
 
-            response.sendRedirect("login");
+            request.setAttribute("success", "You register the account successfully.");
         }
+
+        request.getRequestDispatcher("/views/authentication/login.jsp").forward(request, response);
     }
 }

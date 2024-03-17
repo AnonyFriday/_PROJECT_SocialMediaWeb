@@ -11,7 +11,9 @@ public interface ICommentDAO {
     CompletableFuture<List<CommentDTO>> getCommentsByPost(long postId);
     CompletableFuture<CommentDTO> getTopCommentByPost(long postId);
     CompletableFuture<List<CommentDTO>> getRepliesByComment(long id);
+    CompletableFuture<List<CommentDTO>> getAllComments();
     CompletableFuture<Void> insertComment(CommentDTO comment);
     CompletableFuture<Void> updateComment(CommentDTO comment);
+    CompletableFuture<Void> flagComment(long id, boolean isActive);
     CompletableFuture<Void> deleteComment(long id);
 }

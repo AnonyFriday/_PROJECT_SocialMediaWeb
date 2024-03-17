@@ -32,7 +32,7 @@
                     <li class="nav-item">
                         <c:choose>
                             <c:when test="${sessionScope.SESSION_USER ne null}">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/user-profile">
                                     <img class="card-border pfp" height="40px" src="${sessionScope.SESSION_USER.imageUrl}">
                                 </a>
                             </c:when>

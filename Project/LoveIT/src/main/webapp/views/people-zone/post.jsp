@@ -14,9 +14,18 @@
             <!-- Information of the user who posted this post -->
             <div class="row">
                 <div class="col-2 col-lg-1 col-xl-1 offset-lg-0 col-md-3 ms-1">
-                    <a  href="#">
-                        <img class="card-border" height="90px" width="90px" src="${param.user_image_url}">
-                    </a>
+                    <c:choose>
+                        <c:when test="${param.user_id eq SESSION_USER.id}">
+                            <a  href="user-profile">
+                                <img class="card-border" height="90px" width="90px" src="${param.user_image_url}">
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a  href="other-profile?userId=${param.user_id}">
+                                <img class="card-border" height="90px" width="90px" src="${param.user_image_url}">
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <div class="col-lg-6 offset-lg-0 d-flex flex-wrap col-md-3">
                     <div class="d-flex w-100">
@@ -67,7 +76,7 @@
                                         </div>
                                     </c:when>
                                     <c:otherwise>
-                                        <p>Nobody has commented yet, be the first one!</p>
+                                        <p>Nobody has commented yet, be the first to share your thoughts!</p>
                                     </c:otherwise>
                                 </c:choose>
                             </div>

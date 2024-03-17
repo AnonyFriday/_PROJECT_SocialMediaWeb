@@ -42,8 +42,8 @@
         <servlet-class>com.group03.loveit.controllers.favorites.RemoveFavoriteController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ProfileController</servlet-name>
-        <servlet-class>com.group03.loveit.controllers.profile.ProfileController</servlet-class>
+        <servlet-name>UserProfileController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.profile.UserProfileController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutController</servlet-name>
@@ -54,6 +54,10 @@
         <servlet-class>com.group03.loveit.controllers.admin.AdminController</servlet-class>
     </servlet>
     <!-- Mappings -->
+    <servlet>
+        <servlet-name>OtherProfileController</servlet-name>
+        <servlet-class>com.group03.loveit.controllers.profile.OtherProfileController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/logout</url-pattern>
@@ -79,8 +83,8 @@
         <url-pattern>/people-zone</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ProfileController</servlet-name>
-        <url-pattern>/profile</url-pattern>
+        <servlet-name>UserProfileController</servlet-name>
+        <url-pattern>/user-profile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ChatController</servlet-name>
@@ -106,14 +110,21 @@
         <servlet-name>RemoveFavoriteController</servlet-name>
         <url-pattern>/remove-favorite</url-pattern>
     </servlet-mapping>
-
     <!-- Session -->
+    <servlet-mapping>
+        <servlet-name>OtherProfileController</servlet-name>
+        <url-pattern>/other-profile</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             60
         </session-timeout>
     </session-config>
-
+    <!-- Context Param -->
+    <context-param>
+        <param-name>USER_SESSION</param-name>
+        <param-value>USER_SESSION</param-value>
+    </context-param>
     <!-- Welcome File -->
     <welcome-file-list>
         <welcome-file>welcome</welcome-file>

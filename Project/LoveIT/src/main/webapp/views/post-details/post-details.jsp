@@ -13,9 +13,18 @@
                     <!-- Post --> 
                     <div class="row">
                         <div class="col-2 col-lg-1 col-xl-1 offset-lg-0 col-md-3 ms-1">
-                            <a  href="#">
-                                <img class="card-border" height="90px" width="90px" src="${post.user.imageUrl}">
-                            </a>
+                            <c:choose>
+                                <c:when test="${post.user.id eq SESSION_USER.id}">
+                                    <a  href="user-profile">
+                                        <img class="card-border" height="90px" width="90px" src="${post.user.imageUrl}">
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a  href="other-profile?userId=${post.user.id}">
+                                        <img class="card-border" height="90px" width="90px" src="${post.user.imageUrl}">
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <div class="col-lg-6 offset-lg-0 d-flex flex-wrap col-md-3">
                             <div class="d-flex w-100">
@@ -56,16 +65,27 @@
                     <div class="d-flex justify-content-center">
                         <div class="row mt-1 pt-1 w-75">
                             <div class="container border border-3 border-dark-subtle rounded p-2 shadow mb-3">
-                                <c:forEach var="comment" items="${comments}">
-                                    <c:set var="replies" value="${comment.replies}" scope="request" />
-                                    <jsp:include page="comment.jsp">
-                                        <jsp:param name="post_id" value="${post.id}" />
-                                        <jsp:param name="comment_id" value="${comment.id}" />
-                                        <jsp:param name="user_image_url" value="${comment.user.imageUrl}" />
-                                        <jsp:param name="user_name" value="${comment.user.fullName}" />
-                                        <jsp:param name="content" value="${comment.content}" />
-                                    </jsp:include>
-                                </c:forEach>
+                                <c:choose>
+                                    <c:when test="${not empty comments and comments ne null}">
+                                        <c:forEach var="comment" items="${comments}">
+                                            <c:set var="replies" value="${comment.replies}" scope="request" />
+                                            <jsp:include page="comment.jsp">
+                                                <jsp:param name="post_id" value="${post.id}" />
+                                                <jsp:param name="user_id" value="${comment.user.id}" />
+                                                <jsp:param name="comment_id" value="${comment.id}" />
+                                                <jsp:param name="user_image_url" value="${comment.user.imageUrl}" />
+                                                <jsp:param name="user_name" value="${comment.user.fullName}" />
+                                                <jsp:param name="content" value="${comment.content}" />
+                                            </jsp:include>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="d-flex justify-content-center">
+                                            <p>There are no comments yet, be the first to share your thoughts!</p>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                                
                             </div>
                         </div>
                     </div>
@@ -73,18 +93,18 @@
                     <!-- Post Comment -->
                     <div class="d-flex flex-row p-2 w-100 mb-3 justify-content-center mt-5">
                         <div class="me-3">
-                            <a href="#">
-                                <c:choose>
-                                    <c:when test="${sessionScope.SESSION_USER ne null}">
-                                        <a class="nav-link" href="#">
-                                            <img class="card-border" height="60px" src="${sessionScope.SESSION_USER.imageUrl}">
-                                        </a>
-                                    </c:when>
-                                    <c:otherwise>
+                            <c:choose>
+                                <c:when test="${sessionScope.SESSION_USER ne null}">
+                                    <a class="nav-link" style="display: inline-block;" href="${pageContext.request.contextPath}/user-profile">
+                                        <img class="card-border" height="60px" src="${sessionScope.SESSION_USER.imageUrl}">
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a class="nav-link" style="display: inline-block;" href="${pageContext.request.contextPath}/login">
                                         <img class="card-border" height="60px" src="${pageContext.request.contextPath}/assets/img/Default_pfp.svg">
-                                    </c:otherwise>
-                                </c:choose>
-                            </a>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
                         <form class="d-flex col-xl-10" action="${pageContext.request.contextPath}/post-details?action=create_comment&post_id=${post.id}" method="post">
