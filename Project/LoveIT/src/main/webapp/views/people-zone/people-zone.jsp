@@ -49,6 +49,7 @@
         let page = 1;
         let isLoading = false;
         const contextPath = "${pageContext.request.contextPath}";
+        let fetchedPostIds = [];
 
         window.onscroll = function() {
             if (!isLoading && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
@@ -60,10 +61,17 @@
         function loadMorePosts() {
             console.log('Loading more posts...');
             page++;
-            fetch(contextPath + '/people-zone?action=fetch&page=' + page)
+            fetch(contextPath + '/people-zone?action=fetch&page=' + page, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(fetchedPostIds),
+            })
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(post => {
+                        fetchedPostIds.push(post.id);
                         const newPost = document.createElement('div');
                         newPost.className = 'post';
 
@@ -147,7 +155,11 @@
 
                         document.getElementById('posts-container').appendChild(newPost);
                     });
+                    return fetchedPostIds;
+                })
+                .then(fetchedPostIds => {
                     isLoading = false;
+                    console.log('Fetched post IDs:', fetchedPostIds);
                 });
         }
     </script>
