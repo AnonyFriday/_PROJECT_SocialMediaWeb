@@ -105,7 +105,7 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT * FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL ORDER BY " + COL_ID + " DESC";
+                String query = "SELECT * FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL AND " + COL_STATUS + " != 'Disable' ORDER BY " + COL_ID + " DESC";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
@@ -151,7 +151,7 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT TOP 1 * FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL ORDER BY " + COL_ID + " DESC";
+                String query = "SELECT TOP 1 * FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL AND " + COL_STATUS + " != 'Disable' ORDER BY " + COL_ID + " DESC";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, postId);
                     try (ResultSet rs = ps.executeQuery()) {
@@ -199,7 +199,7 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
-                String query = "SELECT * FROM Comment WHERE " + COL_REPLY_ID + " = ? ORDER BY " + COL_USER_ID + " DESC";
+                String query = "SELECT * FROM Comment WHERE " + COL_REPLY_ID + " = ? AND " + COL_STATUS + " != 'Disable' ORDER BY " + COL_USER_ID + " DESC";
                 CommentDTO parentCmt = getCommentById(parentId).join();
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setLong(1, parentId);

@@ -84,108 +84,167 @@
     </main>
 
     <script>
+        // Initialize variables
         let page = 1;
         let isLoading = false;
         const contextPath = "${pageContext.request.contextPath}";
+        let fetchedPostIds = [];
 
+        // Add the IDs of the initial posts to the fetchedPostIds array
+        <c:forEach var="post" items="${posts}">
+            fetchedPostIds.push(${post.id});
+        </c:forEach>
+
+        // Event listener for scroll event
         window.onscroll = function() {
+            // Check if the user has scrolled to the bottom of the page
             if (!isLoading && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
                 isLoading = true;
                 loadMorePosts();
             }
         };
 
+        // Function to load more posts
         function loadMorePosts() {
             console.log('Loading more posts...');
             page++;
-            fetch(contextPath + '/people-zone?action=fetch&page=' + page)
+            // Send a POST request to the server to fetch more posts
+            fetch(contextPath + '/people-zone?action=fetch&page=' + page, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(fetchedPostIds),
+            })
                 .then(response => response.json())
                 .then(data => {
+                    // Loop through the posts returned by the server
                     data.forEach(post => {
+                        fetchedPostIds.push(post.id);
+                        // Create the post element
                         const newPost = document.createElement('div');
                         newPost.className = 'post';
 
+                        // Create the top area of the post
                         const topArea = document.createElement('div');
                         topArea.className = 'top-area';
 
+                        // Create the top left area of the post
                         const topLeftArea = document.createElement('div');
                         topLeftArea.className = 'top-left-area';
 
+                        // Create the user image
                         const userImage = document.createElement('img');
                         userImage.src = post.user.imageUrl;
                         userImage.alt = 'User Image';
 
+                        // Create the info area of the post
                         const info = document.createElement('div');
                         info.className = 'info';
 
+                        // Create the user name, age, and nickname elements
                         const userName = document.createElement('p');
                         userName.textContent = post.user.fullName;
-
                         const userAge = document.createElement('p');
                         userAge.textContent = 'Age: ' + post.user.age;
-
                         const userNickName = document.createElement('p');
                         userNickName.textContent = post.user.nickName;
 
+                        // Append the user name, age, and nickname to the info area
                         info.appendChild(userName);
                         info.appendChild(userAge);
                         info.appendChild(userNickName);
 
+                        // Append the user image and info area to the top left area
                         topLeftArea.appendChild(userImage);
                         topLeftArea.appendChild(info);
 
+                        // Create the top right area of the post
                         const topRightArea = document.createElement('div');
                         topRightArea.className = 'top-right-area';
 
+                        // Create the favorite button
                         const favoriteButton = document.createElement('button');
                         favoriteButton.type = 'submit';
                         favoriteButton.innerHTML = post.isFavorite ?
                             '<img src="${pageContext.request.contextPath}/assets/img/heart_on.png" alt="Favorite button">' :
                             '<img src="${pageContext.request.contextPath}/assets/img/heart_off.png" alt="Favorite button">';
+                        favoriteButton.onclick = function() {
+                            // Create form
+                            let form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = contextPath + '/people-zone?action=favorite&post_id=' + post.id;
+
+                            // Append form to body
+                            document.body.appendChild(form);
+
+                            // Submit form
+                            form.submit();
+
+                            // Remove form from body
+                            document.body.removeChild(form);
+                        };
                         topRightArea.appendChild(favoriteButton);
 
+                        // Create the user gender and preference gender elements
                         const userGender = document.createElement('p');
                         userGender.textContent = 'I am ' + post.user.gender.name;
-                        topRightArea.appendChild(userGender);
-
                         const userPreferenceGender = document.createElement('p');
                         userPreferenceGender.textContent = 'Looking for ' + post.user.preferenceGender.name;
+
+                        // Append the user gender and preference gender to the top right area
+                        topRightArea.appendChild(userGender);
                         topRightArea.appendChild(userPreferenceGender);
 
+                        // Append the top left and right areas to the top area
                         topArea.appendChild(topLeftArea);
                         topArea.appendChild(topRightArea);
 
+                        // Create the content area of the post
                         const contentArea = document.createElement('div');
                         contentArea.className = 'content_area';
 
+                        // Create the content and post image elements
                         const content = document.createElement('p');
                         content.textContent = post.content;
-
                         const postImage = document.createElement('img');
                         postImage.src = post.imageUrl;
                         postImage.alt = 'Post image';
 
+                        // Append the content and post image to the content area
                         contentArea.appendChild(content);
                         contentArea.appendChild(postImage);
 
+                        // Create the comment area of the post
                         const commentArea = document.createElement('div');
                         commentArea.className = 'comment-area';
 
+                        // Create the top comment element
                         const topComment = document.createElement('p');
                         topComment.textContent = post.topComment ? post.topComment.content : 'Nobody had commented yet!';
                         commentArea.appendChild(topComment);
 
+                        // Create the discuss now button
                         const discussNowButton = document.createElement('button');
                         discussNowButton.textContent = 'Discuss Now >';
+                        discussNowButton.onclick = function() {
+                            window.location.href = contextPath + '/people-zone?action=post_details&post_id=' + post.id;
+                        };
                         commentArea.appendChild(discussNowButton);
 
+                        // Append the top area, content area, and comment area to the post
                         newPost.appendChild(topArea);
                         newPost.appendChild(contentArea);
                         newPost.appendChild(commentArea);
 
+                        // Append the post to the posts container
                         document.getElementById('posts-container').appendChild(newPost);
                     });
+                    return fetchedPostIds;
+                })
+                .then(fetchedPostIds => {
                     isLoading = false;
+                    console.log('Fetched post IDs:', fetchedPostIds);
                 });
         }
     </script>
