@@ -181,7 +181,7 @@ public class PostDAO implements IPostDAO {
                 String baseQuery = "SELECT p.Id, p.[User_Id], p.Content, p.Created_At, p.Hearts_Total, p.Comment_Total, p.[Status], p.Image_Url " +
                         "FROM Post p JOIN [User] u ON p.[User_Id] = u.Id " +
                         "WHERE (? IS NULL OR p.[User_Id] != ?) AND (? IS NULL OR u.Preference_Id = ?) " +
-                        "AND (? IS NULL OR (p.Content LIKE ? OR u.FullName LIKE ? OR u.NickName LIKE ?)) " +
+                        "AND (? IS NULL OR (p.Content LIKE ?)) " +
                         "AND (? IS NULL OR u.Gender_Id = ?) AND p.[Status] != 'Disable' " +
                         "ORDER BY p.Id DESC";
 
@@ -208,13 +208,9 @@ public class PostDAO implements IPostDAO {
                     if (filter.getKeyword() == null) {
                         ps.setNull(index++, java.sql.Types.VARCHAR);
                         ps.setNull(index++, java.sql.Types.VARCHAR);
-                        ps.setNull(index++, java.sql.Types.VARCHAR);
-                        ps.setNull(index++, java.sql.Types.VARCHAR);
                     } else {
                         String keyword = "%" + filter.getKeyword() + "%";
                         ps.setString(index++, filter.getKeyword());
-                        ps.setString(index++, keyword);
-                        ps.setString(index++, keyword);
                         ps.setString(index++, keyword);
                     }
                     if (filter.getPrefGenderId() == null) {
