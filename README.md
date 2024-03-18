@@ -21,7 +21,6 @@ Social media platform to find lovers or friends. Only for 18 and up users.
 ### Account setup (For unregistered users)
  - Login
  - Register
- - Oauth Login (Using Google)
  - New users, setup personal info such as name, age, email, location, gender, preferred gender.
 
 ### Welcome page (for new users)
@@ -42,10 +41,6 @@ then homepage will show users/posts with selected preference (unregistered user 
 - Posts in feed are shown based on personal preference (the more similar a poster is to the user, the more likely the user will see that person's post).
 - Flag button to report violating posts to admins.
 
-### Chat *(Optional)*
-- Each user is able to direct message others.
-- Message is updated in real time.
-
 ### Profile
 - Show personal info (Name, age, gender, preference, avatar) of users.
 - If the user is owner of profile, they will have ability to change gender or love preference (not email or name due to impersonations).
@@ -55,7 +50,7 @@ then homepage will show users/posts with selected preference (unregistered user 
 
 ### Admin page
 - Post manager: see user-reported posts, search content, hide posts, delete posts.
-- User manager: see all user, search users, delete account, block users from logging in.
+- User manager: see all user, search users, delete account, flag users.
 - Dashboard: see analytics charts of data, such as number of posts, accounts, messages, genders...
 
 # Wireframe
