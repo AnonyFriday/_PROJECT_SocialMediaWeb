@@ -31,7 +31,7 @@ then homepage will show users/posts with selected preference (unregistered user 
 
 ### Homepage/Find Lover/Feed
 - Users can scroll through posts of people looking for relationship.
-- **Users** can make posts.
+- Users can make posts.
 - Ability to filter posts/users by preference (gender, location).
 - "Love" button to save post for later.
 - **Comments**:
