@@ -31,7 +31,7 @@ then homepage will show users/posts with selected preference (unregistered user 
 
 ### Homepage/Find Lover/Feed
 - Users can scroll through posts of people looking for relationship.
-- **Users** can make posts. **Original posters** can delete and modify their posts.
+- **Users** can make posts.
 - Ability to filter posts/users by preference (gender, location).
 - "Love" button to save post for later.
 - **Comments**:
@@ -49,8 +49,8 @@ then homepage will show users/posts with selected preference (unregistered user 
 - List of favourite post.
 
 ### Admin page
-- Post manager: see user-reported posts, search content, hide posts, delete posts.
-- User manager: see all user, search users, delete account, flag users.
+- Post manager: see user-reported posts, hide posts, delete posts, and manage all of the post's comments.
+- User manager: see all user, delete account, flag users.
 - Dashboard: see analytics charts of data, such as number of posts, accounts, messages, genders...
 
 # Wireframe
