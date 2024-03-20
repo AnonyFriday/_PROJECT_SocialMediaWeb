@@ -57,7 +57,7 @@
             <!-- Content of the post -->
             <div class="d-flex">
                 <p class="w-75 pt-4 me-2">${param.content}</p>
-                <img class="w-25" src="${param.image_url}">
+                <img class="w-25" style="border-radius: 20px;" src="${param.image_url}">
             </div>
             <!-- Preview of the comment section of the post -->
             <div class="row border-top border-3 mt-3 pt-3">

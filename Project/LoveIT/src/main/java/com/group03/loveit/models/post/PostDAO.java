@@ -179,11 +179,16 @@ public class PostDAO implements IPostDAO {
                 }
                 // Base SQL query to retrieve posts
                 String baseQuery = "SELECT p.Id, p.[User_Id], p.Content, p.Created_At, p.Hearts_Total, p.Comment_Total, p.[Status], p.Image_Url " +
-                        "FROM Post p JOIN [User] u ON p.[User_Id] = u.Id " +
-                        "WHERE (? IS NULL OR p.[User_Id] != ?) AND (? IS NULL OR u.Preference_Id = ?) " +
-                        "AND (? IS NULL OR (p.Content LIKE ?)) " +
-                        "AND (? IS NULL OR u.Gender_Id = ?) AND p.[Status] != 'Disable' " +
-                        "ORDER BY p.Id DESC";
+                        "FROM Post p JOIN [User] u ON p.[User_Id] = u.Id ";
+
+                if (filter.getKeyword() != null) {
+                    baseQuery += "WHERE p.Content LIKE ? ";
+                } else {
+                    baseQuery += "WHERE (? IS NULL OR p.[User_Id] != ?) AND (? IS NULL OR u.Preference_Id = ?) " +
+                            "AND (? IS NULL OR u.Gender_Id = ?) AND p.[Status] != 'Disable' ";
+                }
+
+                baseQuery += "ORDER BY p.Id DESC";
 
                 // Add pagination to the query if pageSize and page are not null
                 String query = (pageSize != null && page != null) ? baseQuery + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" : baseQuery;
@@ -191,34 +196,31 @@ public class PostDAO implements IPostDAO {
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     // Set the parameters for the PreparedStatement based on the filter
                     int index = 1;
-                    if (filter.getUserId() == null) {
-                        ps.setNull(index++, java.sql.Types.NUMERIC);
-                        ps.setNull(index++, java.sql.Types.NUMERIC);
-                    } else {
-                        ps.setLong(index++, filter.getUserId());
-                        ps.setLong(index++, filter.getUserId());
-                    }
-                    if (filter.getGenderId() == null) {
-                        ps.setNull(index++, java.sql.Types.NUMERIC);
-                        ps.setNull(index++, java.sql.Types.NUMERIC);
-                    } else {
-                        ps.setLong(index++, filter.getGenderId());
-                        ps.setLong(index++, filter.getGenderId());
-                    }
-                    if (filter.getKeyword() == null) {
-                        ps.setNull(index++, java.sql.Types.VARCHAR);
-                        ps.setNull(index++, java.sql.Types.VARCHAR);
-                    } else {
+                    if (filter.getKeyword() != null) {
                         String keyword = "%" + filter.getKeyword() + "%";
-                        ps.setString(index++, filter.getKeyword());
                         ps.setString(index++, keyword);
-                    }
-                    if (filter.getPrefGenderId() == null) {
-                        ps.setNull(index++, java.sql.Types.NUMERIC);
-                        ps.setNull(index++, java.sql.Types.NUMERIC);
                     } else {
-                        ps.setLong(index++, filter.getPrefGenderId());
-                        ps.setLong(index++, filter.getPrefGenderId());
+                        if (filter.getUserId() == null) {
+                            ps.setNull(index++, java.sql.Types.NUMERIC);
+                            ps.setNull(index++, java.sql.Types.NUMERIC);
+                        } else {
+                            ps.setLong(index++, filter.getUserId());
+                            ps.setLong(index++, filter.getUserId());
+                        }
+                        if (filter.getGenderId() == null) {
+                            ps.setNull(index++, java.sql.Types.NUMERIC);
+                            ps.setNull(index++, java.sql.Types.NUMERIC);
+                        } else {
+                            ps.setLong(index++, filter.getGenderId());
+                            ps.setLong(index++, filter.getGenderId());
+                        }
+                        if (filter.getPrefGenderId() == null) {
+                            ps.setNull(index++, java.sql.Types.NUMERIC);
+                            ps.setNull(index++, java.sql.Types.NUMERIC);
+                        } else {
+                            ps.setLong(index++, filter.getPrefGenderId());
+                            ps.setLong(index++, filter.getPrefGenderId());
+                        }
                     }
                     if (pageSize != null && page != null) {
                         ps.setInt(index++, pageSize * (page - 1));
@@ -269,6 +271,7 @@ public class PostDAO implements IPostDAO {
             return posts;
         });
     }
+
 
 
     /**
