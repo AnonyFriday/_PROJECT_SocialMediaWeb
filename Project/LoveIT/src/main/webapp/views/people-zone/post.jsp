@@ -56,7 +56,7 @@
             </div>
             <!-- Content of the post -->
             <div class="d-flex">
-                <p class="w-75 pt-4 me-2">${param.content}</p>
+                <pre class="w-75 pt-4 me-2">${param.content}</pre>
                 <img class="w-25" style="border-radius: 20px;" src="${param.image_url}">
             </div>
             <!-- Preview of the comment section of the post -->
@@ -72,7 +72,7 @@
                                         </div>
                                         <div class="col post-comment-content card-container shadow">
                                             <h3><span class="txt-main-col">${param.tcomment_usn}</span></h3>
-                                            <p>${param.tcomment_content}</p>
+                                            <pre>${param.tcomment_content}</pre>
                                         </div>
                                     </c:when>
                                     <c:otherwise>
