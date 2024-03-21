@@ -15,4 +15,5 @@ public interface IPostDAO {
     CompletableFuture<Void> updatePost(PostDTO post);
     CompletableFuture<Void> flagPost(long id, boolean isActive);
     CompletableFuture<Void> deletePost(long id);
+    CompletableFuture<Void> deleteAllPostsByUser(long userId);
 }

@@ -212,4 +212,52 @@ public class FavoriteDAO implements IFavoriteDAO {
             }
         });
     }
+
+    /**
+     * Deletes all favorites associated with a specific post.
+     *
+     * @param postId The ID of the post whose favorites are to be deleted.
+     * @return A CompletableFuture that will complete when the deletion operation is finished.
+     */
+    public CompletableFuture<Void> deleteAllFavoritesByPost(long postId) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Favorite WHERE " + COL_POST_ID + " = ?")) {
+                    ps.setLong(1, postId);
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete all favourites by post: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting all favourites by post: " + ex.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Deletes all favorites associated with a specific user.
+     *
+     * @param userId The ID of the user whose favorites are to be deleted.
+     * @return A CompletableFuture that will complete when the deletion operation is finished.
+     */
+    public CompletableFuture<Void> deleteAllFavoritesByUser(long userId) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Favorite WHERE " + COL_USER_ID + " = ?")) {
+                    ps.setLong(1, userId);
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete all favourites by user: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting all favourites by user: " + ex.getMessage());
+            }
+        });
+    }
 }

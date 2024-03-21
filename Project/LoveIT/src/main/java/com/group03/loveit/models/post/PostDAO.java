@@ -1,5 +1,7 @@
 package com.group03.loveit.models.post;
 
+import com.group03.loveit.models.comment.CommentDAO;
+import com.group03.loveit.models.favourite.FavoriteDAO;
 import com.group03.loveit.models.user.EStatus;
 import com.group03.loveit.models.user.UserDAO;
 import com.group03.loveit.models.user.UserDTO;
@@ -392,23 +394,66 @@ public class PostDAO implements IPostDAO {
      */
     @Override
     public CompletableFuture<Void> deletePost(long id) {
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
             try (Connection conn = DBUtils.getConnection()) {
                 if (conn == null) {
                     throw new SQLException();
                 }
+                // First, delete all comments by the post
+                CommentDAO commentDAO = new CommentDAO();
+                commentDAO.deleteAllCommentsByPost(id).join();
+                // Then, delete all favorites by the post
+                FavoriteDAO favoriteDAO = new FavoriteDAO();
+                favoriteDAO.deleteAllFavoritesByPost(id).join();
+                // Finally, delete the post itself
                 try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Post WHERE " + COL_ID + " = ?")) {
                     ps.setLong(1, id);
                     ps.executeUpdate();
                 }
             } catch (SQLException ex) {
                 System.out.println("Cannot delete post: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting post: " + ex.getMessage());
             }
-            return null;
         });
     }
-    
-        /**
+
+    /**
+     * Deletes all posts made by a specific user from the database.
+     * This method first retrieves all posts made by the user using the provided user ID,
+     * then deletes each post and all its associated data (comments and favorites).
+     * The operation is performed asynchronously.
+     *
+     * @param userId The ID of the user whose posts are to be deleted.
+     * @return A CompletableFuture that will complete when the deletion operation is finished.
+     */
+    public CompletableFuture<Void> deleteAllPostsByUser(long userId) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                // First, get all posts by the user
+                String selectQuery = "SELECT " + COL_ID + " FROM Post WHERE " + COL_USER_ID + " = ?";
+                try (PreparedStatement selectPs = conn.prepareStatement(selectQuery)) {
+                    selectPs.setLong(1, userId);
+                    try (ResultSet rs = selectPs.executeQuery()) {
+                        // For each post, delete the post and all its associated data
+                        while (rs.next()) {
+                            long postId = rs.getLong(COL_ID);
+                            deletePost(postId).join();
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete all posts by user: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting all posts by user: " + ex.getMessage());
+            }
+        });
+    }
+
+    /**
      * Get count of posts
      *
      * @return

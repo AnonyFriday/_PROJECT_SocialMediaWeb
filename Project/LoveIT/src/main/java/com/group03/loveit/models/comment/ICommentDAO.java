@@ -16,4 +16,7 @@ public interface ICommentDAO {
     CompletableFuture<Void> updateComment(CommentDTO comment);
     CompletableFuture<Void> flagComment(long id, boolean isActive);
     CompletableFuture<Void> deleteComment(long id);
+    CompletableFuture<Void> deleteAllRepliesByComment(long commentId);
+    CompletableFuture<Void> deleteAllCommentsByPost(long postId);
+    CompletableFuture<Void> deleteAllCommentsByUser(long userId);
 }
