@@ -158,7 +158,7 @@ public class RegisterController extends HttpServlet {
             int age = DataProcessingUtils.convertDateToAge(date);
 
             UserDAO userDAO = new UserDAO();
-            UserDTO user = new UserDTO(email, CryptoUtils.encode(password), fullName, nickName, age, gender, preferenceGender);
+            UserDTO user = new UserDTO(email, password, fullName, nickName, age, gender, preferenceGender);
             userDAO.insertUser(user);
 
             request.setAttribute("success", "You register the account successfully.");
