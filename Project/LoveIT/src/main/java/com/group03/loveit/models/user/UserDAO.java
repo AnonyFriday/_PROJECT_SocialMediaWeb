@@ -195,7 +195,7 @@ public final class UserDAO implements IUserDAO {
                 ps.setNString(1, user.getFullName());
                 ps.setNString(2, user.getNickName());
                 ps.setNString(3, user.getEmail());
-                ps.setNString(4, user.getPassword());
+                ps.setNString(4, CryptoUtils.encode(user.getPassword()));
                 ps.setInt(5, user.getAge());
                 ps.setString(6, user.getStatus().getStringFromEnum());
                 ps.setString(7, user.getRole().getStringFromEnum());

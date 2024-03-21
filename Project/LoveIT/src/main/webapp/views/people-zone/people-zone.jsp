@@ -275,7 +275,7 @@
                             commentRowInnerDiv.classList.add('row');
 
                             // Conditional logic for comment content
-                            if (post.topComment !== null) {
+                            if (post.topComment != null) {
                               const commentProfileColDiv = document.createElement('div');
                               commentProfileColDiv.classList.add('col-lg-1', 'col-xl-2');
 
