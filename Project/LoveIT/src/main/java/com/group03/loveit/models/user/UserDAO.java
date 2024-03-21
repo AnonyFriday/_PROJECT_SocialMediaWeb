@@ -247,8 +247,8 @@ public final class UserDAO implements IUserDAO {
 
         return false;
     }
-    
-        /**
+
+    /**
      * Get count of posts
      *
      * @return
@@ -274,21 +274,21 @@ public final class UserDAO implements IUserDAO {
         return 0L;
     }
 
-//    @Override
-//    public boolean deleteUserById(long id) {
-//        try (Connection conn = DBUtils.getConnection()) {
-//            String sql
-//                    = " DELETE FROM [User] "
-//                    + " WHERE Id = ? ";
-//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-//                ps.setLong(1, id);
-//                return ps.executeUpdate() != 0;
-//            }
-//        } catch (SQLException ex) {
-//            System.out.println("Cannot delete comment: " + ex.getMessage());
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean deleteUserById(long id) {
+        try (Connection conn = DBUtils.getConnection()) {
+            String sql
+                    = " DELETE FROM [User] "
+                    + " WHERE Id = ? ";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, id);
+                return ps.executeUpdate() != 0;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Cannot delete comment: " + ex.getMessage());
+        }
+        return false;
+    }
 
     public boolean flagUser(long id, boolean isActive) {
         try (Connection conn = DBUtils.getConnection()) {
