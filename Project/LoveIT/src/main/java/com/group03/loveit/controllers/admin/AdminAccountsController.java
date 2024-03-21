@@ -107,10 +107,4 @@ public class AdminAccountsController extends HttpServlet {
         UserDTO user = userDAO.getUserById(id);
         userDAO.flagUser(id, !user.getStatus().equals(EStatus.ACTIVE));
     }
-
-    private void handleDeleteAccount(HttpServletRequest request) {
-        long id = Long.parseLong(request.getParameter("id"));
-        UserDAO userDAO = new UserDAO();
-        userDAO.deleteUserById(id);
-    }
 }
