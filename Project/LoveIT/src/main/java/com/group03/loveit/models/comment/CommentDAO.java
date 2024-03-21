@@ -379,11 +379,34 @@ public class CommentDAO implements ICommentDAO {
     }
 
     /**
-     * Deletes a comment from the database.
+     * Deletes all replies associated with a specific comment.
+     *
+     * @param commentId The ID of the comment whose replies are to be deleted.
+     * @return A CompletableFuture that will complete when the deletion operation is finished.
+     */
+    public CompletableFuture<Void> deleteAllRepliesByComment(long commentId) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Comment WHERE " + COL_REPLY_ID + " = ?")) {
+                    ps.setLong(1, commentId);
+                    ps.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete all replies by comment: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting all replies by comment: " + ex.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Deletes a comment and all its replies from the database.
      *
      * @param id The ID of the comment to delete.
-     * @return The CompletableFuture that represents the completion of the
-     * deletion.
+     * @return The CompletableFuture that represents the completion of the deletion.
      */
     @Override
     public CompletableFuture<Void> deleteComment(long id) {
@@ -392,6 +415,9 @@ public class CommentDAO implements ICommentDAO {
                 if (conn == null) {
                     throw new SQLException();
                 }
+                // First, delete all replies of the comment
+                deleteAllRepliesByComment(id).join();
+                // Then, delete the comment itself
                 try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Comment WHERE " + COL_ID + " = ?")) {
                     ps.setLong(1, id);
                     ps.executeUpdate();
@@ -401,8 +427,71 @@ public class CommentDAO implements ICommentDAO {
             }
         });
     }
+    /**
+     * Deletes all comments associated with a specific post.
+     *
+     * @param postId The ID of the post whose comments are to be deleted.
+     * @return A CompletableFuture that will complete when the deletion operation is finished.
+     */
+    public CompletableFuture<Void> deleteAllCommentsByPost(long postId) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                // First, get all top-level comments by the post
+                String selectQuery = "SELECT " + COL_ID + " FROM Comment WHERE " + COL_POST_ID + " = ? AND " + COL_REPLY_ID + " IS NULL";
+                try (PreparedStatement selectPs = conn.prepareStatement(selectQuery)) {
+                    selectPs.setLong(1, postId);
+                    try (ResultSet rs = selectPs.executeQuery()) {
+                        // For each comment, delete the comment and all its replies
+                        while (rs.next()) {
+                            long commentId = rs.getLong(COL_ID);
+                            deleteComment(commentId).join();
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete all comments by post: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting all comments by post: " + ex.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Deletes all comments and their replies associated with a specific user.
+     *
+     * @param userId The ID of the user whose comments and their replies are to be deleted.
+     * @return A CompletableFuture that will complete when the deletion operation is finished.
+     */
+    public CompletableFuture<Void> deleteAllCommentsByUser(long userId) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = DBUtils.getConnection()) {
+                if (conn == null) {
+                    throw new SQLException();
+                }
+                // First, get all top-level comments by the user
+                String selectQuery = "SELECT " + COL_ID + " FROM Comment WHERE " + COL_USER_ID + " = ? AND " + COL_REPLY_ID + " IS NULL";
+                try (PreparedStatement selectPs = conn.prepareStatement(selectQuery)) {
+                    selectPs.setLong(1, userId);
+                    try (ResultSet rs = selectPs.executeQuery()) {
+                        // For each comment, delete the comment and all its replies
+                        while (rs.next()) {
+                            long commentId = rs.getLong(COL_ID);
+                            deleteComment(commentId).join();
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Cannot delete all comments and their replies by user: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Unexpected error while deleting all comments and their replies by user: " + ex.getMessage());
+            }
+        });
+    }
     
-        /**
+    /**
      * Count total of comments
      *
      * @return

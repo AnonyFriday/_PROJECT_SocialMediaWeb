@@ -12,4 +12,6 @@ public interface IFavoriteDAO {
     CompletableFuture<List<FavoriteDTO>> getFavoritesByPost(long postId);
     CompletableFuture<Void> insertFavorite(FavoriteDTO favorite);
     CompletableFuture<Void> deleteFavorite(long postId, long userId);
+    CompletableFuture<Void> deleteAllFavoritesByPost(long postId);
+    CompletableFuture<Void> deleteAllFavoritesByUser(long userId);
 }

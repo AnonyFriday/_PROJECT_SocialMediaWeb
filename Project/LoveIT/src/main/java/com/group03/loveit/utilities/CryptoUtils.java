@@ -149,7 +149,6 @@ public final class CryptoUtils {
         return Base64.getEncoder().encodeToString(objectBytes);
     }
 
-    /*
     public static void main(String[] args) {
         // ACTIVE - USER
         String email = "duy@gmail.com";
@@ -163,12 +162,12 @@ public final class CryptoUtils {
         String email2 = "duydie@gmail.com";
         String msg2 = "secure456";
 
-        String encodedString = encode(msg2);
-        boolean isVerified = verify(msg2, encodedString.getBytes());
+        String encodedString = encode(msg1);
+        boolean isVerified = verify(msg1, encodedString.getBytes());
 
         System.out.println("Encoded msg: " + encodedString);
         System.out.println("is verified: " + isVerified);
         System.out.println("Encoded msg Length: " + encodedString.length());
     }
-    */
+
 }

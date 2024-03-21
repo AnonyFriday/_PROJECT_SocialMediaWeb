@@ -21,4 +21,6 @@ public interface IUserDAO {
 
     public boolean updateUser(UserDTO user);
 
+    public boolean deleteUserById(long id);
+
 }

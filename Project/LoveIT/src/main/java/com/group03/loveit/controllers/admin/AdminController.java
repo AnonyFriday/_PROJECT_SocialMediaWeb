@@ -41,7 +41,7 @@ public class AdminController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         // Check session before management
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(true);
         if (session == null || session.getAttribute(ConstantUtils.SESSION_USER) == null) {
             response.sendRedirect("login");
             return;
