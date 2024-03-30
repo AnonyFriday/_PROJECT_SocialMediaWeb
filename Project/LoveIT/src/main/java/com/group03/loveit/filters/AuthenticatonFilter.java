@@ -29,7 +29,8 @@ public class AuthenticatonFilter implements Filter {
     private FilterConfig filterConfig = null;
 
     public AuthenticatonFilter() {
-        System.out.println("Hello Bracnh #6. That is OKE");
+        System.out.println("Please fix a bug on this branch");
+        System.out.println("fixed");
     }
 
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
