@@ -29,6 +29,7 @@ public class AuthenticatonFilter implements Filter {
     private FilterConfig filterConfig = null;
 
     public AuthenticatonFilter() {
+        System.out.println("Hello Bracnh #6. That is OKE");
     }
 
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
