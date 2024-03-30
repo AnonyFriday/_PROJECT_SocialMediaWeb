@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- Packages -->
+    <filter>
+        <filter-name>AuthenticatonFilter</filter-name>
+        <filter-class>com.group03.loveit.filters.AuthenticatonFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticatonFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>LoginController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.authentication.LoginController</servlet-class>
@@ -69,7 +77,6 @@
         <servlet-name>AdminPostsController</servlet-name>
         <servlet-class>com.group03.loveit.controllers.admin.AdminPostsController</servlet-class>
     </servlet>
-    
     <!-- Mappings -->
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
@@ -139,20 +146,17 @@
         <servlet-name>AdminPostsController</servlet-name>
         <url-pattern>/admin/posts</url-pattern>
     </servlet-mapping>
-    
     <!-- Session -->
     <session-config>
         <session-timeout>
             60
         </session-timeout>
     </session-config>
-    
     <!-- Context Param -->
     <context-param>
         <param-name>USER_SESSION</param-name>
         <param-value>USER_SESSION</param-value>
     </context-param>
-    
     <!-- Welcome File -->
     <welcome-file-list>
         <welcome-file>welcome</welcome-file>
