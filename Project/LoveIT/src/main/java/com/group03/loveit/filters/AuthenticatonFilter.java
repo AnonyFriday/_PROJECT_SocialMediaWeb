@@ -29,6 +29,7 @@ public class AuthenticatonFilter implements Filter {
     private FilterConfig filterConfig = null;
 
     public AuthenticatonFilter() {
+        System.out.println("This is a testing for the authentication");
     }
 
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
